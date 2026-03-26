@@ -1,0 +1,202 @@
+/*
+ * Influence Pirates — Central Design Tokens
+ *
+ * ALL visual decisions live here. Components reference these vars only.
+ * To change the entire look: edit this file. Nothing else.
+ *
+ * Naming: --ip-{category}-{property}
+ * Categories: bg, surface, text, border, primary, accent, stage, score,
+ *             font, radius, shadow, space, duration, ease
+ */
+
+/* ============================================================
+   HOLO PRISM (Light Mode) — "The Luminous Lab"
+   ============================================================ */
+
+:root {
+  /* Backgrounds */
+  --ip-bg: #F5EDF5;
+  --ip-bg-subtle: #FAF5FA;
+  --ip-bg-page: #F5EDF5;
+  --ip-bg-gradient: radial-gradient(ellipse at 0% 0%, rgba(232, 180, 240, 0.45) 0%, transparent 50%),
+                    radial-gradient(ellipse at 100% 0%, rgba(216, 160, 235, 0.40) 0%, transparent 50%),
+                    radial-gradient(ellipse at 100% 100%, rgba(240, 190, 220, 0.35) 0%, transparent 50%),
+                    radial-gradient(ellipse at 0% 100%, rgba(220, 170, 240, 0.30) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
+                    #F5EDF5;
+
+  /* Surfaces */
+  --ip-surface: #FFFFFF;
+  --ip-surface-hover: #FDF8FD;
+  --ip-surface-glass: rgba(255, 255, 255, 0.7);
+  --ip-glass-blur: 12px;
+
+  /* Card Glass (glassmorphic cards) */
+  --ip-card-glass-bg: rgba(255, 255, 255, 0.55);
+  --ip-card-glass-blur: 16px;
+  --ip-card-glass-border: rgba(255, 255, 255, 0.6);
+  --ip-card-glass-shadow: 0 4px 24px rgba(166, 102, 170, 0.08), 0 1px 4px rgba(166, 102, 170, 0.04);
+
+  /* Text */
+  --ip-text: #1A1A1A;
+  --ip-text-secondary: #6B7280;
+  --ip-text-tertiary: #9CA3AF;
+  --ip-text-brand: #5B2C6F;
+  --ip-text-on-primary: #FFFFFF;
+
+  /* Borders */
+  --ip-border: #E8D8E8;
+  --ip-border-subtle: #F0E4F0;
+
+  /* Primary Accent (Fuchsia → Pink gradient) */
+  --ip-primary: #A666AA;
+  --ip-primary-hover: #9555A0;
+  --ip-primary-end: #E879A8;
+  --ip-primary-gradient: linear-gradient(135deg, #A666AA 0%, #E879A8 100%);
+
+  /* Accent Colors */
+  --ip-accent-plum: #5B2C6F;
+  --ip-accent-maroon: #7B3F5E;
+
+  /* Sidebar */
+  --ip-sidebar-bg: linear-gradient(180deg, #FFFFFF 0%, #F5EDF5 100%);
+  --ip-sidebar-active-bg: var(--ip-primary-gradient);
+  --ip-sidebar-text: #374151;
+  --ip-sidebar-text-active: #FFFFFF;
+  --ip-sidebar-width: 200px;
+  --ip-sidebar-width-collapsed: 64px;
+
+  /* Pipeline Stage Colors */
+  --ip-stage-discover: #0EA5E9;
+  --ip-stage-angle: #8B5CF6;
+  --ip-stage-hook: #F59E0B;
+  --ip-stage-script: #10B981;
+  --ip-stage-publish: #EC4899;
+  --ip-stage-analyze: #6366F1;
+
+  /* Semantic */
+  --ip-success: #10B981;
+  --ip-warning: #F59E0B;
+  --ip-error: #EF4444;
+  --ip-info: #3B82F6;
+
+  /* Scoring Heat Map */
+  --ip-score-low: #EF4444;
+  --ip-score-below: #F59E0B;
+  --ip-score-good: #3B82F6;
+  --ip-score-strong: #10B981;
+  --ip-score-perfect: #D4AF37;
+
+  /* Hook Pattern Colors */
+  --ip-hook-question: #EF4444;
+  --ip-hook-stat: #3B82F6;
+  --ip-hook-negative-stake: #F59E0B;
+  --ip-hook-contrarian: #8B5CF6;
+  --ip-hook-visual-bridge: #10B981;
+  --ip-hook-direct-payoff: #EC4899;
+
+  /* Typography */
+  --ip-font-display: 'Space Grotesk', sans-serif;
+  --ip-font-body: 'Geist Variable', sans-serif;
+  --ip-font-mono: 'Geist Mono', monospace;
+  --ip-font-serif: 'Instrument Serif', Georgia, serif;
+
+  /* Border Radius */
+  --ip-radius-sm: 8px;
+  --ip-radius-md: 12px;
+  --ip-radius-lg: 16px;
+  --ip-radius-xl: 24px;
+  --ip-radius-full: 9999px;
+
+  /* Shadows */
+  --ip-shadow-sm: 0 1px 3px rgba(166, 102, 170, 0.06);
+  --ip-shadow-md: 0 4px 12px rgba(166, 102, 170, 0.08);
+  --ip-shadow-lg: 0 8px 24px rgba(166, 102, 170, 0.12);
+  --ip-shadow-glow: 0 0 20px rgba(166, 102, 170, 0.15);
+  --ip-shadow-glow-border: 0 0 12px rgba(166, 102, 170, 0.10);
+
+  /* Spacing */
+  --ip-space-1: 4px;
+  --ip-space-2: 8px;
+  --ip-space-3: 12px;
+  --ip-space-4: 16px;
+  --ip-space-5: 20px;
+  --ip-space-6: 24px;
+  --ip-space-8: 32px;
+  --ip-space-10: 40px;
+  --ip-space-12: 48px;
+  --ip-space-16: 64px;
+
+  /* Motion */
+  --ip-duration-micro: 50ms;
+  --ip-duration-short: 150ms;
+  --ip-duration-medium: 250ms;
+  --ip-duration-long: 400ms;
+  --ip-ease-enter: ease-out;
+  --ip-ease-exit: ease-in;
+  --ip-ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --ip-content-max: 1440px;
+  --ip-assistant-width: 320px;
+}
+
+/* ============================================================
+   OBSIDIAN PLUNDER (Dark Mode) — "The Sovereign Navigator"
+   Future: uncomment and apply via .dark class or media query
+   ============================================================ */
+
+/*
+.dark {
+  --ip-bg: #0E0E0E;
+  --ip-bg-subtle: #141414;
+  --ip-bg-page: #0E0E0E;
+
+  --ip-surface: #1A1A1A;
+  --ip-surface-hover: #222222;
+  --ip-surface-glass: rgba(26, 26, 26, 0.8);
+
+  --ip-text: #F5F5F5;
+  --ip-text-secondary: #9CA3AF;
+  --ip-text-tertiary: #6B7280;
+  --ip-text-brand: #D4AF37;
+  --ip-text-on-primary: #0E0E0E;
+
+  --ip-border: #2E2E2E;
+  --ip-border-subtle: #252525;
+
+  --ip-primary: #D4AF37;
+  --ip-primary-hover: #E5C253;
+  --ip-primary-end: #D4AF37;
+  --ip-primary-gradient: linear-gradient(135deg, #D4AF37 0%, #E5C253 100%);
+
+  --ip-accent-plum: #D4AF37;
+  --ip-accent-maroon: #B8962E;
+
+  --ip-sidebar-bg: #141414;
+  --ip-sidebar-text: #9CA3AF;
+  --ip-sidebar-text-active: #0E0E0E;
+
+  --ip-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --ip-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --ip-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --ip-shadow-glow: 0 0 20px rgba(212, 175, 55, 0.2);
+
+  --ip-radius-sm: 2px;
+  --ip-radius-md: 4px;
+  --ip-radius-lg: 8px;
+  --ip-radius-xl: 12px;
+
+  --ip-stage-discover: #38BDF8;
+  --ip-stage-angle: #A78BFA;
+  --ip-stage-hook: #FBBF24;
+  --ip-stage-script: #34D399;
+  --ip-stage-publish: #F472B6;
+  --ip-stage-analyze: #818CF8;
+
+  --ip-success: #34D399;
+  --ip-warning: #FBBF24;
+  --ip-error: #F87171;
+  --ip-info: #60A5FA;
+}
+*/

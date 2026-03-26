@@ -1,0 +1,29 @@
+{
+  "community": [
+    "Join {community_name} — where {icp_segment} get {benefit}",
+    "Link in bio to join {community_name}",
+    "Comment '{keyword}' and I'll send you the link"
+  ],
+  "lead_magnet": [
+    "Grab my free {lead_magnet_name} — link in bio",
+    "I put everything from this video into a free {lead_magnet_type}. Link below.",
+    "Want the exact {template_type} I used? Free download in the description"
+  ],
+  "newsletter": [
+    "I break this down every week in my newsletter. Link in bio.",
+    "Get {frequency} breakdowns like this — subscribe free"
+  ],
+  "booking": [
+    "If you want help implementing this, book a free {call_type} — link in bio",
+    "I help {icp_segment} do exactly this. Book a call if you want to chat."
+  ],
+  "product": [
+    "This is exactly what {product_name} does. Try it free at {url}",
+    "We built {product_name} to solve this. Link in bio."
+  ],
+  "engagement": [
+    "Drop a {emoji} if this resonated",
+    "Save this for later — you'll need it",
+    "Share this with someone who needs to hear it"
+  ]
+}

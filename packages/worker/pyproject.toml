@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcl-worker"
+version = "0.1.0"
+description = "Influence Pirates ARQ background worker"
+requires-python = ">=3.11"
+dependencies = [
+    "arq>=0.25",
+    "mcl-pipeline",
+    "redis>=5.0.0",
+    "supabase>=2.0.0",
+]
