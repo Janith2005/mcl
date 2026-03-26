@@ -143,50 +143,58 @@
 
 /* ============================================================
    OBSIDIAN PLUNDER (Dark Mode) — "The Sovereign Navigator"
-   Future: uncomment and apply via .dark class or media query
+   Applied via .dark class on <html>
    ============================================================ */
 
-/*
 .dark {
-  --ip-bg: #0E0E0E;
+  /* Backgrounds — deep obsidian, no gradient wash */
+  --ip-bg: #0D0D0D;
   --ip-bg-subtle: #141414;
-  --ip-bg-page: #0E0E0E;
+  --ip-bg-page: #0D0D0D;
+  --ip-bg-gradient: #0D0D0D; /* flat, no radial gradient in dark mode */
 
-  --ip-surface: #1A1A1A;
-  --ip-surface-hover: #222222;
-  --ip-surface-glass: rgba(26, 26, 26, 0.8);
+  /* Surfaces — flat dark, no glassmorphism */
+  --ip-surface: #161616;
+  --ip-surface-hover: #1C1C1C;
+  --ip-surface-glass: #161616; /* no transparency in dark mode */
+  --ip-glass-blur: 0px; /* no blur in dark mode */
 
-  --ip-text: #F5F5F5;
+  /* Card — flat dark with thin borders, no glassmorphism */
+  --ip-card-glass-bg: #1A1A1A;
+  --ip-card-glass-blur: 0px;
+  --ip-card-glass-border: rgba(212, 175, 55, 0.15);
+  --ip-card-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+
+  /* Text */
+  --ip-text: #E8E8E8;
   --ip-text-secondary: #9CA3AF;
   --ip-text-tertiary: #6B7280;
   --ip-text-brand: #D4AF37;
-  --ip-text-on-primary: #0E0E0E;
+  --ip-text-on-primary: #0D0D0D;
 
-  --ip-border: #2E2E2E;
-  --ip-border-subtle: #252525;
+  /* Borders — subtle gold tint */
+  --ip-border: rgba(212, 175, 55, 0.12);
+  --ip-border-subtle: rgba(212, 175, 55, 0.08);
 
+  /* Primary — solid gold, not gradient */
   --ip-primary: #D4AF37;
   --ip-primary-hover: #E5C253;
   --ip-primary-end: #D4AF37;
-  --ip-primary-gradient: linear-gradient(135deg, #D4AF37 0%, #E5C253 100%);
+  --ip-primary-gradient: #D4AF37; /* solid, not gradient in dark */
 
-  --ip-accent-plum: #D4AF37;
-  --ip-accent-maroon: #B8962E;
+  /* Accent — teal/cyan for secondary accents */
+  --ip-accent-plum: #2DD4BF;
+  --ip-accent-maroon: #D4AF37;
 
-  --ip-sidebar-bg: #141414;
-  --ip-sidebar-text: #9CA3AF;
-  --ip-sidebar-text-active: #0E0E0E;
+  /* Sidebar */
+  --ip-sidebar-bg: #0D0D0D;
+  --ip-sidebar-active-bg: transparent;
+  --ip-sidebar-text: #6B7280;
+  --ip-sidebar-text-active: #D4AF37;
+  --ip-sidebar-width: 200px;
+  --ip-sidebar-width-collapsed: 64px;
 
-  --ip-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --ip-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --ip-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --ip-shadow-glow: 0 0 20px rgba(212, 175, 55, 0.2);
-
-  --ip-radius-sm: 2px;
-  --ip-radius-md: 4px;
-  --ip-radius-lg: 8px;
-  --ip-radius-xl: 12px;
-
+  /* Pipeline stages — slightly muted for dark bg */
   --ip-stage-discover: #38BDF8;
   --ip-stage-angle: #A78BFA;
   --ip-stage-hook: #FBBF24;
@@ -194,9 +202,38 @@
   --ip-stage-publish: #F472B6;
   --ip-stage-analyze: #818CF8;
 
+  /* Semantic */
   --ip-success: #34D399;
   --ip-warning: #FBBF24;
   --ip-error: #F87171;
   --ip-info: #60A5FA;
+
+  /* Scoring */
+  --ip-score-low: #F87171;
+  --ip-score-below: #FBBF24;
+  --ip-score-good: #60A5FA;
+  --ip-score-strong: #34D399;
+  --ip-score-perfect: #D4AF37;
+
+  /* Hook patterns */
+  --ip-hook-question: #F87171;
+  --ip-hook-stat: #60A5FA;
+  --ip-hook-negative-stake: #FBBF24;
+  --ip-hook-contrarian: #A78BFA;
+  --ip-hook-visual-bridge: #34D399;
+  --ip-hook-direct-payoff: #F472B6;
+
+  /* Border Radius — sharp, precise */
+  --ip-radius-sm: 2px;
+  --ip-radius-md: 4px;
+  --ip-radius-lg: 6px;
+  --ip-radius-xl: 8px;
+  --ip-radius-full: 4px; /* NOT pill-shaped in dark mode */
+
+  /* Shadows — minimal, dark */
+  --ip-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ip-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --ip-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --ip-shadow-glow: 0 0 12px rgba(212, 175, 55, 0.1);
+  --ip-shadow-glow-border: inset 1px 0 0 rgba(212, 175, 55, 0.05);
 }
-*/

@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Plus,
 } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -122,7 +123,7 @@ export function Sidebar() {
           >
             CV
           </div>
-          <div>
+          <div className="flex-1">
             <div className="text-sm font-medium" style={{ color: 'var(--ip-text)' }}>
               Captain Vane
             </div>
@@ -130,6 +131,7 @@ export function Sidebar() {
               Pro Plan
             </div>
           </div>
+          <ThemeToggle />
         </div>
       </div>
     </aside>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Influence Pirates | Analytics Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .tonal-layering {
+            background-color: #f6f3f5;
+        }
+        .energy-orb {
+            position: absolute;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.15;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "tertiary-fixed": "#e3e2e7",
+                "on-surface-variant": "#4e434d",
+                "surface-container-high": "#eae7ea",
+                "tertiary": "#5b5c60",
+                "outline": "#80737e",
+                "tertiary-fixed-dim": "#c7c6cb",
+                "surface-container": "#f0edef",
+                "surface-bright": "#fcf8fb",
+                "primary-fixed": "#ffd6fc",
+                "inverse-primary": "#f6aef8",
+                "tertiary-container": "#747479",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#f6aef8",
+                "secondary-fixed": "#ffdad7",
+                "on-tertiary-fixed-variant": "#46464b",
+                "surface-container-highest": "#e4e2e4",
+                "on-tertiary-container": "#fefcff",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#303032",
+                "on-error": "#ffffff",
+                "on-background": "#1b1b1d",
+                "on-surface": "#1b1b1d",
+                "background": "#fcf8fb",
+                "on-primary-container": "#fffbff",
+                "secondary": "#9c423f",
+                "primary": "#814586",
+                "on-tertiary-fixed": "#1a1b1f",
+                "on-primary-fixed": "#36003e",
+                "surface-tint": "#844789",
+                "primary-container": "#9c5da1",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#410005",
+                "on-secondary-fixed-variant": "#7d2b29",
+                "error": "#ba1a1a",
+                "on-primary-fixed-variant": "#692f6f",
+                "on-error-container": "#93000a",
+                "secondary-fixed-dim": "#ffb3ae",
+                "on-secondary": "#ffffff",
+                "surface-variant": "#e4e2e4",
+                "surface-dim": "#dcd9dc",
+                "outline-variant": "#d2c2ce",
+                "secondary-container": "#fe8e88",
+                "on-tertiary": "#ffffff",
+                "inverse-on-surface": "#f3f0f2",
+                "surface-container-low": "#f6f3f5",
+                "surface": "#fcf8fb",
+                "on-secondary-container": "#762524"
+              },
+              fontFamily: {
+                "headline": ["Space Grotesk"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Energy Orbs for Luminous Lab Vibe -->
+<div class="energy-orb top-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary rounded-full"></div>
+<div class="energy-orb bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-secondary rounded-full"></div>
+<div class="flex">
+<!-- SideNavBar (JSON Component) -->
+<aside class="flex flex-col h-full sticky top-0 left-0 h-screen w-64 border-r border-fuchsia-500/10 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl shadow-[20px_0_40px_rgba(166,102,170,0.05)] z-50">
+<div class="p-8 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-rose-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">IP</div>
+<div>
+<h1 class="font-headline text-xl font-bold bg-gradient-to-br from-fuchsia-600 to-rose-500 bg-clip-text text-transparent">Influence Pirates</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-medium">The Luminous Lab</p>
+</div>
+</div>
+<nav class="flex-1 mt-6 px-4 space-y-2">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-zinc-500 hover:text-fuchsia-500 transition-colors hover:bg-fuchsia-50/30 font-['Space_Grotesk'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Scripts</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-fuchsia-600 dark:text-fuchsia-300 font-bold border-r-4 border-fuchsia-500 bg-fuchsia-50/50 dark:bg-fuchsia-900/10 font-['Space_Grotesk'] tracking-tight" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-zinc-500 hover:text-fuchsia-500 transition-colors hover:bg-fuchsia-50/30 font-['Space_Grotesk'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span>Brain</span>
+</a>
+</nav>
+<div class="p-6">
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20">
+<p class="text-xs text-zinc-500 mb-2 font-medium">STORAGE UTILIZATION</p>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary w-[74%]"></div>
+</div>
+<p class="text-[10px] text-zinc-400 mt-2">74% of Brain Memory used</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 min-w-0">
+<!-- TopAppBar (JSON Component) -->
+<header class="flex justify-between items-center px-8 sticky top-0 z-40 w-full h-16 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-fuchsia-500/10 font-['Space_Grotesk'] text-sm tracking-wide">
+<div class="flex items-center space-x-6 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-fuchsia-500/20 transition-all outline-none" placeholder="Search analytics data..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-fuchsia-100/20 text-zinc-500 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-fuchsia-100/20 text-zinc-500 transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center space-x-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Cap'n Flint</p>
+<p class="text-[10px] text-zinc-400">Master Strategist</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" data-alt="Close-up portrait of a professional man with a confident expression and stylish beard in high-key studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU1rozBEWzUJhyEG_QFvnfvAIWXSJwGztR1A7PL5uiPlzRLuQ_1XYDlLg_mm4gGpyDS5SjIr-CaXJtHZgb3-b-429GC9T1IE1oJ1FwZljLZYRHw9p9VSvs5weEx8UHnpEQw-H-w9FqfjiozHFqGuDl_dGfioMzpRrFRa2Aa3p0m88D6vpM-Ix73OUeXdvToNomtUU0InlM_kDK6dH2B_xkpae7kWkNUMZKUa_uiqo7bWYug180Kx_0aifqiXqbEYny0oCLeSqMfaY9"/>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Dashboard Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-headline font-bold tracking-tight text-on-surface">Performance Intelligence</h2>
+<p class="text-zinc-500 mt-1">Real-time engagement metrics and algorithmic feedback.</p>
+</div>
+<div class="flex space-x-3">
+<div class="flex bg-surface-container-low p-1 rounded-full">
+<button class="px-4 py-1.5 rounded-full text-xs font-bold bg-white shadow-sm text-primary">7 Days</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-500 hover:text-primary">30 Days</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-500 hover:text-primary">All Time</button>
+</div>
+<button class="flex items-center space-x-2 bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-full font-bold text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Export Report</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Winner Identification Cards -->
+<div class="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Winner Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-primary">trending_up</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Top Viral</span>
+<span class="text-xs font-headline font-bold text-zinc-400">#432</span>
+</div>
+<h3 class="font-headline font-bold text-lg mb-1 leading-tight">The Myth of Viral Growth</h3>
+<p class="text-xs text-zinc-500 mb-6">Published 2 days ago</p>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-headline font-bold">142.5K</p>
+<p class="text-[10px] text-primary flex items-center">
+<span class="material-symbols-outlined text-xs mr-0.5">arrow_upward</span>
+                                        24% vs avg.
+                                    </p>
+</div>
+<div class="flex space-x-0.5 items-end h-8">
+<div class="w-1 bg-primary/20 h-4 rounded-full"></div>
+<div class="w-1 bg-primary/30 h-6 rounded-full"></div>
+<div class="w-1 bg-primary/50 h-3 rounded-full"></div>
+<div class="w-1 bg-primary/70 h-8 rounded-full"></div>
+<div class="w-1 bg-primary h-5 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Winner Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-secondary">favorite</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">High Retention</span>
+<span class="text-xs font-headline font-bold text-zinc-400">#429</span>
+</div>
+<h3 class="font-headline font-bold text-lg mb-1 leading-tight">3 Hooks That Work</h3>
+<p class="text-xs text-zinc-500 mb-6">Published 5 days ago</p>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-headline font-bold">89.2K</p>
+<p class="text-[10px] text-secondary flex items-center">
+<span class="material-symbols-outlined text-xs mr-0.5">arrow_upward</span>
+                                        18% vs avg.
+                                    </p>
+</div>
+<div class="flex space-x-0.5 items-end h-8">
+<div class="w-1 bg-secondary/20 h-3 rounded-full"></div>
+<div class="w-1 bg-secondary/30 h-5 rounded-full"></div>
+<div class="w-1 bg-secondary/50 h-8 rounded-full"></div>
+<div class="w-1 bg-secondary/70 h-6 rounded-full"></div>
+<div class="w-1 bg-secondary h-7 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Winner Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-fuchsia-600">psychology</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-fuchsia-100 text-fuchsia-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Brain Pick</span>
+<span class="text-xs font-headline font-bold text-zinc-400">#418</span>
+</div>
+<h3 class="font-headline font-bold text-lg mb-1 leading-tight">Algorithm Secrets</h3>
+<p class="text-xs text-zinc-500 mb-6">Published 8 days ago</p>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-headline font-bold">214.0K</p>
+<p class="text-[10px] text-fuchsia-600 flex items-center">
+<span class="material-symbols-outlined text-xs mr-0.5">arrow_upward</span>
+                                        42% vs avg.
+                                    </p>
+</div>
+<div class="flex space-x-0.5 items-end h-8">
+<div class="w-1 bg-fuchsia-200 h-6 rounded-full"></div>
+<div class="w-1 bg-fuchsia-300 h-3 rounded-full"></div>
+<div class="w-1 bg-fuchsia-400 h-5 rounded-full"></div>
+<div class="w-1 bg-fuchsia-500 h-8 rounded-full"></div>
+<div class="w-1 bg-fuchsia-600 h-4 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Hook Pattern Performance Chart -->
+<div class="col-span-1 md:col-span-3 bg-surface-container-lowest p-8 rounded-lg border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h3 class="font-headline font-bold text-xl">Hook Pattern Performance</h3>
+<p class="text-xs text-zinc-500">Comparison of engagement rates across 6 tactical hook types</p>
+</div>
+<div class="flex space-x-4">
+<div class="flex items-center space-x-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-[10px] font-bold text-zinc-500 uppercase">Avg View Duration</span>
+</div>
+<div class="flex items-center space-x-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-[10px] font-bold text-zinc-500 uppercase">Click Through</span>
+</div>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between px-4 relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-2 pointer-events-none">
+<div class="border-b border-zinc-100 w-full h-0"></div>
+<div class="border-b border-zinc-100 w-full h-0"></div>
+<div class="border-b border-zinc-100 w-full h-0"></div>
+<div class="border-b border-zinc-100 w-full h-0"></div>
+</div>
+<!-- Bars for 6 Hook Types -->
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-32"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-24"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Negative</span>
+</div>
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-48"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-40"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Curiosity</span>
+</div>
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-20"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-56"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Expert</span>
+</div>
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-40"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-32"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Story</span>
+</div>
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-56"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-44"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Direct</span>
+</div>
+<div class="flex flex-col items-center space-y-2 z-10 w-1/6">
+<div class="flex space-x-1 items-end">
+<div class="w-6 bg-primary rounded-t-sm h-28"></div>
+<div class="w-6 bg-secondary rounded-t-sm h-36"></div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400 uppercase">Humor</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Pipeline Health Funnel -->
+<div class="col-span-12 lg:col-span-4 flex flex-col">
+<div class="bg-surface-container-lowest p-8 rounded-lg border border-outline-variant/10 shadow-sm flex-1">
+<h3 class="font-headline font-bold text-xl mb-2">Pipeline Health</h3>
+<p class="text-xs text-zinc-500 mb-8">Efficiency from concept to distribution</p>
+<div class="space-y-6">
+<!-- Funnel Stage 1 -->
+<div class="relative">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Topic Selection</span>
+<span class="text-xs font-headline font-bold">100%</span>
+</div>
+<div class="h-10 bg-primary/5 rounded-lg border border-primary/10 flex items-center px-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/10 w-full"></div>
+<span class="relative z-10 text-xs font-medium text-primary">84 Concepts Identified</span>
+</div>
+</div>
+<!-- Funnel Stage 2 -->
+<div class="relative px-4">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Scripted</span>
+<span class="text-xs font-headline font-bold">64%</span>
+</div>
+<div class="h-10 bg-primary/5 rounded-lg border border-primary/10 flex items-center px-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/20 w-[64%]"></div>
+<span class="relative z-10 text-xs font-medium text-primary">54 Drafts Approved</span>
+</div>
+<div class="absolute left-1/2 -top-4 -translate-x-1/2">
+<span class="material-symbols-outlined text-zinc-300">keyboard_double_arrow_down</span>
+</div>
+</div>
+<!-- Funnel Stage 3 -->
+<div class="relative px-8">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Production</span>
+<span class="text-xs font-headline font-bold">42%</span>
+</div>
+<div class="h-10 bg-primary/5 rounded-lg border border-primary/10 flex items-center px-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/40 w-[42%]"></div>
+<span class="relative z-10 text-xs font-medium text-primary">35 Videos Filmed</span>
+</div>
+<div class="absolute left-1/2 -top-4 -translate-x-1/2">
+<span class="material-symbols-outlined text-zinc-300">keyboard_double_arrow_down</span>
+</div>
+</div>
+<!-- Funnel Stage 4 -->
+<div class="relative px-12">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Published</span>
+<span class="text-xs font-headline font-bold">28%</span>
+</div>
+<div class="h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center px-4 overflow-hidden relative">
+<span class="relative z-10 text-xs font-bold text-white">24 Live Assets</span>
+</div>
+<div class="absolute left-1/2 -top-4 -translate-x-1/2">
+<span class="material-symbols-outlined text-primary/40">keyboard_double_arrow_down</span>
+</div>
+</div>
+</div>
+<div class="mt-12 p-4 bg-surface-container rounded-xl border border-outline-variant/20">
+<div class="flex items-start space-x-3">
+<span class="material-symbols-outlined text-secondary">warning</span>
+<div>
+<p class="text-xs font-bold text-secondary">Bottleneck Alert</p>
+<p class="text-[10px] text-zinc-500 mt-0.5">Production is lagging 15% behind Scripting. Consider batch filming session.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Table for Recent Posts -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-lg border border-outline-variant/10 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-headline font-bold text-xl">Tactical Log</h3>
+<button class="text-xs font-bold text-primary flex items-center hover:underline">
+                                View Full Archive
+                                <span class="material-symbols-outlined text-sm ml-1">open_in_new</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Post Insight</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Views</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Engagement</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Brain Feedback</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-zinc-100 flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Vibrant abstract digital art representing social media connectivity with glowing nodes and lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaAAXafAsYmp1zoqxc5V4J5Ujf--bKqiNh0wFsqfoeTNiME8Oz5ORkwlOAb4Yn1Z0wQVumfIlS06niakmTuUXl3976KuWtHYc6PkbgQrjI2KMLyBwNPGIG6Wy1lfyQqezjSGluFnIinUbO3tZdfZnOX8DtZpPe8LGu951c8WFekKYB7OAeUztDivSw0YYRQMVjdat7Q5wbJAo5OlBeHcHYElo3tpQWv4Y4xO0SLRA8xzIgVUfFFh_-L4EcC9y3ddAiQpVSicbkGx7U"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Digital Leverage 101</p>
+<p class="text-[10px] text-zinc-400">TikTok • Posted 4h ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-headline font-bold">12,402</p>
+<p class="text-[10px] text-primary">+12%</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-headline font-bold">8.4%</p>
+<div class="w-20 h-1 bg-surface-container-highest rounded-full mt-1">
+<div class="w-[84%] h-full bg-secondary rounded-full"></div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm text-fuchsia-500" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-xs text-zinc-600 italic">"Strong hook, weak CTA."</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-zinc-100 flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up of a high-tech computer screen showing complex data visualizations and financial charts in blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4FwbLy0eK5aQdOHe_Uq2K383BrK1OzINpTo0pZAG_Y6mB_k1c4IbOluFvtU5Z0PG0W4GekTv2I5drfdnm8zxqn2m8rxLtfGifdcGaosMTSzEERsu8WAqmz_Jt-4vnKgD7AwVgi5D1uWlM3cHyXn4mRcZL5CcjK3EV50hvOdhPQ5EjET0LMQBNwH3eocoCcghdTc5JmBGs1-crFfA0o34X8hhNxdZ_5iZhYklWlZ9z20zg6PCvc77xN-WFC7mef9ZWGDxo0qxHd7g2"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">The Truth About Passive Income</p>
+<p class="text-[10px] text-zinc-400">Instagram • Posted 1d ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-headline font-bold">45,890</p>
+<p class="text-[10px] text-zinc-400">Stable</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-headline font-bold">12.1%</p>
+<div class="w-20 h-1 bg-surface-container-highest rounded-full mt-1">
+<div class="w-[95%] h-full bg-secondary rounded-full"></div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm text-fuchsia-500" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-xs text-zinc-600 italic">"Optimal shareability."</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Tactical Assistant (JSON Component Logic) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col">
+<div class="bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-2xl rounded-lg border border-fuchsia-500/10 shadow-[-20px_0_40px_rgba(129,69,134,0.08)] flex-1 overflow-hidden flex flex-col">
+<div class="p-6 border-b border-fuchsia-500/5">
+<div class="flex items-center space-x-3 mb-1">
+<span class="material-symbols-outlined text-fuchsia-600">smart_toy</span>
+<h3 class="font-headline font-bold text-lg text-fuchsia-600">Tactical Assistant</h3>
+</div>
+<p class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-zinc-400">AI Agent Brain v4.2</p>
+</div>
+<div class="flex-1 p-6 space-y-6 overflow-y-auto">
+<div class="space-y-4">
+<div class="bg-fuchsia-100/20 p-4 rounded-xl border-l-4 border-fuchsia-500">
+<p class="text-xs font-bold text-fuchsia-700 mb-1">STRATEGIC PIVOT</p>
+<p class="text-xs text-zinc-600 leading-relaxed">The "Curiosity" hook pattern is outperforming "Expert" by 42% this week. I recommend moving all scheduled Expert scripts to the Curiosity framework.</p>
+</div>
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Optimization Insights</p>
+<div class="flex items-start space-x-3 p-3 rounded-xl hover:bg-fuchsia-50 transition-colors cursor-pointer group">
+<div class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm text-fuchsia-600">speed</span>
+</div>
+<div>
+<p class="text-xs font-bold text-zinc-800">Boost Intro Pacing</p>
+<p class="text-[10px] text-zinc-500">Video #432 has a drop-off at 0:03. Suggest removing the transition.</p>
+</div>
+</div>
+<div class="flex items-start space-x-3 p-3 rounded-xl hover:bg-fuchsia-50 transition-colors cursor-pointer group">
+<div class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm text-fuchsia-600">palette</span>
+</div>
+<div>
+<p class="text-xs font-bold text-zinc-800">Thumbnail Color Shift</p>
+<p class="text-[10px] text-zinc-500">Neon orange is showing 4% higher CTR than your current brand purple.</p>
+</div>
+</div>
+<div class="flex items-start space-x-3 p-3 rounded-xl hover:bg-fuchsia-50 transition-colors cursor-pointer group">
+<div class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm text-fuchsia-600">schedule</span>
+</div>
+<div>
+<p class="text-xs font-bold text-zinc-800">Prime Posting Window</p>
+<p class="text-[10px] text-zinc-500">Next high-activity burst detected at 6:45 PM EST tomorrow.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low border-t border-outline-variant/10">
+<div class="relative">
+<input class="w-full bg-white border border-outline-variant/30 rounded-xl py-3 pl-4 pr-12 text-xs focus:ring-2 focus:ring-fuchsia-500/20 transition-all outline-none" placeholder="Ask Brain for advice..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-fuchsia-500 to-rose-500 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Floating Action Button (Task Focused Suppression Check) -->
+<!-- FAB is permitted on Dashboard screen as per rules -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-fuchsia-600 to-rose-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-3xl">add</span>
+<span class="absolute right-full mr-4 px-4 py-2 bg-zinc-900 text-white text-xs rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold tracking-widest uppercase">New Campaign</span>
+</button>
+</body></html>

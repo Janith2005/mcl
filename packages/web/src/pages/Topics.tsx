@@ -80,7 +80,7 @@ function TopicCardComponent({ topic }: { topic: TopicCard }) {
     <div
       className="p-5 mb-4 transition-all hover:translate-y-[-2px]"
       style={{
-        background: 'rgba(255, 255, 255, 0.7)',
+        background: 'var(--ip-card-glass-bg)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         borderRadius: 'var(--ip-radius-lg)',
@@ -316,7 +316,7 @@ export function Topics() {
         <div
           className="p-6"
           style={{
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'var(--ip-card-glass-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 'var(--ip-radius-lg)',

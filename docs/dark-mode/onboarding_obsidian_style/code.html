@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space_Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#484848",
+                        "tertiary-dim": "#dfe3b6",
+                        "on-secondary-fixed": "#004840",
+                        "inverse-surface": "#fcf8f8",
+                        "surface-container": "#191a1a",
+                        "primary-fixed-dim": "#f8d056",
+                        "on-tertiary-fixed": "#444928",
+                        "surface-container-low": "#131313",
+                        "secondary-container": "#00443c",
+                        "error": "#ed7f64",
+                        "background": "#0e0e0e",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed-variant": "#705900",
+                        "tertiary": "#f9fdcf",
+                        "surface-dim": "#0e0e0e",
+                        "primary": "#e9c349",
+                        "tertiary-fixed": "#edf2c4",
+                        "secondary": "#11c9b4",
+                        "on-error-container": "#ff9b82",
+                        "on-error": "#450900",
+                        "surface-bright": "#2c2c2c",
+                        "error-dim": "#ba573f",
+                        "secondary-fixed": "#62fae3",
+                        "on-tertiary": "#5d623e",
+                        "on-surface-variant": "#acabaa",
+                        "on-tertiary-fixed-variant": "#616642",
+                        "inverse-on-surface": "#565554",
+                        "tertiary-container": "#eaefc1",
+                        "outline": "#767575",
+                        "on-secondary-container": "#2fd5c0",
+                        "error-container": "#7e2b17",
+                        "on-primary-container": "#f4cc52",
+                        "inverse-primary": "#745c00",
+                        "on-primary": "#4f3e00",
+                        "on-surface": "#e7e5e4",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed": "#4e3d00",
+                        "surface-container-highest": "#252626",
+                        "surface-container-high": "#1f2020",
+                        "secondary-dim": "#00baa7",
+                        "on-secondary-fixed-variant": "#00675c",
+                        "on-secondary": "#003a33",
+                        "surface-variant": "#252626",
+                        "surface-tint": "#e9c349",
+                        "secondary-fixed-dim": "#50ebd5",
+                        "primary-dim": "#dab53d",
+                        "primary-container": "#574500",
+                        "on-background": "#e7e5e4",
+                        "surface-container-lowest": "#000000",
+                        "tertiary-fixed-dim": "#dfe3b6",
+                        "on-tertiary-container": "#555a37"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-tactical-gradient {
+            background: linear-gradient(145deg, #e9c349 0%, #dab53d 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 antialiased">
+<!-- Top Navigation Bar (Suppressed branding, focus on Progress) -->
+<header class="fixed top-0 left-0 w-full z-40 bg-surface-container-low border-b border-outline-variant/10 px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="text-primary font-headline font-black tracking-tighter text-lg uppercase">Sovereign Navigator</span>
+<div class="h-4 w-[1px] bg-outline-variant/30 hidden md:block"></div>
+<span class="font-label text-xs tracking-widest text-on-surface-variant hidden md:block uppercase">Vanguard Edition</span>
+</div>
+<!-- Tactical Progress Anchor -->
+<div class="flex flex-col items-end gap-1.5 w-48 md:w-64">
+<div class="flex justify-between w-full font-label text-[10px] tracking-widest text-on-surface-variant">
+<span>PHASE 02</span>
+<span class="text-primary">40% COMPLETE</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tactical-gradient w-2/5 rounded-full"></div>
+</div>
+</div>
+</header>
+<main class="min-h-screen pt-32 pb-24 px-6 max-w-6xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Contextual Anchor Section -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="space-y-4">
+<div class="inline-flex items-center gap-2 px-2 py-1 bg-primary-container/20 border-l-2 border-primary">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="target">target</span>
+<span class="font-label text-xs font-bold tracking-widest text-primary uppercase">Mission Briefing</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-headline font-black tracking-tight leading-none text-on-surface">
+                        IDENTIFY YOUR <span class="text-primary">NICHE</span>.
+                    </h1>
+<p class="text-on-surface-variant text-sm leading-relaxed font-medium">
+                        Precision targeting requires a defined operational sector. Select the primary domains where your content authority will be established. Multi-selection enabled for hybrid strategies.
+                    </p>
+</div>
+<div class="p-6 bg-surface-container-low border border-outline-variant/10 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="psychology">psychology</span>
+</div>
+<div class="relative z-10 space-y-4">
+<h4 class="font-label text-[10px] tracking-[0.2em] text-on-surface-variant uppercase">Operational Insight</h4>
+<p class="text-xs italic text-on-surface-variant/80 leading-relaxed">
+                            "Content without a niche is like a ship without a rudder. You may be moving, but you aren't navigating."
+                        </p>
+</div>
+</div>
+</div>
+<!-- Operational Workspace (Multi-select Grid) -->
+<div class="lg:col-span-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Niche Card 1: Active State Example -->
+<div class="group relative p-5 bg-surface-container border-2 border-primary bg-primary/5 cursor-pointer transition-all duration-200">
+<div class="flex justify-between items-start mb-8">
+<div class="p-2 bg-primary/10 rounded-sm">
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-1">Financial Sovereignty</h3>
+<p class="font-label text-xs text-on-surface-variant tracking-tight uppercase mb-4">Wealth &amp; Markets</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Crypto</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Real Estate</span>
+</div>
+</div>
+<!-- Niche Card 2: Default State -->
+<div class="group relative p-5 bg-surface-container border border-outline-variant/15 hover:border-primary/50 cursor-pointer transition-all duration-200">
+<div class="flex justify-between items-start mb-8">
+<div class="p-2 bg-surface-container-highest rounded-sm group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="terminal">terminal</span>
+</div>
+<div class="w-5 h-5 border border-outline-variant rounded-full"></div>
+</div>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-1">Technical Vanguard</h3>
+<p class="font-label text-xs text-on-surface-variant tracking-tight uppercase mb-4">SaaS &amp; Engineering</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">AI/ML</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">DevTools</span>
+</div>
+</div>
+<!-- Niche Card 3 -->
+<div class="group relative p-5 bg-surface-container border border-outline-variant/15 hover:border-primary/50 cursor-pointer transition-all duration-200">
+<div class="flex justify-between items-start mb-8">
+<div class="p-2 bg-surface-container-highest rounded-sm group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="fitness_center">fitness_center</span>
+</div>
+<div class="w-5 h-5 border border-outline-variant rounded-full"></div>
+</div>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-1">Human Performance</h3>
+<p class="font-label text-xs text-on-surface-variant tracking-tight uppercase mb-4">Biohacking &amp; Fitness</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Longevity</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Mental Labs</span>
+</div>
+</div>
+<!-- Niche Card 4 -->
+<div class="group relative p-5 bg-surface-container border border-outline-variant/15 hover:border-primary/50 cursor-pointer transition-all duration-200">
+<div class="flex justify-between items-start mb-8">
+<div class="p-2 bg-surface-container-highest rounded-sm group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="draw">draw</span>
+</div>
+<div class="w-5 h-5 border border-outline-variant rounded-full"></div>
+</div>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-1">Creative Economy</h3>
+<p class="font-label text-xs text-on-surface-variant tracking-tight uppercase mb-4">Art &amp; Production</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Visual Design</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Storytelling</span>
+</div>
+</div>
+<!-- Niche Card 5 -->
+<div class="group relative p-5 bg-surface-container border border-outline-variant/15 hover:border-primary/50 cursor-pointer transition-all duration-200">
+<div class="flex justify-between items-start mb-8">
+<div class="p-2 bg-surface-container-highest rounded-sm group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<div class="w-5 h-5 border border-outline-variant rounded-full"></div>
+</div>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-1">Strategic Growth</h3>
+<p class="font-label text-xs text-on-surface-variant tracking-tight uppercase mb-4">Marketing &amp; Ops</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">SEO</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-label text-on-surface-variant border border-outline-variant/20 uppercase tracking-tighter">Copywriting</span>
+</div>
+</div>
+<!-- Niche Card 6 (Special/Other) -->
+<div class="group relative p-5 bg-surface-container-low border border-dashed border-outline-variant/40 hover:border-primary/50 cursor-pointer transition-all duration-200 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-outline-variant mb-3 text-3xl" data-icon="add_box">add_box</span>
+<h3 class="font-headline font-bold text-sm text-on-surface-variant uppercase tracking-widest">Custom Sector</h3>
+<p class="text-[10px] font-label text-on-surface-variant/60 mt-2 uppercase">Define a unique domain</p>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-outline-variant/10">
+<button class="w-full sm:w-auto px-8 py-3 font-label font-bold text-xs tracking-widest text-on-surface-variant uppercase hover:text-on-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+                        Previous Phase
+                    </button>
+<button class="w-full sm:w-auto px-10 py-4 bg-tactical-gradient text-on-primary font-label font-black text-sm tracking-[0.2em] uppercase rounded-sm shadow-2xl shadow-primary/10 active:scale-95 transition-all flex items-center justify-center gap-3 group">
+                        Execute Selection
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform" data-icon="bolt">bolt</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Tactical Information Overlay (Optional Background Element) -->
+<div class="fixed bottom-0 left-0 w-full pointer-events-none z-0 opacity-[0.03]">
+<div class="p-10 font-label text-[12rem] font-black leading-none uppercase select-none overflow-hidden whitespace-nowrap">
+            Operational Protocol Sovereign Navigator
+        </div>
+</div>
+</body></html>

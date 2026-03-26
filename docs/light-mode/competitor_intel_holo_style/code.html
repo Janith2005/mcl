@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Competitor Intel | Influence Pirates</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed": "#36003e",
+              "primary": "#814586",
+              "surface": "#fcf8fb",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f6f3f5",
+              "surface-container-highest": "#e4e2e4",
+              "on-surface": "#1b1b1d",
+              "outline-variant": "#d2c2ce",
+              "on-tertiary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "surface-container-high": "#eae7ea",
+              "on-error": "#ffffff",
+              "primary-fixed": "#ffd6fc",
+              "inverse-on-surface": "#f3f0f2",
+              "primary-container": "#9c5da1",
+              "on-secondary-fixed-variant": "#7d2b29",
+              "inverse-surface": "#303032",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#f6aef8",
+              "secondary-fixed-dim": "#ffb3ae",
+              "surface-dim": "#dcd9dc",
+              "tertiary-container": "#747479",
+              "outline": "#80737e",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#1a1b1f",
+              "surface-bright": "#fcf8fb",
+              "surface-container": "#f0edef",
+              "on-tertiary-fixed-variant": "#46464b",
+              "on-background": "#1b1b1d",
+              "tertiary-fixed": "#e3e2e7",
+              "on-surface-variant": "#4e434d",
+              "secondary-container": "#fe8e88",
+              "primary-fixed-dim": "#f6aef8",
+              "tertiary": "#5b5c60",
+              "on-primary-container": "#fffbff",
+              "tertiary-fixed-dim": "#c7c6cb",
+              "secondary-fixed": "#ffdad7",
+              "on-secondary": "#ffffff",
+              "background": "#fcf8fb",
+              "on-secondary-container": "#762524",
+              "secondary": "#9c423f",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#692f6f",
+              "surface-variant": "#e4e2e4",
+              "surface-tint": "#844789",
+              "on-secondary-fixed": "#410005"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .holo-prism-gradient {
+            background: linear-gradient(135deg, rgba(129, 69, 134, 0.05) 0%, rgba(156, 66, 63, 0.05) 100%);
+        }
+        .energy-orb {
+            filter: blur(80px);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-x-hidden">
+<!-- Energy Orbs for Luminous Lab Aesthetic -->
+<div class="fixed top-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full bg-primary/10 energy-orb"></div>
+<div class="fixed bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] rounded-full bg-secondary/10 energy-orb"></div>
+<!-- SideNavBar (JSON Derived) -->
+<aside class="fixed left-0 top-0 h-screen w-64 flex flex-col p-6 z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl rounded-r-3xl border-r border-fuchsia-100/10 shadow-[20px_0_40px_rgba(166,102,170,0.05)]">
+<div class="mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#814586] to-[#9c423f] flex items-center justify-center text-white font-bold">IP</div>
+<div>
+<h1 class="text-xl font-bold bg-gradient-to-br from-[#814586] to-[#9c423f] bg-clip-text text-transparent font-headline tracking-tight">Influence Pirates</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface/50 font-bold">Luminous Lab</p>
+</div>
+</div>
+<button class="mb-8 w-full py-4 px-6 bg-gradient-to-br from-[#814586] to-[#9c423f] text-white rounded-full font-headline font-bold text-sm hover:scale-105 transition-all duration-300 ease-out active:scale-95 shadow-lg shadow-primary/20">
+            New Intel Report
+        </button>
+<nav class="flex-1 space-y-2">
+<!-- Active Navigation Logic: Competitor Intel -->
+<a class="flex items-center gap-3 px-4 py-3 bg-fuchsia-100/50 dark:bg-fuchsia-900/30 text-fuchsia-700 dark:text-fuchsia-300 font-bold rounded-full transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-headline tracking-tight">Competitor Intel</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-fuchsia-500 hover:scale-105 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-headline tracking-tight">AI Coaching</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-fuchsia-500 hover:scale-105 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-headline tracking-tight">Connections</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-fuchsia-500 hover:scale-105 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-headline tracking-tight">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-surface-container">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-fuchsia-500 hover:scale-105 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-headline tracking-tight">Help Center</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-4">
+<img alt="Creator Profile Avatar" class="w-8 h-8 rounded-full border-2 border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCoSWa0RHYvD2qKw3-7bIyJTD_LRi2-XRUg80PCBYU84QD8upUdHgEwfIV4RJb1qCHbBYlJzAs120x3W29oBp7N2Su4BmeZUJaVt3i3vG3zLIEBRANtmBYo_TCAc_gdlP_JIl1P8AYjDHT24if3lqdeI1ZRtDXlBlnEt0MH0Pu1aFM8m6B6pPNquToLtXvSEukd4tp5rhK_28eb7BxffhEJICtCgh6QL2xwRRT-7nBf9sdv484cgjvC-7GQrH1_rf7O1TEJQiJ3F8A"/>
+<div class="text-xs">
+<p class="font-bold">Cap'n Creator</p>
+<p class="text-on-surface/50">Pro Admiral</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (JSON Derived) -->
+<header class="flex justify-between items-center w-full px-8 py-4 ml-64 max-w-[calc(100%-16rem)] sticky top-0 z-30 bg-[#fcf8fb]/80 backdrop-blur-md font-['Space_Grotesk'] font-medium">
+<div class="flex items-center gap-6 w-1/2">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Search competitor content..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-fuchsia-50 rounded-full transition-colors text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-fuchsia-50 rounded-full transition-colors text-slate-400">
+<span class="material-symbols-outlined">history_edu</span>
+</button>
+<button class="px-6 py-2 bg-surface-container-highest text-primary font-bold rounded-full text-sm hover:scale-105 transition-all">
+                Invite Team
+            </button>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="ml-64 mr-80 p-8 pt-4">
+<!-- Hero Section: Niche-wide Trends -->
+<section class="mb-10">
+<div class="flex items-end justify-between mb-6">
+<div>
+<h2 class="text-4xl font-headline font-black tracking-tighter text-on-surface">Competitor Intel</h2>
+<p class="text-on-surface/60 font-medium">Tracking 42 pirate fleets across the high seas of content.</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-xs font-bold rounded-full">Last 24h</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface/60 text-xs font-bold rounded-full">Global Data</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Trending Keywords (Bento Box) -->
+<div class="col-span-8 bg-surface-container-lowest rounded-lg p-8 shadow-[0_20px_40px_rgba(129,69,134,0.03)] border border-primary/5">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline font-bold text-xl">Niche-wide Trends</h3>
+<span class="material-symbols-outlined text-primary">trending_up</span>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="px-6 py-4 bg-surface-container rounded-lg border-l-4 border-primary group hover:bg-primary-fixed transition-all cursor-default">
+<p class="text-xs font-bold text-primary/60 uppercase tracking-widest">Hook Strategy</p>
+<p class="text-lg font-headline font-bold text-on-surface">The "I Tried" Reveal</p>
+<p class="text-sm text-on-surface/50 mt-1">+142% Velocity</p>
+</div>
+<div class="px-6 py-4 bg-surface-container rounded-lg border-l-4 border-secondary group hover:bg-secondary-fixed transition-all cursor-default">
+<p class="text-xs font-bold text-secondary/60 uppercase tracking-widest">Viral Keyword</p>
+<p class="text-lg font-headline font-bold text-on-surface">Unfair Advantage</p>
+<p class="text-sm text-on-surface/50 mt-1">98k Avg. Reach</p>
+</div>
+<div class="px-6 py-4 bg-surface-container rounded-lg border-l-4 border-tertiary group hover:bg-tertiary-fixed transition-all cursor-default">
+<p class="text-xs font-bold text-tertiary/60 uppercase tracking-widest">Edit Style</p>
+<p class="text-lg font-headline font-bold text-on-surface">Fast-Cut Kinetic</p>
+<p class="text-sm text-on-surface/50 mt-1">High Retention</p>
+</div>
+</div>
+</div>
+<!-- Global Scoring -->
+<div class="col-span-4 bg-gradient-to-br from-primary to-secondary p-8 rounded-lg text-white shadow-xl shadow-primary/10 flex flex-col justify-between">
+<div>
+<h3 class="font-headline font-bold text-xl mb-1">Fleet Alpha Score</h3>
+<p class="text-white/70 text-sm">Aggregated Niche Strength</p>
+</div>
+<div class="text-6xl font-headline font-black tracking-tighter my-4">84.2</div>
+<div class="flex items-center gap-2 text-xs font-bold bg-white/20 w-fit px-3 py-1 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+                        VOLATILITY: LOW
+                    </div>
+</div>
+</div>
+</section>
+<!-- Video Browser & Skeleton Ripper -->
+<section class="grid grid-cols-12 gap-8">
+<!-- Video Browser (Scraped Content) -->
+<div class="col-span-7">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-2xl tracking-tight">Video Browser</h3>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container rounded-lg"><span class="material-symbols-outlined">filter_list</span></button>
+<button class="p-2 bg-surface-container rounded-lg"><span class="material-symbols-outlined">grid_view</span></button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Video Card 1 -->
+<div class="group bg-surface-container-lowest p-4 rounded-lg flex gap-6 hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] transition-all border border-transparent hover:border-primary/10">
+<div class="w-40 h-56 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Dynamic thumbnail of a vertical short video with neon captions and high-energy motion graphics style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbhxqwTVMgd1NABTJAy_vVjWs59aQjFM2AbvZ96BDlSfbV3OKScQiaKosGTYfOiCoki3mASerhCQEa_0sjh40nLECSOMYba3Cmb_eSccq3vAH-mTCw9GXKaP7zNZr3v-dKaD1yPwOJq4PqWYU493MZBK85yW68VuPJXKUk5IGnKiqYZ5HxpWfS7dA69P7neSmIaDq3bDJzGSknGMTB3cBe9kuhLCQWlyyV7HhLd6swvi1oTdUtg3gF56R97EQsskXz45YVM8HvQSzl"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2">
+<span class="text-[10px] text-white font-bold bg-primary/80 px-2 py-0.5 rounded">1.2M VIEWS</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-xs font-bold text-primary mb-1">@GrowthHackerLabs</p>
+<h4 class="font-headline font-bold text-lg leading-tight">3 Tools that feel illegal to know for SEO in 2024</h4>
+</div>
+<div class="text-right">
+<div class="text-2xl font-headline font-black text-secondary">92</div>
+<p class="text-[10px] font-bold text-on-surface/40">PIRATE SCORE</p>
+</div>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-surface-container">
+<div class="flex gap-2">
+<span class="px-2 py-0.5 bg-surface-container text-[10px] font-bold rounded">AI TOOLING</span>
+<span class="px-2 py-0.5 bg-surface-container text-[10px] font-bold rounded">LISTICLE</span>
+</div>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
+                                    RIP SKELETON <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Video Card 2 -->
+<div class="group bg-surface-container-lowest p-4 rounded-lg flex gap-6 hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] transition-all border border-transparent hover:border-primary/10">
+<div class="w-40 h-56 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Cinematic talking head video setup with soft blue background lighting and professional studio quality" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmpSXaNvc7c-cUhxaZm1Uxpz3XieJDM6EMclblCkwHfoQ0eHFNrh74ehZftmD-qOYerNtmx9QJPSLyJB6XBvDdqhxPArVSzwNC70aINtbeH5Rqa7ecBPOZCBs5SsJyKUCs6i04xAvo2FaOJ1qSQkif0yBfykBmghpmhpXvfQC0mihKrNawNv57OYOwJ5tgwnQwfOsGuy89i096lNN8VIc6BA7aoR86fR4F98PxAJZuiVBgAYqQEKEecVbiV02RCn-0HrsD5tK2gsF0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2">
+<span class="text-[10px] text-white font-bold bg-primary/80 px-2 py-0.5 rounded">840K VIEWS</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-xs font-bold text-primary mb-1">@StrategySam</p>
+<h4 class="font-headline font-bold text-lg leading-tight">Stop using Canva like a beginner (My 5 secrets)</h4>
+</div>
+<div class="text-right">
+<div class="text-2xl font-headline font-black text-secondary">78</div>
+<p class="text-[10px] font-bold text-on-surface/40">PIRATE SCORE</p>
+</div>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-surface-container">
+<div class="flex gap-2">
+<span class="px-2 py-0.5 bg-surface-container text-[10px] font-bold rounded">DESIGN</span>
+<span class="px-2 py-0.5 bg-surface-container text-[10px] font-bold rounded">TUTORIAL</span>
+</div>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
+                                    RIP SKELETON <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Skeleton Ripper Report -->
+<div class="col-span-5">
+<div class="sticky top-24">
+<h3 class="font-headline font-bold text-2xl tracking-tight mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">skull</span>
+                        Skeleton Ripper
+                    </h3>
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden shadow-xl border border-primary/5">
+<div class="bg-primary/5 p-6 border-b border-primary/10">
+<p class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">Analysis: @GrowthHackerLabs</p>
+<h4 class="font-headline font-bold text-xl leading-tight">The "Illegal Tools" Framework</h4>
+</div>
+<div class="p-6 space-y-6">
+<div>
+<div class="flex justify-between items-center mb-3">
+<h5 class="text-xs font-bold uppercase tracking-widest text-on-surface/40">Hook Breakdown</h5>
+<span class="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-black rounded-full">ELITE</span>
+</div>
+<div class="p-4 bg-surface-container rounded-lg italic text-sm text-on-surface/80 border-l-2 border-primary">
+                                    "These 3 tools feel illegal to know... but they'll save you 100 hours."
+                                </div>
+<p class="text-xs mt-2 text-on-surface/60 font-medium leading-relaxed">Psychological Lever: Forbidden Knowledge &amp; High Utility Gap.</p>
+</div>
+<div>
+<h5 class="text-xs font-bold uppercase tracking-widest text-on-surface/40 mb-3">Structural Skeleton</h5>
+<div class="space-y-3">
+<div class="flex gap-3">
+<div class="w-1 bg-primary rounded-full"></div>
+<div>
+<p class="text-sm font-bold">0:00-0:03: Negative Hook</p>
+<p class="text-[11px] text-on-surface/50">States the "illegality" to trigger curiosity.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1 bg-secondary/40 rounded-full"></div>
+<div>
+<p class="text-sm font-bold">0:03-0:15: Rapid Fire List</p>
+<p class="text-[11px] text-on-surface/50">Shows tools quickly without full explanation (Pattern Interrupt).</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1 bg-tertiary/40 rounded-full"></div>
+<div>
+<p class="text-sm font-bold">0:15-0:45: Value Deep Dive</p>
+<p class="text-[11px] text-on-surface/50">Focuses on ONE tool in detail to build authority.</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-surface-container-high text-on-surface font-headline font-bold rounded-lg hover:bg-primary hover:text-white transition-all">
+                                Generate Similar Script
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- AI Coaching Panel: Tactical Assistant -->
+<aside class="fixed right-0 top-0 h-screen w-80 bg-surface-container-lowest border-l border-primary/5 p-6 z-40 flex flex-col">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-lg leading-none">Tactical Assistant</h2>
+<p class="text-xs text-on-surface/50 mt-1">Ready for broadsides</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto space-y-6">
+<div class="bg-primary/5 p-4 rounded-lg border border-primary/10">
+<p class="text-[10px] font-bold text-primary uppercase mb-2">Tactical Advice</p>
+<p class="text-sm font-medium leading-relaxed">
+                    "Cap'n, the 'Illegal Tools' trend is peaking. I recommend we pivot your next video to '3 Chrome Extensions that feel like cheating'."
+                </p>
+</div>
+<div>
+<h3 class="text-xs font-bold text-on-surface/40 uppercase tracking-widest mb-4">Competitor Hook Scores</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold">Tool Stack Reveal</span>
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-[90%] h-full bg-gradient-to-r from-primary to-secondary"></div>
+</div>
+<span class="text-[10px] font-black">9.0</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold">Income Claims</span>
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-[65%] h-full bg-gradient-to-r from-primary to-secondary"></div>
+</div>
+<span class="text-[10px] font-black">6.5</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold">POV Vlogs</span>
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-[42%] h-full bg-gradient-to-r from-primary to-secondary"></div>
+</div>
+<span class="text-[10px] font-black">4.2</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-surface-container">
+<h3 class="text-xs font-bold text-on-surface/40 uppercase mb-4">Recent Intel Alerts</h3>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">notifications_active</span>
+<p class="text-[11px] font-medium">@StrategySam just posted. Analysis ready in 3 mins.</p>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-sm">auto_graph</span>
+<p class="text-[11px] font-medium">Keywords 'UGC' and 'Retention' are surging in your niche.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="mt-auto pt-6">
+<div class="relative">
+<input class="w-full bg-surface-container border-none rounded-xl py-3 px-4 pr-12 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ask Tactical Assistant..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-white rounded-lg hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</aside>
+</body></html>

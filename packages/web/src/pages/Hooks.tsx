@@ -136,7 +136,7 @@ export function Hooks() {
               key={hook.id}
               className="p-6 transition-all hover:translate-y-[-1px]"
               style={{
-                background: 'rgba(255, 255, 255, 0.7)',
+                background: 'var(--ip-card-glass-bg)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
                 borderRadius: 'var(--ip-radius-lg)',
@@ -265,7 +265,7 @@ export function Hooks() {
         <div
           className="sticky top-8 p-4"
           style={{
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'var(--ip-card-glass-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 'var(--ip-radius-lg)',

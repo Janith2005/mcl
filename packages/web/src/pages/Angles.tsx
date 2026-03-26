@@ -20,7 +20,7 @@ const MOCK_ANGLES: AngleCard[] = [
   {
     id: '1',
     badge: 'THE REBEL',
-    badgeColor: '#FFFFFF',
+    badgeColor: 'var(--ip-text-on-primary)',
     badgeBg: 'var(--ip-score-low)',
     title: 'Forget what you were told about seniority.',
     description:
@@ -32,7 +32,7 @@ const MOCK_ANGLES: AngleCard[] = [
   {
     id: '2',
     badge: 'THE EXPERT',
-    badgeColor: '#FFFFFF',
+    badgeColor: 'var(--ip-text-on-primary)',
     badgeBg: 'var(--ip-stage-angle)',
     title: 'Precision over Volume: The AI Strategist.',
     description:
@@ -125,7 +125,7 @@ export function Angles() {
           <div
             className="p-6 mb-6"
             style={{
-              background: 'rgba(255, 255, 255, 0.7)',
+              background: 'var(--ip-card-glass-bg)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               borderRadius: 'var(--ip-radius-lg)',
@@ -239,7 +239,7 @@ export function Angles() {
                 key={angle.id}
                 className="p-5 transition-all hover:translate-y-[-2px]"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.7)',
+                  background: 'var(--ip-card-glass-bg)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
                   borderRadius: 'var(--ip-radius-lg)',
@@ -318,7 +318,7 @@ export function Angles() {
         <div
           className="p-8 text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'var(--ip-card-glass-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 'var(--ip-radius-lg)',
@@ -336,7 +336,7 @@ export function Angles() {
         <div
           className="p-8 text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'var(--ip-card-glass-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 'var(--ip-radius-lg)',

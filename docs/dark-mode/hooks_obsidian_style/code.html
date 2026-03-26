@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator | Hooks</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#484848",
+              "tertiary-dim": "#dfe3b6",
+              "on-secondary-fixed": "#004840",
+              "inverse-surface": "#fcf8f8",
+              "surface-container": "#191a1a",
+              "primary-fixed-dim": "#f8d056",
+              "on-tertiary-fixed": "#444928",
+              "surface-container-low": "#131313",
+              "secondary-container": "#00443c",
+              "error": "#ed7f64",
+              "background": "#0e0e0e",
+              "surface": "#0e0e0e",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary": "#f9fdcf",
+              "surface-dim": "#0e0e0e",
+              "primary": "#e9c349",
+              "tertiary-fixed": "#edf2c4",
+              "secondary": "#11c9b4",
+              "on-error-container": "#ff9b82",
+              "on-error": "#450900",
+              "surface-bright": "#2c2c2c",
+              "error-dim": "#ba573f",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary": "#5d623e",
+              "on-surface-variant": "#acabaa",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-on-surface": "#565554",
+              "tertiary-container": "#eaefc1",
+              "outline": "#767575",
+              "on-secondary-container": "#2fd5c0",
+              "error-container": "#7e2b17",
+              "on-primary-container": "#f4cc52",
+              "inverse-primary": "#745c00",
+              "on-primary": "#4f3e00",
+              "on-surface": "#e7e5e4",
+              "primary-fixed": "#ffe088",
+              "on-primary-fixed": "#4e3d00",
+              "surface-container-highest": "#252626",
+              "surface-container-high": "#1f2020",
+              "secondary-dim": "#00baa7",
+              "on-secondary-fixed-variant": "#00675c",
+              "on-secondary": "#003a33",
+              "surface-variant": "#252626",
+              "surface-tint": "#e9c349",
+              "secondary-fixed-dim": "#50ebd5",
+              "primary-dim": "#dab53d",
+              "primary-container": "#574500",
+              "on-background": "#e7e5e4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "on-tertiary-container": "#555a37"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0e0e0e;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #484848;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-4 pb-8 z-50 bg-[#131313] w-64 border-r border-[#484848]/15">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary text-xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h1 class="text-amber-500 font-bold font-label uppercase text-xs tracking-widest">Tactical Op</h1>
+<p class="text-[10px] text-on-surface-variant font-label uppercase tracking-tighter">Vanguard Edition</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="topic">topic</span>
+                Topics
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="explore">explore</span>
+                Angles
+            </a>
+<a class="flex items-center px-3 py-2 text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-label uppercase text-xs tracking-widest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="anchor">anchor</span>
+                Hooks
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="description">description</span>
+                Scripts
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
+                Analytics
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="psychology">psychology</span>
+                Brain
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+                Competitors
+            </a>
+<a class="flex items-center px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 bg-secondary-container text-on-secondary-container font-label text-[10px] uppercase font-bold tracking-widest rounded-sm flex items-center justify-center gap-2 hover:bg-secondary-dim hover:text-on-secondary transition-colors duration-200">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                Tactical Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-64 flex flex-col h-screen">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15 bg-[#0e0e0e] z-40 sticky top-0">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase font-headline">Sovereign Navigator</span>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-high border-none text-[10px] font-label tracking-widest uppercase pl-9 pr-4 py-1.5 w-64 focus:ring-1 focus:ring-primary/30 rounded-sm" placeholder="DEPLOY HOOK SEARCH..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-1.5 hover:bg-surface-container-highest transition-colors rounded-sm" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-1.5 hover:bg-surface-container-highest transition-colors rounded-sm" data-icon="help">help</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-1.5 hover:bg-surface-container-highest transition-colors rounded-sm" data-icon="settings">settings</span>
+</div>
+<div class="h-8 w-8 rounded-full border border-primary/20 overflow-hidden bg-surface-container cursor-pointer active:scale-95 transition-all">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional male creator with focused expression, cinematic dark studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0VT3xLZQtzoYqRWSKae21HNKQ-rfkwdrf3HNOTaRopxDKTiuHeojqjbmKiUV_RcHWPLaAx9xzNWovfeUriLofIBoa2nKdT7poeHpl1ec5ksIZSZZiBiQey1cfQAC2Kb3V_XlcsKetKvSTfJFXIFcPVHVoPj1IkidW7FZa6V5PWhrO6aRJYq3eEBBEY7JJMP-SEKLVsv35ZKxOR9URKFq9hnkiWN7R3qqZn_xnO1kM18lN5CMa2wvVOdd62xvASkUPuhZAHz2rlPHd"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Hook Library Section -->
+<section class="flex-1 p-8 overflow-y-auto custom-scrollbar bg-surface-dim">
+<div class="mb-10 flex justify-between items-end">
+<div>
+<span class="text-primary font-label text-[10px] tracking-[0.2em] uppercase mb-2 block">Tactical Frameworks</span>
+<h2 class="text-3xl font-black font-headline tracking-tight uppercase">Hook Architect</h2>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-surface-container-high text-on-surface font-label text-[10px] uppercase tracking-widest border border-outline-variant/15 hover:bg-surface-bright transition-colors">
+                            Filter: All Types
+                        </button>
+<button class="px-6 py-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-label text-[10px] uppercase font-bold tracking-widest rounded-sm shadow-lg shadow-primary/10 hover:brightness-110 transition-all">
+                            New Hook +
+                        </button>
+</div>
+</div>
+<!-- Hook Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Hook Card 1: The Question -->
+<div class="bg-surface-container p-5 relative border-l border-primary/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">01</span>
+</div>
+<span class="material-symbols-outlined text-primary mb-4" data-icon="quiz">quiz</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Question</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Open a curiosity loop by challenging a common belief with a polarizing inquiry.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-primary/80 italic border-l-2 border-primary mb-4">
+                            "Why are 99% of creators failing at the one thing that actually matters?"
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 4.8%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-primary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Hook Card 2: The Stat -->
+<div class="bg-surface-container p-5 relative border-l border-secondary/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">02</span>
+</div>
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="bar_chart">bar_chart</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Stat</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Leverage hard data to establish immediate authority and shock value.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-secondary/80 italic border-l-2 border-secondary mb-4">
+                            "This simple 5-second habit increased my productivity by exactly 412%."
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 5.2%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-secondary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Hook Card 3: The Negation -->
+<div class="bg-surface-container p-5 relative border-l border-error/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">03</span>
+</div>
+<span class="material-symbols-outlined text-error mb-4" data-icon="block">block</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Negation</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Stop the scroll by telling users what NOT to do. Fear of loss drives action.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-error/80 italic border-l-2 border-error mb-4">
+                            "Stop posting every day until you've mastered this one specific psychological trigger."
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 6.1%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-error transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Hook Card 4: The Transformation -->
+<div class="bg-surface-container p-5 relative border-l border-tertiary-container/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">04</span>
+</div>
+<span class="material-symbols-outlined text-tertiary mb-4" data-icon="trending_up">trending_up</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Transformation</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Show the bridge from 'Before' to 'After' to promise high-value outcomes.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-tertiary/80 italic border-l-2 border-tertiary mb-4">
+                            "How I went from 0 to 10k subscribers using a dead simple 3-step system."
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 4.4%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-tertiary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Hook Card 5: The Specificity -->
+<div class="bg-surface-container p-5 relative border-l border-primary/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">05</span>
+</div>
+<span class="material-symbols-outlined text-primary mb-4" data-icon="precision_manufacturing">precision_manufacturing</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Specificity</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Use ultra-specific numbers or niches to signal high relevance to a target audience.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-primary/80 italic border-l-2 border-primary mb-4">
+                            "For the solo-entrepreneur making exactly $4,000 a month: you're missing this."
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 3.9%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-primary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Hook Card 6: The Secret -->
+<div class="bg-surface-container p-5 relative border-l border-secondary/30 group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="font-label text-4xl font-black">06</span>
+</div>
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="key">key</span>
+<h3 class="font-headline font-bold text-lg mb-2">The Secret</h3>
+<p class="text-on-surface-variant text-xs leading-relaxed mb-6 font-body">Position your content as "Insider Knowledge" that the gatekeepers don't want you to know.</p>
+<div class="bg-surface-container-lowest p-3 font-label text-[11px] text-secondary/80 italic border-l-2 border-secondary mb-4">
+                            "The industry secret to viral growth that high-level agencies keep hidden."
+                        </div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Avg CTR: 7.2%</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant cursor-pointer group-hover:text-secondary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Bento Style Performance Metric Section -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-3 bg-surface-container-low p-6 flex flex-col justify-between border-t-2 border-primary">
+<div>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">Pattern Intelligence</span>
+<h4 class="text-xl font-black font-headline mt-2 mb-4">Historical Performance Heatmap</h4>
+<div class="flex items-end gap-1 h-24 mb-6">
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 40%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 65%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 35%"></div>
+<div class="flex-1 bg-primary hover:bg-primary/80 transition-colors" style="height: 85%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 55%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 45%"></div>
+<div class="flex-1 bg-primary/60 hover:bg-primary/80 transition-colors" style="height: 75%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 95%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 30%"></div>
+<div class="flex-1 bg-surface-container-highest hover:bg-primary/40 transition-colors" style="height: 50%"></div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex gap-4">
+<div>
+<p class="text-[9px] font-label text-on-surface-variant uppercase">Peak Performance</p>
+<p class="text-lg font-bold font-headline">09:15 UTC</p>
+</div>
+<div>
+<p class="text-[9px] font-label text-on-surface-variant uppercase">Highest Avg CTR</p>
+<p class="text-lg font-bold font-headline text-secondary">8.4%</p>
+</div>
+</div>
+<button class="font-label text-[10px] uppercase font-bold text-primary flex items-center gap-2 hover:underline">
+                                Full Analytics Report <span class="material-symbols-outlined text-xs" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 flex flex-col justify-center items-center text-center border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary text-4xl mb-4" data-icon="auto_awesome">auto_awesome</span>
+<h4 class="font-label text-[10px] uppercase font-bold tracking-[0.2em] text-on-surface mb-2">AI Generator</h4>
+<p class="text-[11px] text-on-surface-variant mb-4 font-body leading-relaxed">Let Sovereign AI draft 10 high-impact hooks based on your topic.</p>
+<button class="w-full py-2 bg-primary text-on-primary font-label text-[10px] uppercase font-bold tracking-widest rounded-sm">
+                            Deploy AI
+                        </button>
+</div>
+</div>
+</section>
+<!-- Swipe Library Sidebar -->
+<aside class="w-80 bg-surface-container-low border-l border-[#484848]/15 flex flex-col overflow-hidden">
+<div class="p-6 border-b border-[#484848]/15">
+<h3 class="font-headline font-black uppercase text-sm tracking-tight mb-1">Swipe Library</h3>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Community &amp; Personal Best</p>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+<!-- Swipe Item 1 -->
+<div class="bg-surface-container p-4 border border-outline-variant/10 hover:border-primary/30 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 font-label text-[8px] uppercase font-bold rounded-full">Viral Grade</span>
+<span class="text-secondary font-label text-[10px] font-bold">94 Score</span>
+</div>
+<p class="text-xs font-body italic text-on-surface-variant mb-3 leading-snug">"I found the perfect tool for creators, and no, it's not ChatGPT..."</p>
+<div class="flex justify-between items-center text-[9px] font-label uppercase text-on-surface-variant">
+<span>YouTube Shorts</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]" data-icon="visibility">visibility</span> 2.4M</span>
+</div>
+</div>
+<!-- Swipe Item 2 -->
+<div class="bg-surface-container p-4 border border-outline-variant/10 hover:border-primary/30 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 font-label text-[8px] uppercase font-bold rounded-full">Consistent</span>
+<span class="text-on-surface-variant font-label text-[10px] font-bold">78 Score</span>
+</div>
+<p class="text-xs font-body italic text-on-surface-variant mb-3 leading-snug">"The 3 books that changed how I think about building a business."</p>
+<div class="flex justify-between items-center text-[9px] font-label uppercase text-on-surface-variant">
+<span>Instagram Reel</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]" data-icon="visibility">visibility</span> 450K</span>
+</div>
+</div>
+<!-- Swipe Item 3 -->
+<div class="bg-surface-container p-4 border border-outline-variant/10 hover:border-primary/30 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-error-container text-on-error-container px-2 py-0.5 font-label text-[8px] uppercase font-bold rounded-full">High CTR</span>
+<span class="text-error font-label text-[10px] font-bold">89 Score</span>
+</div>
+<p class="text-xs font-body italic text-on-surface-variant mb-3 leading-snug">"If you're still using [X], you're already behind your competition."</p>
+<div class="flex justify-between items-center text-[9px] font-label uppercase text-on-surface-variant">
+<span>Twitter/X Thread</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]" data-icon="visibility">visibility</span> 892K</span>
+</div>
+</div>
+<!-- Swipe Item 4 -->
+<div class="bg-surface-container p-4 border border-outline-variant/10 hover:border-primary/30 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 font-label text-[8px] uppercase font-bold rounded-full">New Entry</span>
+<span class="text-primary font-label text-[10px] font-bold">N/A</span>
+</div>
+<p class="text-xs font-body italic text-on-surface-variant mb-3 leading-snug">"The secret to a 6-figure newsletter isn't writing, it's this..."</p>
+<div class="flex justify-between items-center text-[9px] font-label uppercase text-on-surface-variant">
+<span>LinkedIn Post</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]" data-icon="visibility">visibility</span> 12K</span>
+</div>
+</div>
+<!-- Swipe Item 5 -->
+<div class="bg-surface-container p-4 border border-outline-variant/10 hover:border-primary/30 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 font-label text-[8px] uppercase font-bold rounded-full">Evergreen</span>
+<span class="text-secondary font-label text-[10px] font-bold">91 Score</span>
+</div>
+<p class="text-xs font-body italic text-on-surface-variant mb-3 leading-snug">"Stop working harder. Start working differently. Here's how."</p>
+<div class="flex justify-between items-center text-[9px] font-label uppercase text-on-surface-variant">
+<span>TikTok</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]" data-icon="visibility">visibility</span> 1.1M</span>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-highest/50 border-t border-[#484848]/15">
+<button class="w-full py-2 bg-transparent border border-outline text-on-surface font-label text-[10px] uppercase font-bold tracking-widest rounded-sm hover:bg-surface-bright transition-colors">
+                        Expand Swipe Library
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+<!-- Floating Action Indicator (Suppressed as per rules for detailed screen, but adding tactical detail) -->
+<div class="fixed bottom-6 right-6 z-50">
+<div class="group flex flex-col items-end gap-2">
+<div class="bg-surface-bright px-3 py-1.5 rounded-sm border border-outline-variant/20 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+<span class="text-[10px] font-label uppercase font-bold text-primary tracking-widest">Tactical Support Active</span>
+</div>
+<button class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="support_agent" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</button>
+</div>
+</div>
+</body></html>

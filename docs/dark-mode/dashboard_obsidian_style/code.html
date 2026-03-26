@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#484848",
+              "tertiary-dim": "#dfe3b6",
+              "on-secondary-fixed": "#004840",
+              "inverse-surface": "#fcf8f8",
+              "surface-container": "#191a1a",
+              "primary-fixed-dim": "#f8d056",
+              "on-tertiary-fixed": "#444928",
+              "surface-container-low": "#131313",
+              "secondary-container": "#00443c",
+              "error": "#ed7f64",
+              "background": "#0e0e0e",
+              "surface": "#0e0e0e",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary": "#f9fdcf",
+              "surface-dim": "#0e0e0e",
+              "primary": "#e9c349",
+              "tertiary-fixed": "#edf2c4",
+              "secondary": "#11c9b4",
+              "on-error-container": "#ff9b82",
+              "on-error": "#450900",
+              "surface-bright": "#2c2c2c",
+              "error-dim": "#ba573f",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary": "#5d623e",
+              "on-surface-variant": "#acabaa",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-on-surface": "#565554",
+              "tertiary-container": "#eaefc1",
+              "outline": "#767575",
+              "on-secondary-container": "#2fd5c0",
+              "error-container": "#7e2b17",
+              "on-primary-container": "#f4cc52",
+              "inverse-primary": "#745c00",
+              "on-primary": "#4f3e00",
+              "on-surface": "#e7e5e4",
+              "primary-fixed": "#ffe088",
+              "on-primary-fixed": "#4e3d00",
+              "surface-container-highest": "#252626",
+              "surface-container-high": "#1f2020",
+              "secondary-dim": "#00baa7",
+              "on-secondary-fixed-variant": "#00675c",
+              "on-secondary": "#003a33",
+              "surface-variant": "#252626",
+              "surface-tint": "#e9c349",
+              "secondary-fixed-dim": "#50ebd5",
+              "primary-dim": "#dab53d",
+              "primary-container": "#574500",
+              "on-background": "#e7e5e4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "on-tertiary-container": "#555a37"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #e7e5e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar Shell -->
+<header class="bg-[#0e0e0e] dark:bg-[#0e0e0e] flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15 fixed top-0 z-40">
+<div class="flex items-center gap-8">
+<span class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase">Sovereign Navigator</span>
+<div class="hidden md:flex items-center bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 p-0 w-48 font-label uppercase tracking-widest text-on-surface-variant" placeholder="Command Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-gray-400 hover:bg-[#191a1a] transition-colors duration-150 p-2 rounded cursor-pointer active:scale-95">notifications</button>
+<button class="material-symbols-outlined text-gray-400 hover:bg-[#191a1a] transition-colors duration-150 p-2 rounded cursor-pointer active:scale-95">help</button>
+<button class="material-symbols-outlined text-gray-400 hover:bg-[#191a1a] transition-colors duration-150 p-2 rounded cursor-pointer active:scale-95">settings</button>
+<div class="w-8 h-8 rounded-full bg-surface-container border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="Creator Profile Avatar" data-alt="Close up portrait of a digital creator with neutral lighting and dark background professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV6Kj_hV-ueLYO4NLtAg12_YqHjK1qmHcaTMX5XFrpIQ7ojHcnR8krXZxeAu4LHrNBOcb8aIjpFBCin1V70DLYs2F2iBCQ8XstLcRYd4JqEdieZG4gpZ2rS9YliS3PinDDturxRu-LPjmVHaMSsewGfSSfDgHRoqVrTqxAOays4mSVknfPNjIWef5Q354syPLG3KnjvqfCoYLSapDXh_PSHDMc7N30MhNjV19wyUQH712NAuO2uL61sblQxGZ4jhvK4yswlqZYIs2P"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-8 z-30 bg-[#131313] dark:bg-[#131313] h-screen w-64 border-r border-[#484848]/15 hidden md:flex">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-6 h-6 bg-primary flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary text-sm" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<span class="font-label uppercase text-xs tracking-widest text-amber-500 font-bold">Tactical Op</span>
+</div>
+<p class="text-[10px] font-label text-gray-500 tracking-[0.2em] uppercase">Vanguard Edition</p>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto hide-scrollbar">
+<!-- Active State: Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-label uppercase text-xs tracking-widest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">topic</span>
+                Topics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">explore</span>
+                Angles
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">anchor</span>
+                Hooks
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">description</span>
+                Scripts
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                Brain
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+                Competitors
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 bg-primary/10 border border-primary/20 text-primary font-label uppercase text-[10px] tracking-widest rounded-sm hover:bg-primary/20 transition-all">
+                Tactical Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-64 pt-24 px-6 pb-12 min-h-screen">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
+<div>
+<h1 class="text-3xl font-black tracking-tight text-on-surface mb-2">VANGUARD_CONTROL</h1>
+<p class="font-label text-xs tracking-[0.3em] text-on-surface-variant uppercase">Mission Status: <span class="text-secondary">Optimal</span> | 04-OCT-2023</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high hover:bg-surface-bright px-4 py-2 border border-outline-variant/20 flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Generate Hook</span>
+</button>
+<button class="bg-primary px-6 py-2 text-on-primary font-bold shadow-[0_0_20px_rgba(233,195,73,0.15)] flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label text-[10px] uppercase tracking-widest">New Operation</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Column: Brain Health & Analytics -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Metrics Monolith Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container p-5 border-l-2 border-primary relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-5">
+<span class="material-symbols-outlined text-8xl">psychology</span>
+</div>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-4">Brain Health Score</p>
+<div class="flex items-end gap-3">
+<span class="text-4xl font-black text-primary">94.2</span>
+<span class="text-secondary font-label text-[10px] uppercase mb-1">+4.2%</span>
+</div>
+<div class="mt-4 w-full bg-surface-container-highest h-[2px]">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+</div>
+<div class="bg-surface-container p-5 border-l-2 border-secondary relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-5">
+<span class="material-symbols-outlined text-8xl">trending_up</span>
+</div>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-4">Avg Engagement</p>
+<div class="flex items-end gap-3">
+<span class="text-4xl font-black text-secondary">8.7</span>
+<span class="text-secondary font-label text-[10px] uppercase mb-1">+1.1%</span>
+</div>
+<div class="mt-4 w-full bg-surface-container-highest h-[2px]">
+<div class="bg-secondary h-full w-[87%]"></div>
+</div>
+</div>
+<div class="bg-surface-container p-5 border-l-2 border-error relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-5">
+<span class="material-symbols-outlined text-8xl">timer</span>
+</div>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-4">Avg Retention</p>
+<div class="flex items-end gap-3">
+<span class="text-4xl font-black text-on-surface">62<span class="text-lg">s</span></span>
+<span class="text-error font-label text-[10px] uppercase mb-1">-2s</span>
+</div>
+<div class="mt-4 w-full bg-surface-container-highest h-[2px]">
+<div class="bg-error h-full w-[62%]"></div>
+</div>
+</div>
+</div>
+<!-- Pipeline Funnel (Bento Large) -->
+<div class="bg-surface-container-low p-6 border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-bold text-lg uppercase tracking-tight text-on-surface">Content Pipeline Funnel</h3>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Quarterly Tactical Flow</p>
+</div>
+<select class="bg-surface-container border-none text-[10px] font-label uppercase tracking-widest focus:ring-1 focus:ring-primary py-1 px-3">
+<option>Last 30 Days</option>
+<option>Last 7 Days</option>
+</select>
+</div>
+<div class="space-y-4">
+<!-- Funnel Stages -->
+<div class="relative">
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] uppercase tracking-widest">Ideation</span>
+<span class="font-label text-[10px] uppercase">1,240 Units</span>
+</div>
+<div class="h-10 bg-surface-container w-full flex">
+<div class="h-full bg-primary/40 border-r border-background" style="width: 100%"></div>
+</div>
+</div>
+<div class="relative">
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] uppercase tracking-widest">Scripting</span>
+<span class="font-label text-[10px] uppercase">412 Units</span>
+</div>
+<div class="h-10 bg-surface-container w-full flex">
+<div class="h-full bg-primary/60 border-r border-background" style="width: 33%"></div>
+</div>
+</div>
+<div class="relative">
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] uppercase tracking-widest">Production</span>
+<span class="font-label text-[10px] uppercase">89 Units</span>
+</div>
+<div class="h-10 bg-surface-container w-full flex">
+<div class="h-full bg-primary/80 border-r border-background" style="width: 7%"></div>
+</div>
+</div>
+<div class="relative">
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] uppercase tracking-widest">Distribution</span>
+<span class="font-label text-[10px] uppercase">42 Units</span>
+</div>
+<div class="h-10 bg-surface-container w-full flex">
+<div class="h-full bg-primary" style="width: 3.5%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Performing Posts -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant">Top Tactical Assets</h3>
+<button class="text-[10px] font-label uppercase tracking-widest text-primary hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container p-4 flex gap-4 border border-outline-variant/10 group hover:border-primary/30 transition-all">
+<div class="w-16 h-16 bg-background flex-shrink-0 overflow-hidden">
+<img alt="Content Preview" data-alt="Cinematic frame of a modern workspace with neon accents and high end tech gear shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVyoLnmgNFDum0_lFdPJGKEGzDRusYvX9hvviYRxPx6dX8WgXrHR8HD6kLjso1SgJwfF6jhpxIW3rKwakNhHcOKN5PfNOfbJJoUN6kOqLscmaq1oXlYD67PUHU0GCetwawgFFKGECJ64uCNR6H9plZAZqG426ywiG0ZObjVUWxE_3IIfQMQYUOAD8XAEGYWo0s1HLKhJCyFGnyLpS0hi_k4G6PVOqLf08CE_K9HLg8B47WVQ2YrQ0HQHdVFWFw2jedFwTACnta00dR"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-bold text-xs truncate uppercase mb-1 group-hover:text-primary transition-colors">The 5 Rules of Sovereign Leverage</h4>
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="font-label text-[9px] text-on-surface-variant uppercase">Views</span>
+<span class="font-bold text-xs">42.5K</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-[9px] text-on-surface-variant uppercase">Conv</span>
+<span class="font-bold text-xs text-secondary">4.2%</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container p-4 flex gap-4 border border-outline-variant/10 group hover:border-primary/30 transition-all">
+<div class="w-16 h-16 bg-background flex-shrink-0 overflow-hidden">
+<img alt="Content Preview" data-alt="Abstract digital visualization of data streams and network connections in gold and obsidian tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAput5kUrkZosAsISR8qkszqv17Wt2H4_Q_ShgUvQ-Rv3bAXPxmqJEMDjMl-6y3U08DCHJ51T1musxksnnyJ_dg_ZniwE87Ex3d0zwenFDQUZu8pWgsr--7DIw1ws2mP3Jt0I-LjPKbg2a5O7b8dNcdHWzCD8P73ef2pCPsWL5kSMFPkl5wTwinsmY1iG2zj19b-AjyO5eJuUgGkdhrXWXuHVWq6Az9gcb9RetOGnIpspXQ9mdJumqCCztfNsKWjCWetvVHRKqSeJCX"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-bold text-xs truncate uppercase mb-1 group-hover:text-primary transition-colors">Tactical Scripting Manual v2</h4>
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="font-label text-[9px] text-on-surface-variant uppercase">Views</span>
+<span class="font-bold text-xs">28.1K</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-[9px] text-on-surface-variant uppercase">Conv</span>
+<span class="font-bold text-xs text-secondary">3.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Recent Activity & Quick Actions -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Recent Activity Feed -->
+<div class="bg-surface-container p-6 h-full flex flex-col border border-outline-variant/10">
+<h3 class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-6">Live Activity Stream</h3>
+<div class="space-y-6 relative">
+<!-- Connection Line -->
+<div class="absolute left-[9px] top-2 bottom-2 w-[1px] bg-outline-variant/30"></div>
+<!-- Activity Items -->
+<div class="flex gap-4 relative z-10">
+<div class="w-5 h-5 rounded-full bg-secondary flex items-center justify-center mt-1 border-4 border-surface-container">
+<span class="material-symbols-outlined text-[10px] text-on-secondary" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase mb-1">Asset Published</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">"The 5 Rules of Sovereign Leverage" is live on LinkedIn.</p>
+<span class="text-[9px] font-label text-outline uppercase mt-1 inline-block">2m ago</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10">
+<div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center mt-1 border-4 border-surface-container">
+<span class="material-symbols-outlined text-[10px] text-on-primary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase mb-1">New Angle Found</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">Brain AI detected a trending hook in "Maritime Strategy" segment.</p>
+<span class="text-[9px] font-label text-outline uppercase mt-1 inline-block">15m ago</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10">
+<div class="w-5 h-5 rounded-full bg-surface-bright flex items-center justify-center mt-1 border-4 border-surface-container">
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">comment</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase mb-1">Insight Captured</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">User @navigator_x provided critical feedback on Script v4.</p>
+<span class="text-[9px] font-label text-outline uppercase mt-1 inline-block">1h ago</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10">
+<div class="w-5 h-5 rounded-full bg-error flex items-center justify-center mt-1 border-4 border-surface-container">
+<span class="material-symbols-outlined text-[10px] text-on-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase mb-1">Performance Drop</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">X-Platform engagement down 12% in the last 4 hours.</p>
+<span class="text-[9px] font-label text-outline uppercase mt-1 inline-block">3h ago</span>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full py-2 font-label text-[9px] uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors">Download Log Report</button>
+</div>
+<!-- Quick Action Grid -->
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-container hover:bg-surface-bright p-4 text-left border border-outline-variant/10 group transition-all">
+<span class="material-symbols-outlined text-primary mb-3 block group-hover:scale-110 transition-transform">anchor</span>
+<span class="font-label text-[10px] uppercase tracking-widest block font-bold">New Hook</span>
+</button>
+<button class="bg-surface-container hover:bg-surface-bright p-4 text-left border border-outline-variant/10 group transition-all">
+<span class="material-symbols-outlined text-secondary mb-3 block group-hover:scale-110 transition-transform">auto_graph</span>
+<span class="font-label text-[10px] uppercase tracking-widest block font-bold">Deep Scan</span>
+</button>
+<button class="bg-surface-container hover:bg-surface-bright p-4 text-left border border-outline-variant/10 group transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-3 block group-hover:scale-110 transition-transform">archive</span>
+<span class="font-label text-[10px] uppercase tracking-widest block font-bold">Vault</span>
+</button>
+<button class="bg-surface-container hover:bg-surface-bright p-4 text-left border border-outline-variant/10 group transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-3 block group-hover:scale-110 transition-transform">support_agent</span>
+<span class="font-label text-[10px] uppercase tracking-widest block font-bold">Support</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB - Restricted to Dashboard -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center z-50 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</body></html>

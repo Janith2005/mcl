@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "surface": "#fcf8fb",
+              "background": "#fcf8fb",
+              "tertiary": "#814586",
+              "secondary": "#a855f7",
+              "primary": "#d946ef",
+              "on-surface": "#1b1b1d",
+              "outline-variant": "#f0e7f0",
+              "surface-container-high": "#ffffff",
+              "surface-container": "#ffffff",
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #fcf8fb;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, hsla(285,100%,95%,1) 100%), 
+            radial-gradient(at 100% 100%, hsla(339,49%,30%,0) 0, hsla(320,100%,95%,1) 100%);
+        color: #1b1b1d;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(129, 69, 134, 0.04);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+      .funnel-gradient-1 { background: linear-gradient(180deg, #f0abfc 0%, #d946ef 100%); }
+      .funnel-gradient-2 { background: linear-gradient(180deg, #d8b4fe 0%, #a855f7 100%); }
+      .funnel-gradient-3 { background: linear-gradient(180deg, #a5b4fc 0%, #6366f1 100%); }
+      .funnel-gradient-4 { background: linear-gradient(180deg, #818cf8 0%, #4f46e5 100%); }
+      .funnel-gradient-5 { background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%); }
+    </style>
+</head>
+<body class="font-body selection:bg-fuchsia-100 selection:text-fuchsia-900 overflow-hidden">
+<!-- SideNavBar (Components_6 Style) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-zinc-100 bg-[#fcf8fb] flex flex-col py-8 px-4 gap-4 z-50">
+<div class="px-3 mb-4">
+<div class="flex flex-col">
+<span class="font-['Space_Grotesk'] text-xl font-bold tracking-tight text-[#814586]">Influence Pirates</span>
+<span class="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">AI Content Lab</span>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#1b1b1d] font-bold border-r-2 border-[#814586] bg-fuchsia-50/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="font-['Space_Grotesk'] text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="lightbulb">lightbulb</span>
+<span class="font-['Space_Grotesk'] text-sm">Topics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="explore">explore</span>
+<span class="font-['Space_Grotesk'] text-sm">Angles</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="anchor">anchor</span>
+<span class="font-['Space_Grotesk'] text-sm">Hooks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="description">description</span>
+<span class="font-['Space_Grotesk'] text-sm">Scripts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="bar_chart">bar_chart</span>
+<span class="font-['Space_Grotesk'] text-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="psychology">psychology</span>
+<span class="font-['Space_Grotesk'] text-sm">Brain</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-[#814586] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-['Space_Grotesk'] text-sm">Settings</span>
+</a>
+<div class="px-3 pt-4 border-t border-zinc-100">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full border-2 border-fuchsia-100 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB25eaKkAv75pMbccyxT5bXSjdzkf_peTgCKL-Adz6DKdxhteOTVW06EV3A3QG3Vrg3eJIgrBfIqDZIGLJ_9JiBkQFpaqJZXtFusirlZltcmDYeLSObzNTTDSxbP8gT3QYQNU4HMV824zj3WGk4OBGYDELOxvPh1XQeWxiT-HxOG03TaKwjws_-wZLlgxQjo-2Q5I6XHmNNUAZoabxQn_Lb2-jc6buI7rAZgfpS1DrHco80sZ_IuJ-uoNNNc9FgqxHBiOBzOuYat2sF"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-zinc-800">Captain Influence</span>
+<span class="text-[9px] text-zinc-400 uppercase tracking-wider font-bold">Premium Admin</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col overflow-y-auto custom-scrollbar">
+<!-- TopAppBar (Components_6 Style) -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-6 h-16 bg-white/70 backdrop-blur-xl shadow-[0_20px_40px_rgba(129,69,134,0.08)]">
+<div class="flex items-center gap-8">
+<div class="font-['Space_Grotesk'] font-bold tracking-tight text-fuchsia-700">
+<span class="border-b-2 border-fuchsia-500 pb-1">Workspaces</span>
+</div>
+<div class="text-zinc-500 hover:text-fuchsia-600 transition-all cursor-pointer font-['Space_Grotesk'] font-medium text-sm">Team</div>
+<div class="text-zinc-500 hover:text-fuchsia-600 transition-all cursor-pointer font-['Space_Grotesk'] font-medium text-sm">API</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center bg-zinc-50 rounded-full px-4 py-1.5 border border-zinc-200">
+<span class="material-symbols-outlined text-sm text-zinc-400 mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none p-0 text-[11px] focus:ring-0 placeholder-zinc-400 w-48 font-['Space_Grotesk'] uppercase tracking-widest font-medium" placeholder="CMD + K TO SEARCH" type="text"/>
+</div>
+<div class="flex items-center gap-4 text-zinc-400">
+<span class="material-symbols-outlined hover:text-fuchsia-600 cursor-pointer transition-transform active:scale-90" data-icon="bolt">bolt</span>
+<span class="material-symbols-outlined hover:text-fuchsia-600 cursor-pointer transition-transform active:scale-90" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined hover:text-fuchsia-600 cursor-pointer transition-transform active:scale-90" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 max-w-[1400px] w-full mx-auto space-y-8">
+<!-- Header & Quick Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-4xl font-black font-headline tracking-tighter text-zinc-900">Vessel Command</h1>
+<p class="text-zinc-500 text-sm mt-1 font-medium font-['Space_Grotesk'] uppercase tracking-widest">Global operations status for Agency Pro</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-white text-[#814586] px-5 py-2.5 rounded-xl text-xs font-label uppercase tracking-widest font-bold border border-fuchsia-100 shadow-sm hover:shadow-md hover:bg-fuchsia-50/50 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="explore">explore</span>
+                    Discover Topics
+                </button>
+<button class="bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white px-5 py-2.5 rounded-xl text-xs font-label uppercase tracking-widest font-bold shadow-lg shadow-fuchsia-200 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="analytics">analytics</span>
+                    Analyze Performance
+                </button>
+</div>
+</div>
+<!-- Pipeline & Brain Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Pipeline Funnel (Glass Style) -->
+<div class="col-span-8 glass-card p-8 rounded-2xl relative overflow-hidden">
+<div class="flex justify-between items-center mb-10">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></div>
+<h2 class="font-label text-xs uppercase tracking-[0.2em] font-black text-fuchsia-600">Content Pipeline Funnel</h2>
+</div>
+<span class="text-[10px] text-zinc-400 font-black tracking-widest uppercase">Last 24h velocity</span>
+</div>
+<div class="flex items-end gap-3 h-56">
+<!-- Discover -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="funnel-gradient-1 h-[40%] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 group-hover:scale-[1.02] shadow-sm">
+<span class="text-2xl font-black font-headline text-white">124</span>
+<div class="absolute -top-7 text-[10px] font-black text-fuchsia-500 opacity-0 group-hover:opacity-100 transition-all">78.2% CONV</div>
+</div>
+<div class="mt-4 text-center text-[10px] font-black text-zinc-400 tracking-widest">DISCOVER</div>
+</div>
+<!-- Angle -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="funnel-gradient-2 h-[55%] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 group-hover:scale-[1.02] shadow-sm">
+<span class="text-2xl font-black font-headline text-white">86</span>
+</div>
+<div class="mt-4 text-center text-[10px] font-black text-zinc-400 tracking-widest">ANGLE</div>
+</div>
+<!-- Hook -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="funnel-gradient-3 h-[70%] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 group-hover:scale-[1.02] shadow-sm">
+<span class="text-2xl font-black font-headline text-white">42</span>
+</div>
+<div class="mt-4 text-center text-[10px] font-black text-zinc-400 tracking-widest">HOOK</div>
+</div>
+<!-- Script -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="funnel-gradient-4 h-[85%] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 group-hover:scale-[1.02] shadow-sm">
+<span class="text-2xl font-black font-headline text-white">18</span>
+</div>
+<div class="mt-4 text-center text-[10px] font-black text-zinc-400 tracking-widest">SCRIPT</div>
+</div>
+<!-- Publish -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="funnel-gradient-5 h-[100%] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 group-hover:scale-[1.02] shadow-lg shadow-indigo-100">
+<span class="text-2xl font-black font-headline text-white">7</span>
+<div class="absolute -top-7 flex items-center gap-1 text-[10px] font-black text-indigo-500">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                                +12%
+                            </div>
+</div>
+<div class="mt-4 text-center text-[10px] font-black text-zinc-400 tracking-widest">PUBLISH</div>
+</div>
+</div>
+</div>
+<!-- Brain Health Widget (Glass Style) -->
+<div class="col-span-4 glass-card p-8 rounded-2xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-violet-500"></div>
+<h2 class="font-label text-xs uppercase tracking-[0.2em] font-black text-violet-600">Agent Health</h2>
+</div>
+<span class="material-symbols-outlined text-zinc-300 cursor-pointer hover:text-violet-500 transition-colors" data-icon="info">info</span>
+</div>
+<div class="flex flex-col items-center py-4">
+<div class="relative w-36 h-36 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-fuchsia-50" cx="72" cy="72" fill="transparent" r="64" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-violet-500" cx="72" cy="72" fill="transparent" r="64" stroke="currentColor" stroke-dasharray="402" stroke-dashoffset="52" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-4xl font-black font-headline text-zinc-900 tracking-tighter">87%</span>
+<span class="text-[9px] font-black text-zinc-400 uppercase tracking-widest">COGNITION</span>
+</div>
+</div>
+<div class="mt-6 text-center">
+<p class="text-sm font-bold text-zinc-800">Agent Brain: <span class="text-violet-600">Optimal Sync</span></p>
+<p class="text-[10px] text-zinc-400 mt-1 uppercase tracking-widest font-black">Sync: 12 minutes ago</p>
+</div>
+</div>
+<button class="w-full bg-violet-50 text-violet-700 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-violet-100 transition-all active:scale-95">
+                    Force Brain Sync
+                </button>
+</div>
+</div>
+<!-- Bottom Content Grid -->
+<div class="grid grid-cols-12 gap-6 pb-12">
+<!-- Top Performer Card -->
+<div class="col-span-5 flex flex-col space-y-4">
+<div class="flex items-center gap-3">
+<h2 class="font-label text-xs uppercase tracking-[0.2em] font-black text-zinc-400">Top Performer</h2>
+<div class="flex-1 h-[1px] bg-zinc-100"></div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden group border-white/50">
+<div class="relative aspect-[16/10]">
+<img class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXshUCOzG-DJZZlJBgAoBOYBPsGTGUPhP2sJzHyR5Pwjmo-GZLWaahgZxpMEshOk0uC0kO8jDUacStGOr1mCSnjKKdqse6FMLTaqiSx1o9aJs1J5satoOMLFLf4nZMockhje18ee9L8vrCPhtoUKPImap9B0poWG9KkpRoRt4bpud58d5ROOBGoUFQudb_klIZ8WPxYizDpw0ZXJGZVUuf7fOsVM_7thBZzFfneU_75exRmLZ2cpwhzG12p9sGpjUtilmNAmN99KiT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent opacity-80"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div>
+<span class="bg-fuchsia-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-fuchsia-200">Viral Potential</span>
+<h3 class="text-zinc-900 text-2xl font-black mt-2 tracking-tighter">The Anti-Guru Angle</h3>
+</div>
+<div class="bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white text-[10px] font-black text-zinc-900 shadow-sm">
+                                00:58
+                            </div>
+</div>
+</div>
+<div class="p-6 grid grid-cols-2 gap-4">
+<div class="p-4 bg-zinc-50/50 rounded-xl border border-white/50">
+<p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Total Views</p>
+<p class="text-2xl font-black font-headline text-zinc-900">12,492</p>
+</div>
+<div class="p-4 bg-fuchsia-50/30 rounded-xl border border-fuchsia-50">
+<p class="text-[10px] font-black text-fuchsia-400 uppercase tracking-widest mb-1">Conv. Rate</p>
+<p class="text-2xl font-black font-headline text-fuchsia-600">8.2%</p>
+</div>
+<div class="col-span-2 p-4 bg-gradient-to-br from-fuchsia-50 to-violet-50 border border-white/50 rounded-xl">
+<div class="flex items-center gap-2 text-[10px] font-black text-fuchsia-600 uppercase tracking-widest mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="psychology">psychology</span>
+                                Why it won
+                            </div>
+<p class="text-xs text-zinc-600 leading-relaxed font-medium italic">"Contrarian Hook: Leveraged 'Negative Credibility' to break typical pattern recognition in the first 1.5s."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Tactical Feed -->
+<div class="col-span-7 flex flex-col space-y-4">
+<div class="flex items-center gap-3">
+<h2 class="font-label text-xs uppercase tracking-[0.2em] font-black text-zinc-400">Tactical Feed</h2>
+<div class="flex-1 h-[1px] bg-zinc-100"></div>
+</div>
+<div class="glass-card rounded-2xl border-white/50 divide-y divide-zinc-50 overflow-hidden">
+<!-- Activity Item 1 -->
+<div class="p-5 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-2xl bg-fuchsia-50 flex items-center justify-center text-fuchsia-500 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-800">New hook generated for <span class="text-fuchsia-600 italic">"SaaS Fatigue"</span></p>
+<p class="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">32 MINUTES AGO • AI AGENT ALPHA</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-xl group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="p-5 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center text-violet-500 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-800">Competitor report ready: <span class="text-violet-600 italic">Creator X Insights</span></p>
+<p class="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">2 HOURS AGO • SYSTEM SYNC</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-xl group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="p-5 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-800">Alert: High churn detected in <span class="text-rose-600 italic">Hook Batch #12</span></p>
+<p class="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">4 HOURS AGO • ANALYTICS ENGINE</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-xl group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="text-center py-4 text-[10px] font-black text-zinc-400 hover:text-fuchsia-600 transition-colors uppercase tracking-[0.3em]">
+                    View Comprehensive Logs
+                </button>
+</div>
+</div>
+</div>
+</main>
+<!-- NavigationDrawer (AI Coaching Assistant - Glass Floating Style) -->
+<aside class="fixed right-6 top-20 h-[calc(100vh-120px)] w-80 bg-white/80 backdrop-blur-2xl border border-white rounded-3xl flex flex-col p-6 shadow-[0_20px_60px_-15px_rgba(129,69,134,0.15)] z-40">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-['Space_Grotesk'] text-[#814586] text-sm font-black uppercase tracking-widest">Tactical Assistant</h3>
+<p class="text-[10px] text-zinc-400 font-bold tracking-tighter">VIRAL POTENTIAL: HIGH</p>
+</div>
+<span class="material-symbols-outlined text-zinc-300 cursor-pointer hover:text-rose-400 transition-colors" data-icon="close">close</span>
+</div>
+<div class="flex gap-2 mb-6 p-1 bg-zinc-50 rounded-2xl">
+<button class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest bg-white text-[#814586] rounded-xl shadow-sm">Chat</button>
+<button class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-600 transition-colors">Insights</button>
+<button class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-600 transition-colors">Logs</button>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar">
+<div class="p-4 bg-fuchsia-50/50 rounded-2xl text-[11px] border border-fuchsia-100 font-medium">
+<p class="text-zinc-600 leading-relaxed italic">"I've analyzed the last 3 videos. Your retention drops at 0:14. We need to introduce the 'Negative Stake' earlier in the script."</p>
+</div>
+<div class="space-y-3">
+<span class="text-[9px] font-black text-zinc-400 uppercase tracking-widest px-1">Suggested Actions</span>
+<div class="p-3 bg-white border border-fuchsia-100/50 rounded-xl flex items-center gap-3 cursor-pointer hover:border-fuchsia-300 hover:translate-x-1 transition-all shadow-sm">
+<span class="material-symbols-outlined text-fuchsia-500 text-sm" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[11px] font-bold text-zinc-800">Generate 5 'Stake' variations</span>
+</div>
+<div class="p-3 bg-white border border-fuchsia-100/50 rounded-xl flex items-center gap-3 cursor-pointer hover:border-fuchsia-300 hover:translate-x-1 transition-all shadow-sm">
+<span class="material-symbols-outlined text-violet-500 text-sm" data-icon="search">search</span>
+<span class="text-[11px] font-bold text-zinc-800">Research retention peaks</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="relative group">
+<input class="w-full bg-zinc-50/50 border-zinc-100 border-2 rounded-2xl text-xs py-3.5 px-5 focus:ring-2 focus:ring-fuchsia-200 focus:border-fuchsia-300 placeholder-zinc-400 font-medium transition-all" placeholder="ASK STRATEGY..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-3 text-zinc-300 text-sm group-focus-within:text-fuchsia-500 transition-colors" data-icon="send">send</span>
+</div>
+<button class="w-full bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white py-4 rounded-2xl text-xs font-black font-['Space_Grotesk'] uppercase tracking-[0.2em] shadow-lg shadow-fuchsia-100 hover:brightness-110 active:scale-95 transition-all">
+            Ask Strategy
+        </button>
+</div>
+</aside>
+</body></html>

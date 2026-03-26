@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator | Tactical Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#484848",
+                        "tertiary-dim": "#dfe3b6",
+                        "on-secondary-fixed": "#004840",
+                        "inverse-surface": "#fcf8f8",
+                        "surface-container": "#191a1a",
+                        "primary-fixed-dim": "#f8d056",
+                        "on-tertiary-fixed": "#444928",
+                        "surface-container-low": "#131313",
+                        "secondary-container": "#00443c",
+                        "error": "#ed7f64",
+                        "background": "#0e0e0e",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed-variant": "#705900",
+                        "tertiary": "#f9fdcf",
+                        "surface-dim": "#0e0e0e",
+                        "primary": "#e9c349",
+                        "tertiary-fixed": "#edf2c4",
+                        "secondary": "#11c9b4",
+                        "on-error-container": "#ff9b82",
+                        "on-error": "#450900",
+                        "surface-bright": "#2c2c2c",
+                        "error-dim": "#ba573f",
+                        "secondary-fixed": "#62fae3",
+                        "on-tertiary": "#5d623e",
+                        "on-surface-variant": "#acabaa",
+                        "on-tertiary-fixed-variant": "#616642",
+                        "inverse-on-surface": "#565554",
+                        "tertiary-container": "#eaefc1",
+                        "outline": "#767575",
+                        "on-secondary-container": "#2fd5c0",
+                        "error-container": "#7e2b17",
+                        "on-primary-container": "#f4cc52",
+                        "inverse-primary": "#745c00",
+                        "on-primary": "#4f3e00",
+                        "on-surface": "#e7e5e4",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed": "#4e3d00",
+                        "surface-container-highest": "#252626",
+                        "surface-container-high": "#1f2020",
+                        "secondary-dim": "#00baa7",
+                        "on-secondary-fixed-variant": "#00675c",
+                        "on-secondary": "#003a33",
+                        "surface-variant": "#252626",
+                        "surface-tint": "#e9c349",
+                        "secondary-fixed-dim": "#50ebd5",
+                        "primary-dim": "#dab53d",
+                        "primary-container": "#574500",
+                        "on-background": "#e7e5e4",
+                        "surface-container-lowest": "#000000",
+                        "tertiary-fixed-dim": "#dfe3b6",
+                        "on-tertiary-container": "#555a37"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #e7e5e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .tactical-gradient {
+            background: linear-gradient(145deg, #e9c349 0%, #dab53d 100%);
+        }
+        .obsidian-panel {
+            background-color: #131313;
+            border: 1px solid rgba(72, 72, 72, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+<!-- Background Decoration (Non-Navigation) -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]"></div>
+</div>
+<!-- Login Container -->
+<main class="relative w-full max-w-md z-10">
+<!-- Brand Header -->
+<div class="mb-10 text-center">
+<h1 class="text-3xl font-black tracking-tighter text-primary uppercase font-headline">
+                Sovereign Navigator
+            </h1>
+<p class="font-label text-xs tracking-[0.2em] text-on-surface-variant mt-2 uppercase">
+                Tactical Content Operations // V.2
+            </p>
+</div>
+<!-- Auth Card -->
+<div class="obsidian-panel p-8 shadow-2xl">
+<div class="flex flex-col gap-6">
+<!-- Social Auth Cluster -->
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest hover:bg-surface-bright transition-colors duration-200 border border-outline-variant/10">
+<img alt="" class="w-4 h-4 grayscale contrast-125" data-alt="minimalist chrome google logo in grayscale against a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8r9o6sc8ZR-Tdc-xeX0CZMHWXgvqjWE9eCfNz4g6A7-2cIj_y3ueajwsWwMLH-HnSJx9FEyJ4b2TZ8bTmQUr90JtYtVXZTbyL9gYncPG2g9pkFqc6dN8xTir7x-pZmGMyCOwnqAGjjoF6BoP50VNSByx9TSwlebhk4Io0b8-XlwvE8Qf49Wb4I3KUX7avsIKiIoDWw9BmXknKB7i6vm9NWulJUAs_0w4yZ7J988SY9cyrc87A66pUhjqS_ZzRupuKamuaekBhnL_w"/>
+<span class="font-label text-[10px] font-bold tracking-widest uppercase">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest hover:bg-surface-bright transition-colors duration-200 border border-outline-variant/10">
+<span class="material-symbols-outlined text-base" data-icon="terminal">terminal</span>
+<span class="font-label text-[10px] font-bold tracking-widest uppercase">GitHub</span>
+</button>
+</div>
+<!-- Divider -->
+<div class="relative flex items-center py-2">
+<div class="flex-grow border-t border-outline-variant/20"></div>
+<span class="flex-shrink mx-4 font-label text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">Manual Entry</span>
+<div class="flex-grow border-t border-outline-variant/20"></div>
+</div>
+<!-- Email Form -->
+<form class="flex flex-col gap-5">
+<div class="space-y-1.5">
+<label class="font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-0.5">Frequency / Email</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none border-b-2 border-primary/0 focus:border-primary/40 focus:ring-0 text-sm font-medium py-3 px-4 transition-all placeholder:text-on-surface-variant/30 uppercase tracking-tight" placeholder="OPERATOR@NAVIGATOR.IO" type="email"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between items-end">
+<label class="font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-0.5">Cipher / Password</label>
+<a class="font-label text-[9px] text-primary/60 hover:text-primary transition-colors tracking-tighter uppercase" href="#">Reset Key?</a>
+</div>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none border-b-2 border-primary/0 focus:border-primary/40 focus:ring-0 text-sm font-medium py-3 px-4 transition-all placeholder:text-on-surface-variant/30 tracking-widest" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="tactical-gradient mt-2 py-4 px-6 flex items-center justify-center gap-3 active:scale-[0.98] transition-all group" type="submit">
+<span class="text-on-primary font-headline font-extrabold text-sm uppercase tracking-tighter">Initialize Command</span>
+<span class="material-symbols-outlined text-on-primary text-lg" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="mt-8 flex flex-col items-center gap-4">
+<p class="text-on-surface-variant text-[11px] font-medium tracking-tight">
+                New operator? 
+                <a class="text-primary font-bold hover:underline underline-offset-4 ml-1" href="#">Request Access</a>
+</p>
+<!-- Security Badge -->
+<div class="flex items-center gap-2 px-3 py-1 bg-secondary-container/10 border border-secondary-container/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label text-[9px] text-on-secondary-container tracking-widest uppercase">System Secure // Encryption Active</span>
+</div>
+</div>
+</main>
+<!-- UI Background Texture -->
+<div class="fixed bottom-6 left-6 opacity-10 pointer-events-none hidden md:block">
+<div class="font-label text-[10px] space-y-1">
+<p>LAT: 34.0522° N</p>
+<p>LNG: 118.2437° W</p>
+<p>AUTH_ST: PENDING</p>
+</div>
+</div>
+<!-- Right Side Tactical Grid Decoration -->
+<div class="fixed top-1/2 right-0 -translate-y-1/2 opacity-[0.03] pointer-events-none hidden lg:block">
+<svg height="400" viewbox="0 0 100 100" width="400">
+<circle cx="50" cy="50" fill="none" r="48" stroke="currentColor" stroke-width="0.1"></circle>
+<circle cx="50" cy="50" fill="none" r="30" stroke="currentColor" stroke-width="0.1"></circle>
+<line stroke="currentColor" stroke-width="0.1" x1="50" x2="50" y1="0" y2="100"></line>
+<line stroke="currentColor" stroke-width="0.1" x1="0" x2="100" y1="50" y2="50"></line>
+</svg>
+</div>
+</body></html>

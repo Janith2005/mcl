@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#000000",
+              "surface": "#0e0e0e",
+              "background": "#0e0e0e",
+              "tertiary": "#f9fdcf",
+              "secondary": "#11c9b4",
+              "primary-dim": "#dab53d",
+              "error-container": "#7e2b17",
+              "on-surface": "#e7e5e4",
+              "surface-container-high": "#1f2020",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-primary": "#745c00",
+              "on-primary-fixed": "#4e3d00",
+              "on-secondary-fixed": "#004840",
+              "surface-tint": "#e9c349",
+              "secondary-dim": "#00baa7",
+              "error": "#ed7f64",
+              "surface-container": "#191a1a",
+              "on-primary-container": "#f4cc52",
+              "tertiary-dim": "#dfe3b6",
+              "on-background": "#e7e5e4",
+              "outline-variant": "#484848",
+              "tertiary-fixed": "#edf2c4",
+              "on-error-container": "#ff9b82",
+              "error-dim": "#ba573f",
+              "surface-variant": "#252626",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "primary-fixed": "#ffe088",
+              "secondary-container": "#00443c",
+              "inverse-on-surface": "#565554",
+              "on-tertiary": "#5d623e",
+              "on-error": "#450900",
+              "primary-container": "#574500",
+              "primary": "#e9c349",
+              "inverse-surface": "#fcf8f8",
+              "on-secondary-fixed-variant": "#00675c",
+              "surface-container-low": "#131313",
+              "on-surface-variant": "#acabaa",
+              "surface-dim": "#0e0e0e",
+              "on-tertiary-container": "#555a37",
+              "on-secondary": "#003a33",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary-container": "#eaefc1",
+              "on-secondary-container": "#2fd5c0",
+              "surface-bright": "#2c2c2c",
+              "primary-fixed-dim": "#f8d056",
+              "outline": "#767575",
+              "on-tertiary-fixed": "#444928",
+              "on-primary": "#4f3e00",
+              "secondary-fixed-dim": "#50ebd5",
+              "surface-container-highest": "#252626"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #0e0e0e;
+        color: #e7e5e4;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #484848;
+      }
+    </style>
+</head>
+<body class="font-body selection:bg-primary selection:text-on-primary overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col bg-[#131313] dark:bg-[#131313] h-screen w-64 border-r border-[#484848]/15 font-inter text-sm antialiased z-50">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary text-xl" data-icon="anchor">anchor</span>
+</div>
+<div class="flex flex-col">
+<span class="font-space-grotesk text-xl font-bold tracking-tight text-[#D4AF37]">Sovereign</span>
+<span class="text-[10px] uppercase tracking-widest text-gray-500">Agency Pro</span>
+</div>
+</div>
+<nav class="flex-1 px-4 mt-4 space-y-1">
+<!-- Active: Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#191a1a] text-[#D4AF37] border-l-2 border-[#D4AF37] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+<span>Topics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="insights">insights</span>
+<span>Angles</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="anchor">anchor</span>
+<span>Hooks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="description">description</span>
+<span>Scripts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="leaderboard">leaderboard</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="psychology">psychology</span>
+<span>Brain</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="monitoring">monitoring</span>
+<span>Competitors</span>
+</a>
+</nav>
+<div class="p-4 border-t border-[#484848]/15">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-gray-200 hover:bg-[#191a1a] transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-3 py-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/30 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional male avatar with minimalist geometric background style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB25eaKkAv75pMbccyxT5bXSjdzkf_peTgCKL-Adz6DKdxhteOTVW06EV3A3QG3Vrg3eJIgrBfIqDZIGLJ_9JiBkQFpaqJZXtFusirlZltcmDYeLSObzNTTDSxbP8gT3QYQNU4HMV824zj3WGk4OBGYDELOxvPh1XQeWxiT-HxOG03TaKwjws_-wZLlgxQjo-2Q5I6XHmNNUAZoabxQn_Lb2-jc6buI7rAZgfpS1DrHco80sZ_IuJ-uoNNNc9FgqxHBiOBzOuYat2sF"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-medium">Captain Influence</span>
+<span class="text-[10px] text-gray-500">Premium Admin</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col bg-surface overflow-y-auto custom-scrollbar">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 flex items-center justify-between px-6 h-14 bg-[#0e0e0e]/80 backdrop-blur-md border-b border-[#484848]/15 font-space-grotesk text-xs uppercase tracking-widest">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="layers">layers</span>
+<span class="font-bold border-b border-[#D4AF37]">Workspaces</span>
+</div>
+<div class="text-gray-400 hover:text-[#D4AF37] transition-all cursor-pointer">Team</div>
+<div class="text-gray-400 hover:text-[#D4AF37] transition-all cursor-pointer">API</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center bg-surface-container rounded-sm px-3 py-1.5 border border-outline-variant/10">
+<span class="material-symbols-outlined text-sm text-gray-500 mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none p-0 text-[10px] focus:ring-0 placeholder-gray-600 w-48" placeholder="CMD + K TO SEARCH" type="text"/>
+</div>
+<div class="flex items-center gap-4 text-gray-400">
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" data-icon="smart_toy">smart_toy</span>
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 max-w-[1600px] w-full mx-auto space-y-8">
+<!-- Header & Quick Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-2xl font-bold font-headline tracking-tight">Vessel Command</h1>
+<p class="text-gray-500 text-sm mt-1">Global operations status for Agency Pro.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container text-on-surface px-4 py-2 rounded-sm text-xs font-label uppercase tracking-widest border border-outline-variant/20 hover:bg-surface-bright transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="explore">explore</span>
+                        Discover Topics
+                    </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-sm text-xs font-label uppercase tracking-widest font-bold shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="analytics">analytics</span>
+                        Analyze Performance
+                    </button>
+</div>
+</div>
+<!-- Pipeline & Brain Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Pipeline Funnel (Bento Style) -->
+<div class="col-span-8 bg-surface-container p-6 rounded-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary/20"></div>
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<h2 class="font-label text-xs uppercase tracking-widest text-primary">Content Pipeline Funnel</h2>
+</div>
+<span class="text-[10px] text-gray-500 font-label">LAST 24H VELOCITY</span>
+</div>
+<div class="flex items-end gap-2 h-48">
+<!-- Discover -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="bg-primary/5 hover:bg-primary/10 transition-colors h-[40%] rounded-t-sm border-t border-x border-primary/20 flex flex-col items-center justify-center relative">
+<span class="text-xl font-bold font-headline">124</span>
+<div class="absolute -top-6 text-[10px] font-label text-primary opacity-0 group-hover:opacity-100 transition-opacity">78.2% CONV</div>
+</div>
+<div class="bg-surface-container-high py-2 text-center text-[10px] font-label text-gray-400">DISCOVER</div>
+</div>
+<!-- Angle -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="bg-primary/10 hover:bg-primary/15 transition-colors h-[55%] rounded-t-sm border-t border-x border-primary/30 flex flex-col items-center justify-center relative">
+<span class="text-xl font-bold font-headline">86</span>
+</div>
+<div class="bg-surface-container-high py-2 text-center text-[10px] font-label text-gray-400">ANGLE</div>
+</div>
+<!-- Hook -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="bg-primary/20 hover:bg-primary/25 transition-colors h-[70%] rounded-t-sm border-t border-x border-primary/40 flex flex-col items-center justify-center relative">
+<span class="text-xl font-bold font-headline">42</span>
+</div>
+<div class="bg-surface-container-high py-2 text-center text-[10px] font-label text-gray-400">HOOK</div>
+</div>
+<!-- Script -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="bg-primary/30 hover:bg-primary/35 transition-colors h-[85%] rounded-t-sm border-t border-x border-primary/50 flex flex-col items-center justify-center relative">
+<span class="text-xl font-bold font-headline">18</span>
+</div>
+<div class="bg-surface-container-high py-2 text-center text-[10px] font-label text-gray-400">SCRIPT</div>
+</div>
+<!-- Publish -->
+<div class="flex-1 flex flex-col justify-end group">
+<div class="bg-primary/40 hover:bg-primary/50 transition-colors h-[100%] rounded-t-sm border-t border-x border-primary/60 flex flex-col items-center justify-center relative">
+<span class="text-xl font-bold font-headline">7</span>
+<div class="absolute -top-6 flex items-center gap-1 text-[10px] font-label text-secondary">
+<span class="material-symbols-outlined text-[12px]" data-icon="trending_up">trending_up</span>
+                                    +12%
+                                </div>
+</div>
+<div class="bg-surface-container-high py-2 text-center text-[10px] font-label text-gray-400">PUBLISH</div>
+</div>
+</div>
+</div>
+<!-- Brain Health Widget -->
+<div class="col-span-4 bg-surface-container p-6 rounded-sm flex flex-col justify-between border-l border-outline-variant/10">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+<h2 class="font-label text-xs uppercase tracking-widest text-secondary">Agent Health</h2>
+</div>
+<span class="material-symbols-outlined text-gray-600 cursor-pointer" data-icon="info">info</span>
+</div>
+<div class="flex flex-col items-center py-4">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="47.3" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold font-headline">87%</span>
+<span class="text-[9px] font-label text-gray-500 uppercase tracking-tighter">COGNITION</span>
+</div>
+</div>
+<div class="mt-4 text-center">
+<p class="text-sm font-medium">Agent Brain: <span class="text-secondary">High Confidence</span></p>
+<p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Sync: 12 minutes ago</p>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-2 rounded-sm text-[10px] font-label uppercase tracking-widest font-bold hover:brightness-110 transition-all">
+                        Force Brain Sync
+                    </button>
+</div>
+</div>
+<!-- Bottom Content Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Top Performer Card -->
+<div class="col-span-5 flex flex-col space-y-4">
+<div class="flex items-center gap-2">
+<h2 class="font-label text-xs uppercase tracking-widest text-gray-400">Top Performer</h2>
+<div class="flex-1 h-[1px] bg-outline-variant/20"></div>
+</div>
+<div class="bg-surface-container rounded-sm overflow-hidden group border border-outline-variant/10">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="vibrant abstract 3d wave pattern with dark moody lighting and golden highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXshUCOzG-DJZZlJBgAoBOYBPsGTGUPhP2sJzHyR5Pwjmo-GZLWaahgZxpMEshOk0uC0kO8jDUacStGOr1mCSnjKKdqse6FMLTaqiSx1o9aJs1J5satoOMLFLf4nZMockhje18ee9L8vrCPhtoUKPImap9B0poWG9KkpRoRt4bpud58d5ROOBGoUFQudb_klIZ8WPxYizDpw0ZXJGZVUuf7fOsVM_7thBZzFfneU_75exRmLZ2cpwhzG12p9sGpjUtilmNAmN99KiT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent opacity-60"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<span class="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-sm">VIRAL POTENTIAL</span>
+<h3 class="text-white font-bold mt-1 tracking-tight">The Anti-Guru Angle</h3>
+</div>
+<div class="bg-surface/80 backdrop-blur-md px-2 py-1 rounded-sm border border-outline-variant/30 text-xs">
+                                    00:58
+                                </div>
+</div>
+</div>
+<div class="p-4 grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container-high rounded-sm">
+<p class="text-[10px] font-label text-gray-500 uppercase">Total Views</p>
+<p class="text-lg font-bold font-headline">12,492</p>
+</div>
+<div class="p-3 bg-surface-container-high rounded-sm">
+<p class="text-[10px] font-label text-gray-500 uppercase">Conv. Rate</p>
+<p class="text-lg font-bold font-headline text-secondary">8.2%</p>
+</div>
+<div class="col-span-2 p-3 bg-primary/5 border border-primary/10 rounded-sm">
+<div class="flex items-center gap-2 text-[10px] font-label text-primary uppercase mb-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="psychology">psychology</span>
+                                    Why it won
+                                </div>
+<p class="text-xs text-gray-300">Contrarian Hook: Leveraged "Negative Credibility" to break typical pattern recognition in the first 1.5s.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity List -->
+<div class="col-span-7 flex flex-col space-y-4">
+<div class="flex items-center gap-2">
+<h2 class="font-label text-xs uppercase tracking-widest text-gray-400">Tactical Feed</h2>
+<div class="flex-1 h-[1px] bg-outline-variant/20"></div>
+</div>
+<div class="bg-surface-container rounded-sm border border-outline-variant/10 divide-y divide-outline-variant/10 overflow-hidden">
+<!-- Activity Item 1 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</div>
+<div>
+<p class="text-sm font-medium">New hook generated for <span class="text-primary italic">"SaaS Fatigue"</span></p>
+<p class="text-[10px] text-gray-500 uppercase font-label mt-0.5">32 MINUTES AGO • AI AGENT ALPHA</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+</div>
+<div>
+<p class="text-sm font-medium">Competitor report ready: <span class="text-secondary italic">Creator X Insights</span></p>
+<p class="text-[10px] text-gray-500 uppercase font-label mt-0.5">2 HOURS AGO • SYSTEM SYNC</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-error-container/20 flex items-center justify-center text-error group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div>
+<p class="text-sm font-medium">Alert: High churn detected in <span class="text-error italic">Hook Batch #12</span></p>
+<p class="text-[10px] text-gray-500 uppercase font-label mt-0.5">4 HOURS AGO • ANALYTICS ENGINE</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Activity Item 4 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container-highest flex items-center justify-center text-gray-400 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</div>
+<div>
+<p class="text-sm font-medium">Batch Archive: 12 scripts moved to Vault</p>
+<p class="text-[10px] text-gray-500 uppercase font-label mt-0.5">YESTERDAY • MANUAL ACTION</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="text-center py-2 text-[10px] font-label text-gray-500 hover:text-primary transition-colors uppercase tracking-[0.2em]">
+                        View Comprehensive Logs
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- NavigationDrawer (AI Coaching Assistant) -->
+<aside class="fixed right-0 top-14 h-[calc(100vh-3.5rem)] w-80 bg-[#191a1a] border-l border-[#484848]/15 flex flex-col p-4 shadow-[0_0_64px_rgba(212,175,55,0.1)] z-30 slide-in-right">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-space-grotesk text-[#11c9b4] text-sm font-bold uppercase tracking-wider">Tactical Assistant</h3>
+<p class="text-[10px] text-gray-500">READY TO ANALYZE</p>
+</div>
+<span class="material-symbols-outlined text-gray-500 cursor-pointer" data-icon="close">close</span>
+</div>
+<div class="flex gap-1 mb-6 border-b border-outline-variant/10">
+<button class="flex-1 pb-2 text-[10px] font-label uppercase tracking-widest text-[#11c9b4] font-medium border-b border-[#11c9b4]">Chat</button>
+<button class="flex-1 pb-2 text-[10px] font-label uppercase tracking-widest text-gray-500">Insights</button>
+<button class="flex-1 pb-2 text-[10px] font-label uppercase tracking-widest text-gray-500">Logs</button>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+<div class="p-3 bg-surface-container-low rounded-sm text-xs border border-outline-variant/5">
+<p class="text-gray-400 leading-relaxed italic">"I've analyzed the last 3 videos. Your retention drops at 0:14. We need to introduce the 'Negative Stake' earlier in the script."</p>
+</div>
+<div class="space-y-2">
+<span class="text-[9px] font-label text-gray-600 uppercase">Suggested Actions</span>
+<div class="p-2 bg-secondary/5 border border-secondary/20 rounded-sm flex items-center gap-3 cursor-pointer hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[11px]">Generate 5 'Stake' variations</span>
+</div>
+<div class="p-2 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-3 cursor-pointer hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="search">search</span>
+<span class="text-[11px]">Research competitor retention peaks</span>
+</div>
+</div>
+</div>
+<div class="mt-4 space-y-3">
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-xs py-3 px-4 focus:ring-1 focus:ring-secondary/50 placeholder-gray-600 font-label" placeholder="ASK STRATEGY..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-gray-500 text-sm" data-icon="send">send</span>
+</div>
+<button class="w-full bg-[#11c9b4] text-on-secondary py-3 rounded-sm text-xs font-bold font-label uppercase tracking-widest hover:brightness-110 transition-all">
+                Ask Strategy
+            </button>
+</div>
+</aside>
+</body></html>

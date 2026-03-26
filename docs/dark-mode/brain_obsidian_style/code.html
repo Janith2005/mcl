@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator - Agent Brain</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#484848",
+              "tertiary-dim": "#dfe3b6",
+              "on-secondary-fixed": "#004840",
+              "inverse-surface": "#fcf8f8",
+              "surface-container": "#191a1a",
+              "primary-fixed-dim": "#f8d056",
+              "on-tertiary-fixed": "#444928",
+              "surface-container-low": "#131313",
+              "secondary-container": "#00443c",
+              "error": "#ed7f64",
+              "background": "#0e0e0e",
+              "surface": "#0e0e0e",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary": "#f9fdcf",
+              "surface-dim": "#0e0e0e",
+              "primary": "#e9c349",
+              "tertiary-fixed": "#edf2c4",
+              "secondary": "#11c9b4",
+              "on-error-container": "#ff9b82",
+              "on-error": "#450900",
+              "surface-bright": "#2c2c2c",
+              "error-dim": "#ba573f",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary": "#5d623e",
+              "on-surface-variant": "#acabaa",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-on-surface": "#565554",
+              "tertiary-container": "#eaefc1",
+              "outline": "#767575",
+              "on-secondary-container": "#2fd5c0",
+              "error-container": "#7e2b17",
+              "on-primary-container": "#f4cc52",
+              "inverse-primary": "#745c00",
+              "on-primary": "#4f3e00",
+              "on-surface": "#e7e5e4",
+              "primary-fixed": "#ffe088",
+              "on-primary-fixed": "#4e3d00",
+              "surface-container-highest": "#252626",
+              "surface-container-high": "#1f2020",
+              "secondary-dim": "#00baa7",
+              "on-secondary-fixed-variant": "#00675c",
+              "on-secondary": "#003a33",
+              "surface-variant": "#252626",
+              "surface-tint": "#e9c349",
+              "secondary-fixed-dim": "#50ebd5",
+              "primary-dim": "#dab53d",
+              "primary-container": "#574500",
+              "on-background": "#e7e5e4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "on-tertiary-container": "#555a37"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tactical-gradient {
+            background: linear-gradient(145deg, #e9c349 0%, #dab53d 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-[#0e0e0e] flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15 font-['Inter'] font-medium text-sm tracking-tight">
+<div class="flex items-center gap-8">
+<span class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase">Sovereign Navigator</span>
+<div class="hidden md:flex items-center gap-6">
+<span class="text-[#D4AF37] font-bold cursor-pointer active:scale-95">Dashboard</span>
+<span class="text-gray-400 cursor-pointer active:scale-95 hover:bg-[#191a1a] transition-colors duration-150 px-2 py-1 rounded">Missions</span>
+<span class="text-gray-400 cursor-pointer active:scale-95 hover:bg-[#191a1a] transition-colors duration-150 px-2 py-1 rounded">Vault</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-[#131313] px-3 py-1.5 rounded-lg border border-[#484848]/15">
+<span class="material-symbols-outlined text-xs text-[#D4AF37]">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-32 font-label uppercase tracking-widest text-on-surface-variant" placeholder="COMMAND + K" type="text"/>
+</div>
+<span class="material-symbols-outlined text-[#D4AF37] cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-[#D4AF37] cursor-pointer">help</span>
+<span class="material-symbols-outlined text-[#D4AF37] cursor-pointer">settings</span>
+<img alt="Creator Profile Avatar" class="w-8 h-8 rounded-full border border-primary/30" data-alt="close-up portrait of a high-tech digital avatar with golden circuitry patterns on dark obsidian skin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEMiiLzB4oJUIAcA3vMRLhQWF5y0ghhY1l-eGvBTmxiA31GRz9QoowAKxuPCokbDb9pL_eS2Ln3bZXqif8uULswKFbV1E0in_In9NCuH7jXe4z_Ez0fobebxkzsqQO9FQVBT0uYOU6egdd2hwIXj8dX5Zy-HNULB7xeJY-D9jeFH94_79VAQs995gHUkRF9DI9rh75FqDX7FLTi5LW-23oGgJIyJIS2gmInF1rFKUKBj7W2_IfY4KSBp5kQb2WsrbfexMZ3Rn4z0nT"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-8 z-30 bg-[#131313] w-64 border-r border-[#484848]/15 transition-all duration-200 ease-in-out">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 tactical-gradient flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary">psychology</span>
+</div>
+<div>
+<div class="text-amber-500 font-bold font-label uppercase text-xs tracking-widest">Tactical Op</div>
+<div class="text-gray-500 text-[10px] font-label uppercase tracking-[0.2em]">Vanguard Edition</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">topic</span>
+<span>Topics</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">explore</span>
+<span>Angles</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">anchor</span>
+<span>Hooks</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">description</span>
+<span>Scripts</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span>Analytics</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-['Space_Grotesk'] uppercase text-xs tracking-widest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span>Brain</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">group</span>
+<span>Competitors</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span>Settings</span>
+</div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full tactical-gradient text-on-primary font-label font-bold text-[10px] tracking-widest uppercase py-3 rounded-sm flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                Tactical Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 flex h-screen overflow-hidden bg-surface">
+<div class="flex-1 p-8 overflow-y-auto no-scrollbar">
+<!-- Header Section -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-black tracking-tight uppercase mb-1">Agent Brain</h1>
+<p class="text-on-surface-variant font-label text-xs tracking-[0.2em] uppercase">Neural Architecture &amp; Tactical Intelligence</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface-container-high text-on-surface border border-outline-variant/20 px-4 py-2 text-xs font-label uppercase tracking-widest hover:bg-surface-bright transition-colors">Export Schema</button>
+<button class="tactical-gradient text-on-primary px-4 py-2 text-xs font-label font-bold uppercase tracking-widest rounded-sm">Sync Neural Net</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6 pb-12">
+<!-- Health Score (Metric Monolith) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-6 relative border-l-2 border-primary overflow-hidden">
+<div class="relative z-10">
+<span class="font-label text-[10px] text-primary uppercase tracking-[0.3em] block mb-2">Neural Health Score</span>
+<div class="flex items-baseline gap-2 mb-4">
+<span class="text-6xl font-black font-headline tracking-tighter">94.2</span>
+<span class="text-secondary font-label font-bold text-sm tracking-widest">+2.4%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mb-6">
+<div class="bg-secondary h-full rounded-full" style="width: 94.2%;"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Latency</span>
+<span class="font-headline font-bold text-lg">12ms</span>
+</div>
+<div>
+<span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Coherence</span>
+<span class="font-headline font-bold text-lg">High</span>
+</div>
+</div>
+</div>
+<div class="absolute -bottom-8 -right-8 opacity-5">
+<span class="material-symbols-outlined text-9xl">analytics</span>
+</div>
+</div>
+<!-- Knowledge Base Matrix -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container p-6 border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.3em]">Knowledge Base Matrix</span>
+<span class="material-symbols-outlined text-primary-dim cursor-pointer">add_circle</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-4 flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary">database</span>
+</div>
+<div>
+<div class="text-sm font-bold uppercase tracking-tight">Obsidian Archives</div>
+<div class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">2,482 Entries • Updated 2h ago</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="text-[10px] font-label text-secondary uppercase tracking-widest">Indexed</div>
+<div class="text-xs font-bold">100%</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">arrow_forward</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary/10 flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">rss_feed</span>
+</div>
+<div>
+<div class="text-sm font-bold uppercase tracking-tight">Competitor Intelligence</div>
+<div class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">14 Active Streams • Real-time</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="text-[10px] font-label text-secondary uppercase tracking-widest">Syncing</div>
+<div class="text-xs font-bold">Active</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Persona Tonality Profile -->
+<div class="col-span-12 lg:col-span-6 bg-surface-container-low p-6 border border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.3em] block mb-6">Persona Tonality Profile</span>
+<div class="flex items-center justify-center py-4">
+<div class="relative w-48 h-48">
+<div class="absolute inset-0 border-2 border-primary/20 rounded-full animate-pulse"></div>
+<div class="absolute inset-4 border border-secondary/30 rounded-full"></div>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="font-black text-2xl uppercase tracking-tighter">Vanguard</span>
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Archetype</span>
+</div>
+<!-- Radial Tags -->
+<div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-full border border-primary/40 text-[9px] font-label uppercase tracking-widest">Authoritative</div>
+<div class="absolute top-1/2 -right-10 -translate-y-1/2 bg-surface-container-highest px-3 py-1 rounded-full border border-secondary/40 text-[9px] font-label uppercase tracking-widest">Tactical</div>
+<div class="absolute bottom-1/2 -left-10 translate-y-1/2 bg-surface-container-highest px-3 py-1 rounded-full border border-outline-variant/40 text-[9px] font-label uppercase tracking-widest">Sparse</div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-full border border-error/40 text-[9px] font-label uppercase tracking-widest">Provocative</div>
+</div>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex justify-between items-center text-[10px] font-label uppercase tracking-widest">
+<span>Directness</span>
+<span class="text-primary">85%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full">
+<div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-label uppercase tracking-widest">
+<span>Humor Threshold</span>
+<span class="text-secondary">12%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full">
+<div class="bg-secondary h-full rounded-full" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+<!-- Recent Neural Activity -->
+<div class="col-span-12 lg:col-span-6 bg-surface p-6 border border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.3em] block mb-6">Neural Activity Log</span>
+<div class="space-y-6">
+<div class="flex gap-4 items-start relative pb-6">
+<div class="absolute left-2 top-6 bottom-0 w-[1px] bg-outline-variant/20"></div>
+<div class="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/10 mt-1"></div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-bold uppercase tracking-tight">Script Refinement Engine</span>
+<span class="font-label text-[9px] text-on-surface-variant uppercase tracking-widest">09:42:01</span>
+</div>
+<p class="text-[11px] text-on-surface-variant font-label leading-relaxed">Adjusted hook parameters for "Obsidian Plunder" mission. Priority: Engagement Retention.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start relative pb-6">
+<div class="absolute left-2 top-6 bottom-0 w-[1px] bg-outline-variant/20"></div>
+<div class="w-4 h-4 rounded-full bg-secondary ring-4 ring-secondary/10 mt-1"></div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-bold uppercase tracking-tight">Competitor Pulse Detected</span>
+<span class="font-label text-[9px] text-on-surface-variant uppercase tracking-widest">08:15:33</span>
+</div>
+<p class="text-[11px] text-on-surface-variant font-label leading-relaxed">Channel "Ironclad Creator" shifted content velocity. Re-routing response strategy.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-4 h-4 rounded-full bg-outline-variant ring-4 ring-outline-variant/10 mt-1"></div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-bold uppercase tracking-tight">Memory Compression</span>
+<span class="font-label text-[9px] text-on-surface-variant uppercase tracking-widest">04:00:00</span>
+</div>
+<p class="text-[11px] text-on-surface-variant font-label leading-relaxed">Archived 400MB of redundant analytics metadata to primary vault.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tactical Assistant Sidebar -->
+<aside class="w-80 bg-surface-container-low border-l border-[#484848]/15 flex flex-col">
+<div class="p-6 border-b border-[#484848]/15 flex justify-between items-center">
+<div>
+<span class="font-label text-[10px] text-primary uppercase tracking-[0.3em] block">Tactical Assistant</span>
+<span class="font-bold uppercase tracking-tighter text-sm">AI COACH v4.2</span>
+</div>
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+<!-- AI Message -->
+<div class="space-y-2">
+<span class="font-label text-[9px] text-secondary uppercase tracking-widest">AI Command</span>
+<div class="bg-surface-container p-4 border-l-2 border-secondary text-xs leading-relaxed font-label text-on-surface/90">
+                        Operational efficiency is at 94.2%. I suggest revisiting the <span class="text-primary">"Monolith Structure"</span> topic in your knowledge base. It currently lacks density compared to recent competitor shifts.
+                    </div>
+</div>
+<!-- Action Suggestions -->
+<div class="space-y-4">
+<span class="font-label text-[9px] text-on-surface-variant uppercase tracking-widest block border-b border-outline-variant/10 pb-2">Recommended Manoeuvres</span>
+<div class="group cursor-pointer bg-surface-container-high p-3 border border-outline-variant/10 hover:border-primary/40 transition-all">
+<div class="flex items-center gap-3 mb-1">
+<span class="material-symbols-outlined text-primary text-sm">edit_note</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Amplify Hook Density</span>
+</div>
+<p class="text-[9px] font-label text-on-surface-variant uppercase tracking-widest">Est. Impact: +14% Watch Time</p>
+</div>
+<div class="group cursor-pointer bg-surface-container-high p-3 border border-outline-variant/10 hover:border-secondary/40 transition-all">
+<div class="flex items-center gap-3 mb-1">
+<span class="material-symbols-outlined text-secondary text-sm">psychology</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Run Tone Calibration</span>
+</div>
+<p class="text-[9px] font-label text-on-surface-variant uppercase tracking-widest">Minimize "Soft" Adjectives</p>
+</div>
+</div>
+<!-- Neural Graph Mini-viz -->
+<div class="bg-surface-container-lowest p-4 border border-outline-variant/10">
+<span class="font-label text-[9px] text-on-surface-variant uppercase tracking-widest block mb-4">Neural Saturation</span>
+<div class="flex items-end justify-between h-12 gap-1">
+<div class="w-full bg-primary/20 h-4 hover:h-8 transition-all"></div>
+<div class="w-full bg-primary/40 h-6 hover:h-9 transition-all"></div>
+<div class="w-full bg-primary/20 h-3 hover:h-6 transition-all"></div>
+<div class="w-full bg-primary h-12 hover:h-12 transition-all"></div>
+<div class="w-full bg-primary/60 h-8 hover:h-10 transition-all"></div>
+<div class="w-full bg-primary/30 h-5 hover:h-7 transition-all"></div>
+<div class="w-full bg-primary/20 h-4 hover:h-8 transition-all"></div>
+</div>
+</div>
+</div>
+<!-- Chat Input -->
+<div class="p-4 border-t border-[#484848]/15">
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-highest border-none text-[10px] font-label tracking-widest py-4 pl-4 pr-12 focus:ring-1 focus:ring-primary/40 rounded-sm" placeholder="ASK ASSISTANT..." type="text"/>
+<button class="absolute right-2 text-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</aside>
+</main>
+<!-- FAB (Suppressed based on screen context - Brain Overview is focused) -->
+<!-- Removed based on instructions -->
+</body></html>

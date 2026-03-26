@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator | Scripts Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#484848",
+              "tertiary-dim": "#dfe3b6",
+              "on-secondary-fixed": "#004840",
+              "inverse-surface": "#fcf8f8",
+              "surface-container": "#191a1a",
+              "primary-fixed-dim": "#f8d056",
+              "on-tertiary-fixed": "#444928",
+              "surface-container-low": "#131313",
+              "secondary-container": "#00443c",
+              "error": "#ed7f64",
+              "background": "#0e0e0e",
+              "surface": "#0e0e0e",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary": "#f9fdcf",
+              "surface-dim": "#0e0e0e",
+              "primary": "#e9c349",
+              "tertiary-fixed": "#edf2c4",
+              "secondary": "#11c9b4",
+              "on-error-container": "#ff9b82",
+              "on-error": "#450900",
+              "surface-bright": "#2c2c2c",
+              "error-dim": "#ba573f",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary": "#5d623e",
+              "on-surface-variant": "#acabaa",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-on-surface": "#565554",
+              "tertiary-container": "#eaefc1",
+              "outline": "#767575",
+              "on-secondary-container": "#2fd5c0",
+              "error-container": "#7e2b17",
+              "on-primary-container": "#f4cc52",
+              "inverse-primary": "#745c00",
+              "on-primary": "#4f3e00",
+              "on-surface": "#e7e5e4",
+              "primary-fixed": "#ffe088",
+              "on-primary-fixed": "#4e3d00",
+              "surface-container-highest": "#252626",
+              "surface-container-high": "#1f2020",
+              "secondary-dim": "#00baa7",
+              "on-secondary-fixed-variant": "#00675c",
+              "on-secondary": "#003a33",
+              "surface-variant": "#252626",
+              "surface-tint": "#e9c349",
+              "secondary-fixed-dim": "#50ebd5",
+              "primary-dim": "#dab53d",
+              "primary-container": "#574500",
+              "on-background": "#e7e5e4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "on-tertiary-container": "#555a37"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0e0e0e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2c2c2c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484848;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="bg-[#0e0e0e] dark:bg-[#0e0e0e] flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15 fixed top-0 z-40">
+<div class="flex items-center gap-8">
+<div class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase">Sovereign Navigator</div>
+<div class="hidden md:flex items-center gap-6">
+<span class="font-['Inter'] font-medium text-sm tracking-tight text-[#D4AF37] font-bold cursor-pointer active:scale-95 transition-colors duration-150">Scripts</span>
+<span class="font-['Inter'] font-medium text-sm tracking-tight text-gray-400 cursor-pointer active:scale-95 transition-colors duration-150 hover:bg-[#191a1a]">Archive</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded text-xs font-label uppercase tracking-widest text-on-surface-variant border border-outline-variant/10">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+<span>Auto-Saved</span>
+</div>
+<button class="flex items-center gap-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary px-4 py-2 rounded-sm font-label text-xs font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                Export PDF
+            </button>
+<div class="flex items-center gap-3 ml-2 border-l border-outline-variant/20 pl-4">
+<span class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer transition-colors">notifications</span>
+<span class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer transition-colors">help</span>
+<span class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer transition-colors">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional male creator in a tech workspace with focused expression and soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9mhYWtaMYYmW1SmqQ4RaqujF4VZ_lLqvyCF1L30nb8W0gmDetu9tjcLRTp2j5-dlHCqWXaLU8VrHCpOVOzvIsMgv-O4DGY8rlYp27li9dplWo3VKdCll_Zig0CqILpnPEJ2xQ1DOoudG7ne6tVRc9LOS2Qfwt4gb7J08ZUHXhV_n8NXWCKSYmqZtelqZKzYriQ0DY0pyyYWrIe0ReIPrEiVCwlDScGNovb96UJhr4kcz7zG3vYiBnzzNcwMKIFa9gRjRQ5kCID5FI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="bg-[#131313] dark:bg-[#131313] fixed left-0 top-0 h-full flex flex-col pt-4 pb-8 z-50 fixed left-0 top-0 h-full flex flex-col pt-4 pb-8 z-50 h-screen w-64 left-0 top-0 border-r border-[#484848]/15">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-amber-500 font-bold">pinboard</span>
+</div>
+<div>
+<div class="text-amber-500 font-bold font-label uppercase text-[10px] tracking-widest">Tactical Op</div>
+<div class="text-gray-500 font-medium text-[9px] font-label uppercase tracking-[0.2em]">Vanguard Edition</div>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">topic</span>
+<span>Topics</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">explore</span>
+<span>Angles</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">anchor</span>
+<span>Hooks</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">description</span>
+<span>Scripts</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">analytics</span>
+<span>Analytics</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">psychology</span>
+<span>Brain</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">group</span>
+<span>Competitors</span>
+</div>
+<div class="px-4 py-2 flex items-center gap-4 transition-all duration-200 ease-in-out cursor-pointer text-gray-500 font-medium hover:text-white hover:bg-[#191a1a] font-['Space_Grotesk'] uppercase text-xs tracking-widest">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</div>
+</div>
+<div class="mt-auto px-4">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-sm font-label text-[10px] font-bold uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+                Tactical Assistant
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 h-screen flex flex-col bg-surface">
+<!-- Editor Header Area -->
+<div class="p-6 bg-surface-container-low flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex-1 max-w-2xl">
+<input class="w-full bg-transparent border-none text-on-surface font-headline font-black text-xl tracking-tight focus:ring-0 placeholder-gray-700" placeholder="Untitled Script" type="text" value="THE SOVEREIGN PROTOCOL: DECODING HIGH-VALUE ATTENTION"/>
+<div class="flex gap-4 mt-2">
+<span class="font-label text-[10px] text-primary tracking-[0.2em] uppercase font-bold">Status: First Draft</span>
+<span class="font-label text-[10px] text-gray-500 tracking-[0.2em] uppercase font-bold">Word Count: 1,420</span>
+<span class="font-label text-[10px] text-secondary tracking-[0.2em] uppercase font-bold">Estimated Length: 08:45</span>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-sm border border-outline-variant/10 cursor-pointer hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">history</span>
+<span class="font-label text-[10px] uppercase font-bold tracking-widest text-gray-400">Version History</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-sm border border-outline-variant/10 cursor-pointer hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">share</span>
+<span class="font-label text-[10px] uppercase font-bold tracking-widest text-gray-400">Collab</span>
+</div>
+</div>
+</div>
+<!-- Triple Column Layout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Sidebar: Elements / Navigation -->
+<aside class="w-16 border-r border-outline-variant/10 bg-surface-container-low flex flex-col items-center py-6 gap-8">
+<button class="p-2 text-primary bg-primary/10 rounded-sm" title="Script Editor">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-on-surface transition-colors" title="Beat Sheet">
+<span class="material-symbols-outlined">reorder</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-on-surface transition-colors" title="Filming Guide">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-on-surface transition-colors" title="B-Roll List">
+<span class="material-symbols-outlined">layers</span>
+</button>
+<div class="mt-auto border-t border-outline-variant/10 pt-6 flex flex-col gap-6">
+<button class="p-2 text-gray-500 hover:text-primary transition-colors" title="Formatting">
+<span class="material-symbols-outlined">format_size</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-error transition-colors" title="Delete Script">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</aside>
+<!-- Center: The Code-Style Editor -->
+<section class="flex-1 bg-surface-container overflow-y-auto p-12 flex justify-center">
+<div class="max-w-3xl w-full">
+<!-- Script Content Area -->
+<div class="space-y-12">
+<!-- Beat: Hook -->
+<div class="group relative">
+<div class="absolute -left-20 top-0 flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="font-label text-[10px] uppercase tracking-widest font-black text-primary">00:00</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-gray-500">HOOK</span>
+</div>
+<div class="border-l-2 border-primary pl-6 py-2">
+<h3 class="font-label text-[11px] uppercase tracking-[0.3em] font-bold text-primary mb-4">THE PATTERN INTERRUPT</h3>
+<p class="text-on-surface font-body text-lg leading-relaxed selection:bg-primary/20">
+                                    Most creators think they are building a library. They aren't. They are building a <span class="text-primary font-bold italic underline decoration-primary/30">digital fortress</span>. But if the gates are open and the walls are crumbling, nobody cares what's inside the vault.
+                                </p>
+<div class="mt-6 flex gap-3">
+<div class="px-2 py-1 bg-surface-container-highest rounded-sm border border-outline-variant/20">
+<span class="font-label text-[9px] uppercase tracking-widest text-secondary font-bold">Visual: Close-up zoom 1.5x</span>
+</div>
+<div class="px-2 py-1 bg-surface-container-highest rounded-sm border border-outline-variant/20">
+<span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Audio: Low bass synth swell</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Beat: Body 1 -->
+<div class="group relative">
+<div class="absolute -left-20 top-0 flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="font-label text-[10px] uppercase tracking-widest font-black text-primary">01:30</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-gray-500">BEAT 01</span>
+</div>
+<div class="border-l-2 border-outline-variant pl-6 py-2">
+<h3 class="font-label text-[11px] uppercase tracking-[0.3em] font-bold text-on-surface-variant mb-4">THE SOVEREIGNTY FALLACY</h3>
+<p class="text-on-surface-variant font-body text-lg leading-relaxed selection:bg-primary/20">
+                                    The algorithms aren't your boss; they are your logistics network. If you treat YouTube like a job, you've already lost. We need to shift the perspective from <span class="text-on-surface font-semibold">"Content Creation"</span> to <span class="text-on-surface font-semibold">"Intellectual Sovereignty."</span>
+</p>
+<div class="mt-8 space-y-4">
+<div class="flex gap-4 items-start bg-surface-container-low p-4 rounded-sm border border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-[20px]">lightbulb</span>
+<p class="text-sm font-body text-on-secondary-container leading-relaxed">
+                                            Insight: Connect this to the 'Naval Ravikant' leverage philosophy mentioned in the last brainstorming session.
+                                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Beat: Body 2 -->
+<div class="group relative">
+<div class="absolute -left-20 top-0 flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="font-label text-[10px] uppercase tracking-widest font-black text-primary">04:15</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-gray-500">BEAT 02</span>
+</div>
+<div class="border-l-2 border-outline-variant pl-6 py-2">
+<h3 class="font-label text-[11px] uppercase tracking-[0.3em] font-bold text-on-surface-variant mb-4">ENGINEERING THE NAVIGATOR</h3>
+<p class="text-on-surface font-body text-lg leading-relaxed selection:bg-primary/20">
+                                    Step one of the Sovereign Protocol is the <span class="text-primary-dim font-bold">Audit</span>. Every frame of your footage should serve the tactical objective. If it doesn't move the needle on trust, cut it.
+                                </p>
+</div>
+</div>
+<!-- Placeholder for next section -->
+<div class="pt-12 border-t border-outline-variant/10 text-center">
+<button class="font-label text-[10px] uppercase tracking-[0.4em] font-black text-gray-600 hover:text-primary transition-all">
+                                [ INSERT NEXT BEAT ]
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Contextual Intelligence Panel -->
+<aside class="w-80 border-l border-outline-variant/10 bg-surface-container-low p-6 overflow-y-auto hidden xl:block">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-label text-[11px] uppercase tracking-widest font-black text-primary">Tactical Insights</h2>
+<span class="material-symbols-outlined text-gray-500 text-[18px]">more_vert</span>
+</div>
+<div class="space-y-6">
+<!-- Metric Card -->
+<div class="bg-surface-container p-4 border-l-2 border-secondary">
+<div class="font-label text-[9px] uppercase tracking-widest text-gray-500 mb-1">Retention Forecast</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-3xl font-black text-on-surface tracking-tighter">72%</span>
+<span class="text-secondary material-symbols-outlined text-[16px]">trending_up</span>
+</div>
+<div class="mt-3 h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+<p class="mt-2 font-body text-[10px] text-on-surface-variant leading-tight">High impact hook detected. Maintaining pace is critical in Segment 3.</p>
+</div>
+<!-- Keywords -->
+<div>
+<h4 class="font-label text-[10px] uppercase tracking-widest text-on-surface font-bold mb-3">Targeted Entities</h4>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[9px] font-label text-gray-400 uppercase tracking-wider border border-outline-variant/10">Creator Economy</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[9px] font-label text-gray-400 uppercase tracking-wider border border-outline-variant/10">Personal Branding</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[9px] font-label text-primary-dim uppercase tracking-wider border border-primary/20">Leverage</span>
+</div>
+</div>
+<!-- References -->
+<div>
+<h4 class="font-label text-[10px] uppercase tracking-widest text-on-surface font-bold mb-3">B-Roll References</h4>
+<div class="space-y-3">
+<div class="group cursor-pointer">
+<div class="w-full aspect-video bg-surface-container-highest rounded overflow-hidden relative border border-outline-variant/20">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="close-up of futuristic computer hardware with blue and orange glowing lights in a dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQdhhnDWz-M6uQsqyVhOB2uN1QU-uBFXCqqwFWMisFq26pA5BGntjBZKLo8_nkEa3eviPbugO0AqWJkPg36Rh_nf9S58VD_wNn_KyeEkNxKWBnS_KszLmi8_0wr8dyeoSvCn3Fhfm6fjqVIzZR3YDSn8Tvt3BXifpBpEb-IO5nkh1DJ3qMJtMY1yHKw2ORsyYhNL64eVPjyjoVq-vHkR6zqZw7mO03D9K_dxhTE0PKHx90YvOhjFQrxNksBRIS2vEuAk_3s4mLOmh3"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<p class="mt-1 font-label text-[9px] uppercase tracking-wider text-gray-500">Ref: Tech Detail #04</p>
+</div>
+<div class="group cursor-pointer">
+<div class="w-full aspect-video bg-surface-container-highest rounded overflow-hidden relative border border-outline-variant/20">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="abstract digital waves of gold and teal data points flowing through a black void with soft depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUZvpaJ_7tmTRxMivsq5E_ZD04koJBsSQ1P49y_d-6vfYdRNlEDeXR8BMJD42D0ygsiNiar34mXhScg2iIVZNiLc8mv_FKwnrOqFmQ7SIKcOVyl9YLfMsZD5E8bW0ALiRlgKgWHOvtsWmaDc4oZwPJkENqucApW8xAeBUpHFB_FZh7b3N1Ggt-cuU8q0WxqXF8zsFkeUml4roDCMvi-lqSEEUIDFCUk4xmmy6cWolHGpMOrsHW2_cpjcmMx8ejk34SDz_HSPuisXs0"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<p class="mt-1 font-label text-[9px] uppercase tracking-wider text-gray-500">Ref: Data Visualization #12</p>
+</div>
+</div>
+</div>
+</div>
+<!-- FAB AI Assistant -->
+<div class="mt-12">
+<div class="bg-gradient-to-br from-surface-container-high to-surface-container-highest p-4 rounded-lg border border-primary/10 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[80px]">psychology</span>
+</div>
+<h4 class="font-label text-[10px] uppercase tracking-widest text-primary font-bold mb-2">Tactical Prompt</h4>
+<p class="text-[11px] font-body text-on-surface-variant leading-relaxed mb-4 italic">"Rewrite the hook to be 20% more aggressive toward the 'standard SaaS' aesthetic."</p>
+<button class="w-full py-2 bg-primary/10 text-primary border border-primary/20 rounded-sm font-label text-[9px] uppercase font-black tracking-widest hover:bg-primary hover:text-on-primary transition-all">Execute Command</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Floating Action Element (Contextual for Home/Dash, suppressed here but added for alignment to mandate if necessary) -->
+<!-- Suppression logic check: This is a Task-Focused Sub-page/Editor. FAB is technically suppressed per system instructions. -->
+</body></html>

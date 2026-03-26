@@ -122,10 +122,11 @@ export function Login() {
             border: '1px solid var(--ip-border)',
             borderRadius: 'var(--ip-radius-full)',
             color: 'var(--ip-text)',
-            background: 'var(--ip-surface)',
+            background: 'var(--ip-bg-subtle)',
           }}
         >
-          <span style={{ color: 'var(--ip-primary)' }}>&#x2014;</span> Sign in with Google
+          <span style={{ color: 'var(--ip-primary)' }}>&#x2014;</span>{' '}
+          <span style={{ color: 'var(--ip-text)' }}>Sign in with Google</span>
         </button>
 
         <div className="flex items-center gap-3 my-4">

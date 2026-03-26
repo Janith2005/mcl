@@ -89,6 +89,36 @@
     --sidebar-ring: var(--ip-primary);
 }
 
+/* Obsidian Plunder — map --ip-* dark tokens to shadcn variables */
+.dark {
+    --background: var(--ip-bg);
+    --foreground: var(--ip-text);
+    --card: var(--ip-surface);
+    --card-foreground: var(--ip-text);
+    --popover: var(--ip-surface);
+    --popover-foreground: var(--ip-text);
+    --primary: var(--ip-primary);
+    --primary-foreground: var(--ip-text-on-primary);
+    --secondary: var(--ip-bg-subtle);
+    --secondary-foreground: var(--ip-text);
+    --muted: var(--ip-bg-subtle);
+    --muted-foreground: var(--ip-text-secondary);
+    --accent: var(--ip-bg-subtle);
+    --accent-foreground: var(--ip-text-brand);
+    --destructive: var(--ip-error);
+    --border: var(--ip-border);
+    --input: var(--ip-border);
+    --ring: var(--ip-primary);
+    --sidebar: var(--ip-sidebar-bg);
+    --sidebar-foreground: var(--ip-sidebar-text);
+    --sidebar-primary: var(--ip-primary);
+    --sidebar-primary-foreground: var(--ip-text-on-primary);
+    --sidebar-accent: var(--ip-bg-subtle);
+    --sidebar-accent-foreground: var(--ip-text-brand);
+    --sidebar-border: var(--ip-border);
+    --sidebar-ring: var(--ip-primary);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

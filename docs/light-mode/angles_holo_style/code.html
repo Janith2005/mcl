@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Angles - Influence Pirates</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .holo-gradient {
+            background: linear-gradient(135deg, #814586 0%, #9c423f 100%);
+        }
+        .energy-orb {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.15;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#d2c2ce",
+                        "primary-fixed-dim": "#f6aef8",
+                        "secondary": "#9c423f",
+                        "primary-container": "#9c5da1",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#46464b",
+                        "on-primary": "#ffffff",
+                        "background": "#fcf8fb",
+                        "surface-tint": "#844789",
+                        "surface-container": "#f0edef",
+                        "secondary-fixed": "#ffdad7",
+                        "on-secondary-fixed-variant": "#7d2b29",
+                        "on-surface": "#1b1b1d",
+                        "surface-variant": "#e4e2e4",
+                        "inverse-surface": "#303032",
+                        "tertiary-fixed-dim": "#c7c6cb",
+                        "tertiary-fixed": "#e3e2e7",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#f6aef8",
+                        "tertiary-container": "#747479",
+                        "tertiary": "#5b5c60",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f5",
+                        "outline": "#80737e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "surface-bright": "#fcf8fb",
+                        "on-tertiary-container": "#fefcff",
+                        "on-primary-fixed-variant": "#692f6f",
+                        "surface-dim": "#dcd9dc",
+                        "on-primary-fixed": "#36003e",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#4e434d",
+                        "primary-fixed": "#ffd6fc",
+                        "on-secondary-fixed": "#410005",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fe8e88",
+                        "surface-container-high": "#eae7ea",
+                        "on-secondary-container": "#762524",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "surface-container-highest": "#e4e2e4",
+                        "primary": "#814586",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf8fb"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex overflow-hidden">
+<!-- Energy Orbs for Holo Prism Look -->
+<div class="energy-orb w-96 h-96 bg-primary top-[-10%] left-[-5%] rounded-full"></div>
+<div class="energy-orb w-80 h-80 bg-secondary bottom-[5%] right-[20%] rounded-full"></div>
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 gap-2 z-50">
+<div class="flex items-center gap-3 mb-8 px-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+<div>
+<h1 class="text-lg font-black tracking-tighter text-slate-900 dark:text-white font-headline">Creator Lab</h1>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold">Coaching Engine</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-headline font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-headline font-medium">Topics</span>
+</a>
+<!-- Active Tab: Angles -->
+<a class="flex items-center gap-3 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-full px-4 py-3 shadow-lg shadow-fuchsia-500/20 scale-102 translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-headline font-medium">Angles</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">anchor</span>
+<span class="font-headline font-medium">Hooks</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">auto_awesome_motion</span>
+<span class="font-headline font-medium">Swipe File</span>
+</a>
+</nav>
+<button class="mb-6 w-full holo-gradient text-white rounded-full py-3 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all">
+            New Content
+        </button>
+<div class="mt-auto border-t border-slate-100 pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-headline font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-headline font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0 h-screen relative">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 h-16 w-full bg-white/70 backdrop-blur-2xl dark:bg-slate-900/70 shadow-[0_4px_20px_rgba(166,102,170,0.05)] z-40">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-bold bg-gradient-to-r from-fuchsia-600 to-pink-600 bg-clip-text text-transparent font-headline tracking-tight">Influence Pirates</h2>
+<div class="hidden lg:flex items-center gap-6 ml-8">
+<span class="text-fuchsia-600 font-bold border-b-2 border-fuchsia-600 py-1 font-headline">Angles Lab</span>
+<span class="text-slate-500 font-medium hover:text-fuchsia-500 transition-colors font-headline cursor-pointer">Drafts</span>
+<span class="text-slate-500 font-medium hover:text-fuchsia-500 transition-colors font-headline cursor-pointer">Published</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary/20 w-64 text-sm font-body" placeholder="Search angles..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:text-primary transition-all active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-primary transition-all active:scale-95">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5 ml-2">
+<img alt="User avatar" class="w-full h-full rounded-full object-cover" data-alt="close-up portrait of a professional woman with a stylish haircut in a brightly lit studio with soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrcmPgY5ZOH5gYkRoPb5si9yMPLMFz4yeoFpv-bkt0Tw3tePXxcxezRBP6ApOxNBZMHLXHi5KVdp1DyFUrfeQ6Nv3MvS5_wMnVs9FvzZiIx2kUqHq8-jLZAGkb0wpxAYiM9aNirJfMDy2f0jrxC9g6qPS9ixlNf0mDnf2XfqZ4r89kqoAtU7LOVKFAEGYrc_gz1pARxDovSHZdPQRZ7WZr_Kl0xMtugJjXb4h6bOqluncA5XKoStzxyE2sZkV8OFNykMAODI2GgKRT"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto p-8 space-y-12">
+<!-- Hero Editor: Contrast Formula -->
+<section class="space-y-6">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-primary font-bold text-xs uppercase tracking-widest">Active Focus</span>
+<h1 class="text-4xl font-headline font-bold text-on-surface tracking-tight mt-1">Niche Authority in AI</h1>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-highest px-6 py-2.5 rounded-full font-bold text-primary active:scale-95 transition-all text-sm">Save Template</button>
+<button class="holo-gradient text-white px-8 py-2.5 rounded-full font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">auto_fix</span> Generate Content
+                        </button>
+</div>
+</div>
+<!-- Contrast Formula Card -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_20px_40px_rgba(129,69,134,0.04)] border border-primary-fixed-dim/10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">science</span>
+<h3 class="font-headline font-bold text-xl">The Contrast Formula</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+<div class="space-y-2">
+<label class="text-[10px] font-black uppercase text-slate-400 tracking-tighter">The Old World (Status Quo)</label>
+<textarea class="w-full bg-surface-container p-4 rounded-xl border-none focus:ring-2 focus:ring-primary/20 min-h-[100px] text-sm font-body" placeholder="Ex: AI is a threat to junior developers' jobs..."></textarea>
+</div>
+<div class="flex justify-center">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">sync_alt</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-black uppercase text-primary tracking-tighter">The New World (Your Insights)</label>
+<textarea class="w-full bg-primary/5 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary/20 min-h-[100px] text-sm font-body" placeholder="Ex: AI is the junior's superpower to skip the grunt work..."></textarea>
+</div>
+</div>
+</div>
+</section>
+<!-- Multi-format Tabs & Angles Grid -->
+<section class="space-y-8 pb-12">
+<div class="flex items-center justify-between">
+<div class="flex bg-surface-container p-1 rounded-full">
+<button class="px-6 py-2 rounded-full bg-white text-primary font-bold shadow-sm text-sm transition-all">Longform</button>
+<button class="px-6 py-2 rounded-full text-slate-500 font-medium hover:text-primary text-sm transition-all">Shortform</button>
+<button class="px-6 py-2 rounded-full text-slate-500 font-medium hover:text-primary text-sm transition-all">LinkedIn/Twitter</button>
+</div>
+<div class="flex items-center gap-2 text-slate-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span>Sort by performance</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Angle 1: The Rebel -->
+<div class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-primary-fixed-dim/20">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-secondary-fixed text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">The Rebel</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-4">Forget what you were told about seniority.</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Traditional career paths are dead. In the AI era, the 'Rebel' uses tools to automate seniority, making years of experience irrelevant for those who dare to skip the queue.</p>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<span class="text-[10px] font-bold text-slate-400">STRENGTH: HIGH</span>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:translate-x-1 transition-transform">
+                                Edit Draft <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Angle 2: The Expert -->
+<div class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-primary-fixed-dim/20">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">The Expert</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-4">Precision over Volume: The AI Strategist.</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">It's not about how much code you write, but the architectural decisions you enable. AI isn't the developer; it's the workforce, and you are the CEO.</p>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<span class="text-[10px] font-bold text-slate-400">STRENGTH: MEDIUM</span>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:translate-x-1 transition-transform">
+                                Edit Draft <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Angle 3: The Contrarian -->
+<div class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-primary-fixed-dim/20">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-surface-container-highest text-slate-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">The Contrarian</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-4">Why you should stop learning Python in 2024.</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">Syntax is a commodity. Logic is the asset. While everyone is racing to learn the 'how', the winners are mastering the 'why'.</p>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<span class="text-[10px] font-bold text-slate-400">STRENGTH: VIRAL</span>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:translate-x-1 transition-transform">
+                                Edit Draft <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Floating FAB Contextual (Only if appropriate) -->
+<!-- Suppressed for Details/Editor Screen per Rules -->
+</main>
+<!-- NavigationDrawer (Tactical Assistant) -->
+<aside class="hidden xl:flex flex-col gap-6 p-6 w-80 bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 fixed right-0 top-16 h-[calc(100vh-4rem)] rounded-l-3xl border-l border-white/20 shadow-[-20px_40px_40px_rgba(166,102,170,0.08)] z-30 overflow-y-auto">
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-pink-600 text-base">Tactical Assistant</h3>
+<p class="text-[10px] uppercase font-bold text-slate-400">AI Insights &amp; Context</p>
+</div>
+<div class="flex bg-slate-50/50 dark:bg-slate-800/50 p-1 rounded-full text-xs">
+<button class="flex-1 py-2 text-center text-slate-500 font-medium">Context</button>
+<button class="flex-1 py-2 text-center bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full font-bold">AI Coach</button>
+<button class="flex-1 py-2 text-center text-slate-500 font-medium">Live Feed</button>
+</div>
+<!-- Angle Performance Insights -->
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm space-y-4 border border-slate-50">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400">Performance Prediction</span>
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500">The Rebel</span>
+<span class="font-headline font-bold text-on-surface">88% Match</span>
+</div>
+<div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500">The Expert</span>
+<span class="font-headline font-bold text-on-surface">62% Match</span>
+</div>
+<div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+<div class="bg-primary/40 h-full w-[62%]"></div>
+</div>
+</div>
+</div>
+<div class="bg-primary/5 p-5 rounded-2xl space-y-3 relative overflow-hidden">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">psychology</span>
+<span class="text-sm font-headline font-bold">Coach Tip</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                    "Your 'Rebel' angle is tracking high with your recent audience data. Consider leaning into the **'Automation Sovereignty'** keyword—it's getting 4x more engagement than 'AI Productivity'."
+                </p>
+<button class="w-full text-[10px] font-bold text-primary text-left hover:underline">Apply change to all angles</button>
+</div>
+<div class="space-y-4">
+<h4 class="text-[10px] font-black uppercase text-slate-400 tracking-wider">Top Viral Hooks for this Topic</h4>
+<div class="space-y-2">
+<div class="p-3 bg-surface-container rounded-xl text-xs hover:bg-white hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-primary/10">
+                        "99% of developers are using ChatGPT wrong..."
+                    </div>
+<div class="p-3 bg-surface-container rounded-xl text-xs hover:bg-white hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-primary/10">
+                        "The day the junior dev became the CTO."
+                    </div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl text-white">
+<p class="text-[10px] font-bold text-primary-fixed-dim mb-1">PRO INSIGHT</p>
+<p class="text-xs leading-tight">Tuesday mornings have 22% higher open rates for 'Rebel' content.</p>
+</div>
+</aside>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 glass-panel flex justify-around items-center px-4 z-50 border-t border-slate-100">
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-bold">Topics</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">layers</span>
+<span class="text-[10px] font-bold">Angles</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">auto_awesome_motion</span>
+<span class="text-[10px] font-bold">Swipe</span>
+</button>
+</nav>
+</body></html>

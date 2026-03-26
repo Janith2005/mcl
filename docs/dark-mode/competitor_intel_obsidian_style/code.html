@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#484848",
+              "tertiary-dim": "#dfe3b6",
+              "on-secondary-fixed": "#004840",
+              "inverse-surface": "#fcf8f8",
+              "surface-container": "#191a1a",
+              "primary-fixed-dim": "#f8d056",
+              "on-tertiary-fixed": "#444928",
+              "surface-container-low": "#131313",
+              "secondary-container": "#00443c",
+              "error": "#ed7f64",
+              "background": "#0e0e0e",
+              "surface": "#0e0e0e",
+              "on-primary-fixed-variant": "#705900",
+              "tertiary": "#f9fdcf",
+              "surface-dim": "#0e0e0e",
+              "primary": "#e9c349",
+              "tertiary-fixed": "#edf2c4",
+              "secondary": "#11c9b4",
+              "on-error-container": "#ff9b82",
+              "on-error": "#450900",
+              "surface-bright": "#2c2c2c",
+              "error-dim": "#ba573f",
+              "secondary-fixed": "#62fae3",
+              "on-tertiary": "#5d623e",
+              "on-surface-variant": "#acabaa",
+              "on-tertiary-fixed-variant": "#616642",
+              "inverse-on-surface": "#565554",
+              "tertiary-container": "#eaefc1",
+              "outline": "#767575",
+              "on-secondary-container": "#2fd5c0",
+              "error-container": "#7e2b17",
+              "on-primary-container": "#f4cc52",
+              "inverse-primary": "#745c00",
+              "on-primary": "#4f3e00",
+              "on-surface": "#e7e5e4",
+              "primary-fixed": "#ffe088",
+              "on-primary-fixed": "#4e3d00",
+              "surface-container-highest": "#252626",
+              "surface-container-high": "#1f2020",
+              "secondary-dim": "#00baa7",
+              "on-secondary-fixed-variant": "#00675c",
+              "on-secondary": "#003a33",
+              "surface-variant": "#252626",
+              "surface-tint": "#e9c349",
+              "secondary-fixed-dim": "#50ebd5",
+              "primary-dim": "#dab53d",
+              "primary-container": "#574500",
+              "on-background": "#e7e5e4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#dfe3b6",
+              "on-tertiary-container": "#555a37"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #e7e5e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .thin-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .thin-scrollbar::-webkit-scrollbar-track {
+            background: #131313;
+        }
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background: #484848;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-[#0e0e0e] flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15">
+<div class="flex items-center gap-8">
+<span class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase">Sovereign Navigator</span>
+<div class="hidden md:flex items-center bg-[#131313] px-3 py-1.5 rounded-sm border border-[#484848]/15">
+<span class="material-symbols-outlined text-gray-500 text-sm mr-2">search</span>
+<input class="bg-transparent border-none text-xs font-label uppercase tracking-widest focus:ring-0 w-64 text-on-surface" placeholder="SEARCH INTEL..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-gray-400 cursor-pointer hover:text-[#D4AF37] transition-colors">notifications</span>
+<span class="material-symbols-outlined text-gray-400 cursor-pointer hover:text-[#D4AF37] transition-colors">help</span>
+<span class="material-symbols-outlined text-gray-400 cursor-pointer hover:text-[#D4AF37] transition-colors">settings</span>
+</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest border border-primary/20 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional male strategist with sharp features and neutral expression against a dark studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXTrvdEWRmlag-a2jvgZUXlkqdJsJesrolX8g0dhWTLdf-3FTjDpoU4BWUUbdJvaqoH8zQufwtXpEPjcT7OwWWE2V0TxhXrJXtkQ4w3cFwhMBKcSoDFVYzJ2fVaVoBh48vjWZyuev7T_b1WCE_YJxlhz2BxIfkPimIUQLJ7EKsDZUE1moJ8GppJfHZQQ0qdjm56C1ujK202WS-TL6dRzQ-bzjH9xYbjhto75RMOEuLHQIPq5zK0f0J1PdKr99wxS6l57F3BVznwRxR"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-8 z-30 bg-[#131313] w-64 border-r border-[#484848]/15">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary/10 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div>
+<h2 class="text-amber-500 font-bold text-sm tracking-tight">Tactical Op</h2>
+<p class="font-['Space_Grotesk'] uppercase text-[10px] tracking-[0.2em] text-gray-500">Vanguard Edition</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">topic</span>
+<span>Topics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">explore</span>
+<span>Angles</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">anchor</span>
+<span>Hooks</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span>Scripts</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">psychology</span>
+<span>Brain</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-['Space_Grotesk'] uppercase text-xs tracking-widest" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Competitors</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-gray-500 font-medium font-['Space_Grotesk'] uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 px-4 font-label text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-2 border border-secondary/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                Tactical Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-64 pt-[61px] h-screen flex flex-col bg-[#0e0e0e]">
+<!-- Dashboard Header -->
+<div class="px-8 py-6 flex items-end justify-between border-b border-outline-variant/10">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 bg-primary rounded-full"></span>
+<span class="font-label text-[10px] tracking-[0.3em] text-primary uppercase">Field Intelligence Zone</span>
+</div>
+<h1 class="text-3xl font-black tracking-tight text-on-surface uppercase italic">Competitor Intel</h1>
+</div>
+<div class="flex gap-4">
+<div class="text-right">
+<p class="font-label text-[10px] tracking-widest text-gray-500 uppercase">Target Count</p>
+<p class="text-xl font-bold text-on-surface">42 <span class="text-secondary text-sm ml-1">+3</span></p>
+</div>
+<div class="w-[1px] h-10 bg-outline-variant/20"></div>
+<div class="text-right">
+<p class="font-label text-[10px] tracking-widest text-gray-500 uppercase">Scan Frequency</p>
+<p class="text-xl font-bold text-on-surface">REAL-TIME</p>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-hidden grid grid-cols-12">
+<!-- Video Browser Section -->
+<section class="col-span-8 p-8 overflow-y-auto thin-scrollbar bg-[#0e0e0e]">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-label text-xs tracking-[0.2em] text-gray-400 uppercase">Live Transmission Feed</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-container-high text-[10px] font-label text-primary border border-primary/20 tracking-tighter uppercase">Filter: High Retention</button>
+<button class="px-3 py-1 bg-surface-container text-[10px] font-label text-gray-500 border border-outline-variant/10 tracking-tighter uppercase">Sort: Velocity</button>
+</div>
+</div>
+<!-- Asymmetric Bento Grid for Videos -->
+<div class="grid grid-cols-2 gap-6">
+<!-- Featured Video Card -->
+<div class="col-span-2 group relative bg-surface-container-low border border-outline-variant/10 overflow-hidden">
+<div class="aspect-video relative">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="high-tech workspace with multiple glowing monitors displaying complex code and data visualizations in a dim room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFmNQUc7GsXfbwT-Gmxum3y_3FYYu7ysHteceovk71WlLo-RF3KV7CLtkC2lZ2kNH5UqjF41yOt-lxcxjwcT6Lc-w8mdTdFEx3F5FqeuEGq-EJBVVmazy6ZmJAWgz3Nas8Jn_IIdne6kWTQJJaZDHE9C9YT2Mo2sNVjo2_4U6ExkUCIh832BNsUYnZUCSnKwSzli9mzwoLRuNEQntruldqlUWpeHK4lKOCdpxBV5X87TzK-XOfXnjVuM_Z5QEmN3aLaW2y-Vf3uzKq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-2 py-0.5 text-[9px] font-black uppercase tracking-widest">SKELETON DETECTED</div>
+<div class="absolute bottom-6 left-6 right-6">
+<h4 class="text-xl font-bold text-white mb-2 leading-tight uppercase tracking-tight">How to Leverage AI for Rapid Component Delivery</h4>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm">visibility</span>
+<span class="font-label text-[11px] text-gray-300">1.2M VIEWS</span>
+</div>
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label text-[11px]">88% ENGAGEMENT</span>
+</div>
+</div>
+</div>
+<button class="absolute bottom-6 right-6 w-12 h-12 rounded-full bg-primary/90 text-on-primary flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(233,195,73,0.3)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+<!-- Smaller Video Items -->
+<div class="bg-surface-container border border-outline-variant/5 p-4 flex gap-4">
+<div class="w-32 h-20 bg-black flex-shrink-0 relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="close-up of electronic circuit board with neon green glowing traces and macro detail of microchips" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByJCfo0nJYp8x9yiqLZaNMhRidKPKeIWXNr8V0nmuPeq6lYxSwtZa3qfCkM1jux6n6mbvbMca68p0Bis_XcQsO7IZDm1WMbmIOUHcbZWX9tMDaPBRy5FG3K021LbtCJGSYo0g2fbWv0hiTdxKJxo5YqlHne1cevanin8OTEN-HXEZgOU4siFvZOwHZ66WdHb4sxzVnH7C-CIy3hVTvCOOKY1yArnB0UBCl61yBFBx_AM3FLAMQDA70FdIhT3EhfRF2M3CRrgedrrJ4"/>
+<span class="absolute bottom-1 right-1 bg-black/80 text-[8px] font-label px-1 text-gray-300">08:42</span>
+</div>
+<div class="flex flex-col justify-between">
+<h5 class="text-xs font-bold text-on-surface line-clamp-2 uppercase tracking-tight">Advanced System Architecture Breakdown</h5>
+<div class="flex items-center gap-3">
+<span class="text-[9px] font-label text-gray-500">420K VIEWS</span>
+<span class="text-[9px] font-label text-primary">HOOK: 9/10</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant/5 p-4 flex gap-4">
+<div class="w-32 h-20 bg-black flex-shrink-0 relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="complex financial line chart on a dark interface with vibrant red and green data points" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF82JxwmNCwabUtkGy8PxdNEhuvkSsMNG9t9VzA01jtguALwNJxGamNi7EQBBpy6byI4PLK-ExF-mxbUKIF0ul6e_yDAtebqEIKNoOiRd-RJ5bIfA8TjcEAcpdye6liP26K7-G7rL9NEF8NyzG0B1_LLjBuGvH-UcM6_GzrX_Gh9zhEErDxVTMZGpvids50UfSV2rvzqF5NapLePFMAcwlldlRKUu6qoMuO4L7HiBlOVse2_NNomJwskNF0r3Xd4LN2-WwO8hjI2jC"/>
+<span class="absolute bottom-1 right-1 bg-black/80 text-[8px] font-label px-1 text-gray-300">12:15</span>
+</div>
+<div class="flex flex-col justify-between">
+<h5 class="text-xs font-bold text-on-surface line-clamp-2 uppercase tracking-tight">Market Domination Through Tonal Depth</h5>
+<div class="flex items-center gap-3">
+<span class="text-[9px] font-label text-gray-500">18K VIEWS</span>
+<span class="text-[9px] font-label text-primary">HOOK: 7/10</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant/5 p-4 flex gap-4">
+<div class="w-32 h-20 bg-black flex-shrink-0 relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="abstract digital representation of a planet made of interconnected light nodes and data lines in deep space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2MFNLNCSk7wx3mGZq0RbhL7CotC7YMrb9ClTNZ_emfEg6AnTPhWaOo_myc2MG6Z2GruRzNQTgLcqogpPe93xW00rJ5VuuRlDwH9xyPVx5NLNGb6KMwK4WspGBZ2Wx-Cpf8znL_uXIJ4loUG0RbJffzDHPGC_086lmAEYr_RNGilUyldrHKsgDcF8PIsRmEQcyDabWFPJFceTPgBbrKOlGKfm7vJ9V1bgaNMODRxDMPkNLJxwnnZ5QjIpSy3FVnkmDfHmZHjAlVCyJ"/>
+<span class="absolute bottom-1 right-1 bg-black/80 text-[8px] font-label px-1 text-gray-300">05:59</span>
+</div>
+<div class="flex flex-col justify-between">
+<h5 class="text-xs font-bold text-on-surface line-clamp-2 uppercase tracking-tight">Decoding The Viral Skeleton of Top Creators</h5>
+<div class="flex items-center gap-3">
+<span class="text-[9px] font-label text-gray-500">92K VIEWS</span>
+<span class="text-[9px] font-label text-primary">HOOK: 10/10</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant/5 p-4 flex gap-4">
+<div class="w-32 h-20 bg-black flex-shrink-0 relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="macro photograph of a computer CPU processor with intricate metallic patterns and reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU5XN4A2mHL5SHOnPDjsrD3cLEQLuArZK2opqsnIb2BeF8xh9vH8Iyzylh15TomsB-Z4MPUe3jy2PEsATjvGCUVAU8X33pCLOksMGxmMFkOVosaJ3nnjvGJIRDz1EzNv_U-ABicykA4YNH_0p3mPLPOLmHf-FJdtByto0l0hXiP6wZRxUnfqj_py85tKgq-zIoGTNIqeUZNy0lvYv5eubSH5FLYADBbOtUy-49GEN9VYfUHbJMSvlMx6m1Y8nwpiMSrFBjVffHDWCw"/>
+<span class="absolute bottom-1 right-1 bg-black/80 text-[8px] font-label px-1 text-gray-300">15:30</span>
+</div>
+<div class="flex flex-col justify-between">
+<h5 class="text-xs font-bold text-on-surface line-clamp-2 uppercase tracking-tight">Tactical Resource Management Protocols</h5>
+<div class="flex items-center gap-3">
+<span class="text-[9px] font-label text-gray-500">5.2K VIEWS</span>
+<span class="text-[9px] font-label text-primary">HOOK: 6/10</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Skeleton Ripper Reports Sidebar -->
+<section class="col-span-4 border-l border-outline-variant/15 bg-surface-container-low p-6 overflow-y-auto thin-scrollbar">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-label text-xs tracking-[0.2em] text-on-surface uppercase font-bold">Skeleton Ripper Reports</h3>
+</div>
+<div class="space-y-6">
+<!-- Report Card 1: The Monolith -->
+<div class="bg-surface p-5 border-l-2 border-primary">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-label text-[10px] tracking-widest text-gray-500 uppercase">Analysis Target</h4>
+<p class="text-sm font-bold text-on-surface">VIDEO_ID_4492</p>
+</div>
+<span class="bg-primary/10 text-primary text-[9px] font-label font-bold px-2 py-0.5 uppercase">Elite Metric</span>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between items-end mb-1">
+<span class="font-label text-[9px] text-gray-500 uppercase">Hook Strength</span>
+<span class="text-primary font-bold text-sm">94%</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest">
+<div class="h-full bg-primary" style="width: 94%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-1">
+<span class="font-label text-[9px] text-gray-500 uppercase">Information Density</span>
+<span class="text-secondary font-bold text-sm">MAX</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest">
+<div class="h-full bg-secondary" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/10">
+<p class="font-label text-[9px] text-gray-500 uppercase mb-2">Tactical Summary</p>
+<p class="text-[11px] leading-relaxed text-on-surface-variant italic">"Utilizes asymmetric screen splits to maintain focus during rapid information delivery. Recommend immediate plagiarism-free adaptation of the 'Grid-Flash' transition."</p>
+</div>
+</div>
+<!-- Metric Monoliths -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container p-3 border border-outline-variant/5">
+<p class="font-label text-[8px] text-gray-500 uppercase tracking-widest mb-1">CPM Drift</p>
+<p class="text-xl font-black text-on-surface tracking-tighter">+$12.4</p>
+<div class="h-0.5 w-4 bg-secondary mt-2"></div>
+</div>
+<div class="bg-surface-container p-3 border border-outline-variant/5">
+<p class="font-label text-[8px] text-gray-500 uppercase tracking-widest mb-1">Churn Risk</p>
+<p class="text-xl font-black text-error tracking-tighter">0.02%</p>
+<div class="h-0.5 w-4 bg-error mt-2"></div>
+</div>
+</div>
+<!-- Hook Breakdown List -->
+<div class="space-y-2">
+<h5 class="font-label text-[9px] tracking-[0.2em] text-gray-500 uppercase">Top 3 Hook Anchors</h5>
+<div class="flex items-center gap-3 bg-surface-container-highest/30 p-2 border border-outline-variant/5">
+<span class="text-primary font-label text-[10px] font-bold">01</span>
+<span class="text-[10px] font-medium text-gray-300 uppercase tracking-tight flex-1">The 'Void-First' Visual Hook</span>
+<span class="material-symbols-outlined text-sm text-secondary">check_circle</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-highest/30 p-2 border border-outline-variant/5">
+<span class="text-primary font-label text-[10px] font-bold">02</span>
+<span class="text-[10px] font-medium text-gray-300 uppercase tracking-tight flex-1">Contrarian Strategy Pitch</span>
+<span class="material-symbols-outlined text-sm text-secondary">check_circle</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-highest/30 p-2 border border-outline-variant/5">
+<span class="text-primary font-label text-[10px] font-bold">03</span>
+<span class="text-[10px] font-medium text-gray-300 uppercase tracking-tight flex-1">Rapid Success Projection</span>
+<span class="material-symbols-outlined text-sm text-gray-600">radio_button_unchecked</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary font-label text-[10px] tracking-widest font-bold uppercase hover:bg-primary-dim transition-colors">
+                        RIF_GENERATE FULL REPORT
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Element -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="flex items-center gap-3 bg-surface-bright p-1 pl-4 rounded-full border border-primary/30 shadow-[0_10px_40px_rgba(0,0,0,0.5)] group">
+<span class="font-label text-[10px] tracking-widest text-primary uppercase font-bold">Initiate New Scan</span>
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center group-hover:rotate-90 transition-transform duration-300">
+<span class="material-symbols-outlined">add</span>
+</div>
+</button>
+</div>
+</body></html>

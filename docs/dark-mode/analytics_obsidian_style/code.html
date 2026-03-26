@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sovereign Navigator | Analytics Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#484848",
+                        "tertiary-dim": "#dfe3b6",
+                        "on-secondary-fixed": "#004840",
+                        "inverse-surface": "#fcf8f8",
+                        "surface-container": "#191a1a",
+                        "primary-fixed-dim": "#f8d056",
+                        "on-tertiary-fixed": "#444928",
+                        "surface-container-low": "#131313",
+                        "secondary-container": "#00443c",
+                        "error": "#ed7f64",
+                        "background": "#0e0e0e",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed-variant": "#705900",
+                        "tertiary": "#f9fdcf",
+                        "surface-dim": "#0e0e0e",
+                        "primary": "#e9c349",
+                        "tertiary-fixed": "#edf2c4",
+                        "secondary": "#11c9b4",
+                        "on-error-container": "#ff9b82",
+                        "on-error": "#450900",
+                        "surface-bright": "#2c2c2c",
+                        "error-dim": "#ba573f",
+                        "secondary-fixed": "#62fae3",
+                        "on-tertiary": "#5d623e",
+                        "on-surface-variant": "#acabaa",
+                        "on-tertiary-fixed-variant": "#616642",
+                        "inverse-on-surface": "#565554",
+                        "tertiary-container": "#eaefc1",
+                        "outline": "#767575",
+                        "on-secondary-container": "#2fd5c0",
+                        "error-container": "#7e2b17",
+                        "on-primary-container": "#f4cc52",
+                        "inverse-primary": "#745c00",
+                        "on-primary": "#4f3e00",
+                        "on-surface": "#e7e5e4",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed": "#4e3d00",
+                        "surface-container-highest": "#252626",
+                        "surface-container-high": "#1f2020",
+                        "secondary-dim": "#00baa7",
+                        "on-secondary-fixed-variant": "#00675c",
+                        "on-secondary": "#003a33",
+                        "surface-variant": "#252626",
+                        "surface-tint": "#e9c349",
+                        "secondary-fixed-dim": "#50ebd5",
+                        "primary-dim": "#dab53d",
+                        "primary-container": "#574500",
+                        "on-background": "#e7e5e4",
+                        "surface-container-lowest": "#000000",
+                        "tertiary-fixed-dim": "#dfe3b6",
+                        "on-tertiary-container": "#555a37"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tonal-gradient { background: linear-gradient(145deg, #e9c349 0%, #dab53d 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-4 pb-8 z-50 bg-[#131313] dark:bg-[#131313] h-screen w-64 left-0 top-0 border-r border-[#484848]/15 tonal shift bg-[#131313] to bg-[#0e0e0e] flat no shadows transition-all duration-200 ease-in-out">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary text-xl" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h2 class="text-amber-500 font-bold font-label uppercase text-xs tracking-widest leading-none">Tactical Op</h2>
+<p class="text-[10px] text-gray-500 font-label tracking-tighter uppercase mt-1">Vanguard Edition</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="topic">topic</span>
+<span>Topics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="explore">explore</span>
+<span>Angles</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="anchor">anchor</span>
+<span>Hooks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="description">description</span>
+<span>Scripts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#D4AF37] border-l-2 border-[#D4AF37] bg-[#191a1a] font-bold font-label uppercase text-xs tracking-widest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="psychology">psychology</span>
+<span>Brain</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="group">group</span>
+<span>Competitors</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 font-medium font-label uppercase text-xs tracking-widest hover:text-white hover:bg-[#191a1a] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-secondary-container text-on-secondary-container rounded-sm font-label text-[10px] tracking-widest uppercase hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                Tactical Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#0e0e0e] dark:bg-[#0e0e0e] full-width top-0 z-40 bg-[#131313] flat no shadows flex justify-between items-center w-full px-6 py-3 border-b border-[#484848]/15 cursor-pointer active:scale-95 transition-colors duration-150">
+<div class="flex items-center gap-8">
+<h1 class="text-lg font-black tracking-tighter text-[#D4AF37] uppercase font-['Inter']">Sovereign Navigator</h1>
+<div class="hidden lg:flex items-center bg-surface-container-high px-3 py-1.5 rounded-sm border border-outline-variant/10">
+<span class="material-symbols-outlined text-gray-500 text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs font-label tracking-widest text-on-surface placeholder:text-gray-600 w-64" placeholder="COMMAND SEARCH..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-gray-400">
+<span class="material-symbols-outlined cursor-pointer hover:text-[#D4AF37]" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#D4AF37]" data-icon="help">help</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#D4AF37]" data-icon="settings">settings</span>
+</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a focused professional male creator in a tech-inspired setting with soft ambient gold lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKoGofDjdrdvu_6-J1rC6T_cm8JpoblZCPP0BI0_Bjnn-fydAjU-LhjNSI1NDLW1sIyX-_oW9ME-1xDqADofkY-n3RuJIaF1xhTocaeX-QhLLzpoeJSK5LR5XaYTHEiSXKRlHIeyiuh8CcPda-ff2is-Hm5c3aFYVkqJFeVDS6L5CT-UEAVwFu5H0LrEg35fjxVWxn4tpgiQ5UHkyelxDYtAY43UNCb46CoudW31bZvoQ3y-ZYyKYKn_ACHTzw2HaEgcvFLQlUW6L-"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="p-8 space-y-8 flex-1">
+<!-- Header/Breadcrumbs -->
+<div class="flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 text-primary font-label text-[10px] tracking-[0.2em] mb-1">
+<span>OPERATIONS</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span>ANALYTICS COMMAND</span>
+</div>
+<h2 class="text-4xl font-black font-headline tracking-tighter text-on-surface uppercase italic">Performance Vector</h2>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-low px-4 py-2 border border-outline-variant/15 flex items-center gap-3">
+<span class="font-label text-[10px] text-gray-500 uppercase tracking-widest">Timeframe</span>
+<span class="font-label text-xs text-primary font-bold">L-30 DAYS</span>
+<span class="material-symbols-outlined text-xs text-gray-600" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- Metric Monoliths -->
+<div class="bg-surface-container-low p-6 border-l-2 border-primary relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label text-[10px] text-gray-500 uppercase tracking-widest mb-4">Total Impressions</p>
+<h3 class="text-4xl font-headline font-black text-on-surface tracking-tighter">1.42M</h3>
+<div class="mt-4 flex items-center gap-2 text-secondary font-label text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+<span>+12.4% VS PREV</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl" data-icon="visibility">visibility</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 border-l-2 border-secondary relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label text-[10px] text-gray-500 uppercase tracking-widest mb-4">Engagement Rate</p>
+<h3 class="text-4xl font-headline font-black text-on-surface tracking-tighter">8.92%</h3>
+<div class="mt-4 flex items-center gap-2 text-secondary font-label text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+<span>+2.1% VS PREV</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl" data-icon="ads_click">ads_click</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 border-l-2 border-primary relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label text-[10px] text-gray-500 uppercase tracking-widest mb-4">Hook Conversion</p>
+<h3 class="text-4xl font-headline font-black text-on-surface tracking-tighter">64.1%</h3>
+<div class="mt-4 flex items-center gap-2 text-error font-label text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_down">trending_down</span>
+<span>-1.2% VS PREV</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl" data-icon="anchor">anchor</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 border-l-2 border-secondary relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label text-[10px] text-gray-500 uppercase tracking-widest mb-4">Retention Depth</p>
+<h3 class="text-4xl font-headline font-black text-on-surface tracking-tighter">04:12</h3>
+<div class="mt-4 flex items-center gap-2 text-secondary font-label text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+<span>+00:15 VS PREV</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl" data-icon="timer">timer</span>
+</div>
+</div>
+</div>
+<!-- Main Charts Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Engagement Distribution Chart -->
+<div class="lg:col-span-2 bg-surface-container p-6 rounded-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-2">
+<div class="w-1 h-4 bg-primary"></div>
+<h4 class="font-label text-xs font-bold uppercase tracking-widest">Growth Trajectory</h4>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label text-[10px] text-gray-500 uppercase tracking-widest">Impressions</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label text-[10px] text-gray-500 uppercase tracking-widest">Engagements</span>
+</div>
+</div>
+</div>
+<!-- Simulated Graph -->
+<div class="h-64 flex items-end gap-2 px-2 border-b border-l border-outline-variant/20">
+<!-- Bar chart simulation with low weight strokes -->
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-1/4 relative group">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-2/5 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-1/2 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-3/5 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/20 h-[70%] relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-4/5 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-full relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-3/4 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-4/5 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-colors h-3/5 relative">
+<div class="absolute bottom-0 w-full h-[2px] bg-primary"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2">
+<span class="font-label text-[10px] text-gray-600 uppercase">Week 01</span>
+<span class="font-label text-[10px] text-gray-600 uppercase">Week 02</span>
+<span class="font-label text-[10px] text-gray-600 uppercase">Week 03</span>
+<span class="font-label text-[10px] text-gray-600 uppercase">Week 04</span>
+</div>
+</div>
+<!-- Hook Pattern Performance -->
+<div class="bg-surface-container p-6 rounded-sm border border-outline-variant/10">
+<div class="flex items-center gap-2 mb-8">
+<div class="w-1 h-4 bg-secondary"></div>
+<h4 class="font-label text-xs font-bold uppercase tracking-widest">Hook Archetypes</h4>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface uppercase tracking-wider">Negativity Bias</span>
+<span class="font-label text-[10px] text-primary">88%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 overflow-hidden">
+<div class="bg-primary h-full" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface uppercase tracking-wider">The "Stupid Simple"</span>
+<span class="font-label text-[10px] text-primary">72%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 overflow-hidden">
+<div class="bg-primary h-full" style="width: 72%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface uppercase tracking-wider">Contrarian Take</span>
+<span class="font-label text-[10px] text-primary">65%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 overflow-hidden">
+<div class="bg-primary h-full" style="width: 65%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface uppercase tracking-wider">The Listicle Fix</span>
+<span class="font-label text-[10px] text-primary">42%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 overflow-hidden">
+<div class="bg-primary h-full" style="width: 42%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Drilldown -->
+<div class="bg-surface-container rounded-sm border border-outline-variant/10 overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-low">
+<h4 class="font-label text-xs font-bold uppercase tracking-widest">High-Performance Signals</h4>
+<button class="text-[10px] font-label uppercase text-primary tracking-[0.2em] flex items-center gap-1">
+                        View Detailed Log
+                        <span class="material-symbols-outlined text-xs" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+<table class="w-full text-left font-label">
+<thead class="bg-surface-container-highest/30">
+<tr>
+<th class="px-6 py-3 text-[10px] uppercase tracking-widest text-gray-500 font-medium">Content Asset</th>
+<th class="px-6 py-3 text-[10px] uppercase tracking-widest text-gray-500 font-medium">Hook Weight</th>
+<th class="px-6 py-3 text-[10px] uppercase tracking-widest text-gray-500 font-medium">CTR</th>
+<th class="px-6 py-3 text-[10px] uppercase tracking-widest text-gray-500 font-medium">Avg Watch</th>
+<th class="px-6 py-3 text-[10px] uppercase tracking-widest text-gray-500 font-medium">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest rounded-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale contrast-125" data-alt="Close-up of retro synthesizer controls with amber lighting and shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf2BlYcDQbtE0Pu_1pqu-zsG917FSj7QjMLeT7vWUim0U7t9kjsmT12gNwOJDqQzpyjxVzkMcjrqpbb0rk8_Pv09O24ZKXf9qGheF06Fzz_P4tJJ3lAKF7EwDFilQuD_kBLZcM-jH_wfyR7snHFwX4ORmWODqBvVSS1DDofKDbd79FR4vYzibbHa6Mop8Blk_PxNd5mNiqPI82dzY9V6Upymz4AGVyP3ZF5EPfs71qPup0kcHzEoouqVNof5-yUVJaLpANG69nVFXQ"/>
+</div>
+<div>
+<div class="text-xs font-bold text-on-surface">The 5-AM Delusion...</div>
+<div class="text-[9px] text-gray-500 mt-0.5 tracking-tight">POSTED: 12 OCT 2023</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-primary font-bold tracking-widest">8.2/10</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface">12.4%</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface font-mono">03:45</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[9px] uppercase tracking-widest font-bold rounded-full">Optimal</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest rounded-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale contrast-125" data-alt="Digital network visualization with glowing lines and particles against a deep dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSWG5IBryBPp7NtoJZOn6c3B-WLLDtPFhjBRbBCrzNBv3K1g6F8a8Iysz3f2M3512uQ49X109BQgirYKgCAGKvbLrJ_gS-HlGRH36Sg0xORVMzqvM8Ju0LoxRyvRJj8ewAWXJ5IKV0c6VJnVEw2m4Bs4m4ffvAlG-12vhio8tq0hVv1EywbVkWdrzyyQVEh26kgnwbVDoYYVCElR72k72p3sndRKKHYZVmoiYxSJ0U6_CUg9wYymw7OK2mjy584vVk4OjpF693ESXK"/>
+</div>
+<div>
+<div class="text-xs font-bold text-on-surface">Why Your Hook Fails...</div>
+<div class="text-[9px] text-gray-500 mt-0.5 tracking-tight">POSTED: 10 OCT 2023</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-primary font-bold tracking-widest">9.4/10</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface">14.8%</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface font-mono">05:12</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[9px] uppercase tracking-widest font-bold rounded-full">Viral Pivot</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest rounded-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale contrast-125" data-alt="Abstract deep blue and black geometric shapes with minimal lighting and sharp edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVo60eQLcoFUnAH-jbYyKXWd3xtkfXljwP9VYfetlkOWeO7e8wqKV0wzJarCKUqjOho7ttCOKC4AlSfFGPJ6B4tOrQpWTrcN7H8cXCPOis57KoTo9lRmGL0w35WHH2vksaTDjlmGV2k_dSXTkbOkH0KAa9ggrqODDAu5tnUnMj17WKxz9a0utAgrRe90taZKPqeKX84LmgHFKQw47MHH8xRSxhRm7gGBtapvR0B-WFNhom9nyyCHSlcEr_UCzRfgTpl-o9moaSuEWv"/>
+</div>
+<div>
+<div class="text-xs font-bold text-on-surface">Stop Writing Captions...</div>
+<div class="text-[9px] text-gray-500 mt-0.5 tracking-tight">POSTED: 08 OCT 2023</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-primary font-bold tracking-widest">5.1/10</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface">4.2%</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs text-on-surface font-mono">01:04</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-error/10 text-error text-[9px] uppercase tracking-widest font-bold rounded-full">Low Sig</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Asymmetric Bottom Detail -->
+<div class="flex flex-col md:flex-row gap-6">
+<div class="flex-1 bg-surface-container-low border border-outline-variant/10 p-6 relative">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-4xl" data-icon="lightbulb">lightbulb</span>
+</div>
+<h5 class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-4">Tactical Recommendation</h5>
+<p class="text-xs text-gray-400 leading-relaxed max-w-lg">
+                        Retention drops significantly at the 0:45 mark across your "Contrarian Take" series. Recommendation: Shift the <span class="text-on-surface font-bold">Secondary Visual Reveal</span> to 0:38 to maintain pattern interrupt. Current engagement decay suggest "Visual Fatigue" on stationary talking head shots.
+                    </p>
+</div>
+<div class="w-full md:w-80 bg-primary/5 border border-primary/20 p-6 flex flex-col justify-between">
+<div>
+<h5 class="font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-4 italic">Creator Health Score</h5>
+<div class="text-6xl font-headline font-black text-primary tracking-tighter">A+</div>
+</div>
+<div class="mt-4 flex flex-col gap-1">
+<div class="w-full bg-outline-variant/20 h-0.5">
+<div class="bg-primary h-full" style="width: 94%"></div>
+</div>
+<span class="font-label text-[8px] text-gray-500 uppercase self-end">94th Percentile in Niche</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

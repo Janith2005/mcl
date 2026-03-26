@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Topics Lab | Influence Pirates</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#d2c2ce",
+                        "primary-fixed-dim": "#f6aef8",
+                        "secondary": "#9c423f",
+                        "primary-container": "#9c5da1",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#46464b",
+                        "on-primary": "#ffffff",
+                        "background": "#fcf8fb",
+                        "surface-tint": "#844789",
+                        "surface-container": "#f0edef",
+                        "secondary-fixed": "#ffdad7",
+                        "on-secondary-fixed-variant": "#7d2b29",
+                        "on-surface": "#1b1b1d",
+                        "surface-variant": "#e4e2e4",
+                        "inverse-surface": "#303032",
+                        "tertiary-fixed-dim": "#c7c6cb",
+                        "tertiary-fixed": "#e3e2e7",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#f6aef8",
+                        "tertiary-container": "#747479",
+                        "tertiary": "#5b5c60",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f5",
+                        "outline": "#80737e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "surface-bright": "#fcf8fb",
+                        "on-tertiary-container": "#fefcff",
+                        "on-primary-fixed-variant": "#692f6f",
+                        "surface-dim": "#dcd9dc",
+                        "on-primary-fixed": "#36003e",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#4e434d",
+                        "primary-fixed": "#ffd6fc",
+                        "on-secondary-fixed": "#410005",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fe8e88",
+                        "surface-container-high": "#eae7ea",
+                        "on-secondary-container": "#762524",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "surface-container-highest": "#e4e2e4",
+                        "primary": "#814586",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf8fb"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .holo-gradient {
+            background: linear-gradient(135deg, #814586 0%, #9c423f 100%);
+        }
+        .energy-orb {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.08;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<div class="energy-orb bg-primary top-[-10%] left-[-10%]"></div>
+<div class="energy-orb bg-secondary bottom-[-10%] right-[-10%]"></div>
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col p-4 gap-2 font-['Space_Grotesk'] font-medium">
+<div class="mb-8 px-4 py-2">
+<h1 class="text-lg font-black tracking-tighter text-slate-900 dark:text-white">Creator Lab</h1>
+<p class="text-xs text-slate-500">Coaching Engine</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-full px-4 py-3 shadow-lg shadow-fuchsia-500/20 scale-102 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Topics</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span>Angles</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">anchor</span>
+<span>Hooks</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 rounded-full hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/20 hover:text-fuchsia-600 transition-all" href="#">
+<span class="material-symbols-outlined">auto_awesome_motion</span>
+<span>Swipe File</span>
+</a>
+</nav>
+<button class="holo-gradient text-white rounded-full py-3 px-6 font-bold flex items-center justify-center gap-2 hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-primary/20 mb-6">
+<span class="material-symbols-outlined">add</span>
+<span>New Content</span>
+</button>
+<div class="mt-auto border-t border-slate-100 pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 rounded-full hover:text-fuchsia-600 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 rounded-full hover:text-fuchsia-600 transition-colors" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+<!-- TopAppBar -->
+<header class="bg-white/70 backdrop-blur-2xl dark:bg-slate-900/70 shadow-[0_4px_20px_rgba(166,102,170,0.05)] z-40 flex justify-between items-center px-6 h-16 w-full font-['Space_Grotesk'] tracking-tight">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold bg-gradient-to-r from-fuchsia-600 to-pink-600 bg-clip-text text-transparent">Influence Pirates</span>
+<div class="h-6 w-px bg-slate-200 mx-2"></div>
+<h2 class="text-lg font-bold text-slate-900">Topic Laboratory</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-100/50 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search trends..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-slate-500 hover:text-fuchsia-500 transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-slate-500 hover:text-fuchsia-500 transition-colors"><span class="material-symbols-outlined">help_outline</span></button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border-2 border-primary-fixed ml-2" data-alt="Close-up portrait of a creative professional with a friendly expression, soft studio lighting, vibrant background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwURBieGBydR8w-Egeu4XiVW2zQyYcISLGH4tUftOgCbx0LVwKClEBX6bty_3G51yhFK-tG-Td71vmlIYcW-DfErr6trGiPEHbKk0Z6Cej85oBBDUV5S4CaNgxTJdPBhVjsZg-dplOcCfEoXYdW0ZDlhAd9r7KBdD8E3ZSGuLeZW3C_g2QWnC2eo4aoWymNaZQF_SZqNwQZRHB4CKXmyRLOjbBgO_9-44eX2Pd7IE2r7Vxlo4I4KWmqv78YJJfIeniu9vh-ixEdzpG"/>
+</div>
+</div>
+</header>
+<!-- Board Content Area -->
+<div class="flex-1 overflow-x-auto overflow-y-hidden p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low p-1 rounded-full flex gap-1">
+<button class="px-4 py-1.5 bg-surface-container-lowest shadow-sm rounded-full text-sm font-semibold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">view_kanban</span> Kanban
+                            </button>
+<button class="px-4 py-1.5 text-slate-500 hover:text-slate-800 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-sm">table_rows</span> Table
+                            </button>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-full text-xs font-medium text-slate-600">
+<span class="w-2 h-2 rounded-full bg-green-500"></span> 12 New Topics found today
+                        </div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 border border-outline-variant/30 rounded-full text-sm font-medium hover:bg-surface-container transition-colors">Bulk Actions</button>
+<button class="px-4 py-2 bg-on-surface text-white rounded-full text-sm font-medium flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                        </button>
+</div>
+</div>
+<!-- Kanban Columns -->
+<div class="flex gap-6 h-[calc(100%-80px)] min-w-max">
+<!-- Discovered Column -->
+<div class="w-80 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-headline font-bold text-slate-700 flex items-center gap-2">
+                                Discovered <span class="text-xs px-2 py-0.5 bg-slate-200 rounded-full text-slate-500">4</span>
+</h3>
+<button class="p-1 text-slate-400 hover:text-slate-600"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2 pb-8 scrollbar-hide">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border border-transparent hover:border-primary-fixed-dim/30 shadow-[0_10px_30px_rgba(0,0,0,0.02)] transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest uppercase text-primary/60">TECH TRENDS</span>
+<div class="flex items-center gap-1 text-pink-600 bg-pink-50 px-2 py-0.5 rounded text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">bolt</span> 88
+                                    </div>
+</div>
+<h4 class="font-headline text-lg font-bold text-slate-900 leading-tight mb-3">AI Agent Overlords: The 2024 Reality</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container rounded-md text-[10px] text-slate-600 font-medium">#AI</span>
+<span class="px-2 py-0.5 bg-surface-container rounded-md text-[10px] text-slate-600 font-medium">#FutureTech</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-50">
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-6 h-6 rounded-full ring-2 ring-white" data-alt="Avatar of a creative team member, young male, smiling, minimalist profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByxhqQTtYCEDtD3ZsVStpmuDtl52B0Vi7Q0IO-H1teBIEU68IIyW4LVNutVs_r8SmUTZHBXt_idEGFo9cRuU5nsYu-FhJpBchNJPd1DUDShog-qPjCOlevi4a2hgM2JbLmwu0ctX7OkbJ-6hOE-TSrVJpZxtETP7jiTLha7QAInTWTeReQOB44WcO9o2kQhfVSBKvbPX0ablHwS0rNwoXWacaTHVq9HVSvL6Jo8_M9RIeF9T88eHn5xpjnF2FAlSdi6EZRMNbZUtNP"/>
+</div>
+<span class="text-[10px] text-slate-400">Added 2h ago</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border border-transparent hover:border-primary-fixed-dim/30 shadow-[0_10px_30px_rgba(0,0,0,0.02)] transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest uppercase text-secondary/60">FINANCE</span>
+<div class="flex items-center gap-1 text-fuchsia-600 bg-fuchsia-50 px-2 py-0.5 rounded text-[10px] font-bold">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">bolt</span> 72
+                                    </div>
+</div>
+<h4 class="font-headline text-lg font-bold text-slate-900 leading-tight mb-3">The Invisible Economy of Ghost Kitchens</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container rounded-md text-[10px] text-slate-600 font-medium">#Business</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-50">
+<span class="text-[10px] text-slate-400 italic">Raw Source: Reddit</span>
+<span class="text-[10px] text-slate-400">Added 5h ago</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Scored Column -->
+<div class="w-80 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-headline font-bold text-slate-700 flex items-center gap-2">
+                                Scored <span class="text-xs px-2 py-0.5 bg-slate-200 rounded-full text-slate-500">2</span>
+</h3>
+<button class="p-1 text-slate-400 hover:text-slate-600"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2 pb-8 scrollbar-hide">
+<div class="bg-surface-container-lowest p-5 rounded-lg border border-primary-fixed-dim shadow-[0_15px_35px_rgba(129,69,134,0.05)] transition-all group relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent -mr-8 -mt-8 rounded-full"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest uppercase text-primary/60">LIFESTYLE</span>
+<div class="flex items-center gap-1 text-white bg-primary px-2 py-0.5 rounded text-[10px] font-bold shadow-md">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">bolt</span> 94
+                                    </div>
+</div>
+<h4 class="font-headline text-lg font-bold text-slate-900 leading-tight mb-3">Minimalism is Dead: Long Live "Cluttercore"</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-primary-fixed rounded-md text-[10px] text-on-primary-fixed-variant font-medium">Viral Spike</span>
+<span class="px-2 py-0.5 bg-surface-container rounded-md text-[10px] text-slate-600 font-medium">#Design</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-50">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-green-500">trending_up</span>
+<span class="text-[10px] font-bold text-slate-600">+12.4% Momentum</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Developing Column -->
+<div class="w-80 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-headline font-bold text-slate-700 flex items-center gap-2">
+                                Developing <span class="text-xs px-2 py-0.5 bg-slate-200 rounded-full text-slate-500">3</span>
+</h3>
+<button class="p-1 text-slate-400 hover:text-slate-600"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2 pb-8 scrollbar-hide">
+<div class="bg-surface-container-lowest p-5 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-transparent">
+<div class="w-full h-1.5 bg-slate-100 rounded-full mb-4 overflow-hidden">
+<div class="h-full bg-primary-container w-[65%]"></div>
+</div>
+<h4 class="font-headline text-lg font-bold text-slate-900 leading-tight mb-3">The SaaS Crisis: Why Subscription Fatigue is Real</h4>
+<div class="flex items-center justify-between text-[10px] text-slate-400">
+<span>Content drafting...</span>
+<span>65% Ready</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Ready Column -->
+<div class="w-80 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-headline font-bold text-slate-700 flex items-center gap-2">
+                                Ready <span class="text-xs px-2 py-0.5 bg-slate-200 rounded-full text-slate-500">1</span>
+</h3>
+<button class="p-1 text-slate-400 hover:text-slate-600"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2 pb-8 scrollbar-hide">
+<div class="bg-surface-container-lowest p-5 rounded-lg border-2 border-green-100 shadow-[0_15px_35px_rgba(34,197,94,0.04)] relative">
+<div class="absolute -top-3 -right-3 bg-green-500 text-white p-1 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<h4 class="font-headline text-lg font-bold text-slate-900 leading-tight mb-3">Why You Should Stop Working 8 Hours a Day</h4>
+<p class="text-xs text-slate-500 mb-4 line-clamp-2">Complete package ready with 3 hooks and high-res thumbnail concept.</p>
+<button class="w-full py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">Export to Schedule</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Component (Optional context) -->
+<button class="absolute bottom-10 right-10 w-14 h-14 bg-primary text-white rounded-full shadow-[0_20px_40px_rgba(129,69,134,0.3)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined">smart_toy</span>
+</button>
+</main>
+<!-- NavigationDrawer (Tactical Assistant) -->
+<aside class="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 rounded-l-3xl border-l border-white/20 bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 shadow-[-20px_40px_40px_rgba(166,102,170,0.08)] flex flex-col gap-6 p-6 overflow-y-auto z-40">
+<div>
+<h3 class="font-headline font-bold text-pink-600 text-lg">Tactical Assistant</h3>
+<p class="text-slate-500 text-xs font-label">AI Insights &amp; Context</p>
+</div>
+<div class="flex gap-2 p-1 bg-slate-100/50 rounded-full">
+<button class="flex-1 bg-white text-pink-700 text-xs font-bold py-2 rounded-full shadow-sm">AI Coach</button>
+<button class="flex-1 text-slate-500 text-xs font-medium py-2 rounded-full hover:bg-white/50 transition-colors">Context</button>
+</div>
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-xs font-black tracking-widest uppercase text-slate-400">Suggested Topics</h4>
+<span class="material-symbols-outlined text-sm text-pink-400">refresh</span>
+</div>
+<!-- Suggestions -->
+<div class="bg-slate-50/50 dark:bg-slate-800/50 p-4 rounded-2xl space-y-4 border border-white/40">
+<div class="group cursor-pointer">
+<p class="text-sm font-bold text-slate-800 group-hover:text-primary transition-colors">How 'Silent Quitting' became a Marketing Strategy</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] font-bold text-green-600">92% Match</span>
+<span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+<span class="text-[10px] text-slate-400">Niche: Marketing</span>
+</div>
+</div>
+<div class="h-px bg-slate-200/50 w-full"></div>
+<div class="group cursor-pointer">
+<p class="text-sm font-bold text-slate-800 group-hover:text-primary transition-colors">The Return of Web 1.0 Aesthetics in UI Design</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] font-bold text-green-600">85% Match</span>
+<span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+<span class="text-[10px] text-slate-400">Niche: Design</span>
+</div>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<h4 class="text-xs font-black tracking-widest uppercase text-slate-400">Niche Analysis</h4>
+<div class="bg-gradient-to-br from-fuchsia-600 to-pink-600 p-5 rounded-2xl text-white shadow-xl shadow-fuchsia-200">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-3xl opacity-80">insights</span>
+<span class="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-full">LIVE DATA</span>
+</div>
+<p class="text-lg font-headline font-bold leading-tight">Your 'Tech-Ethic' niche is peaking.</p>
+<p class="text-xs opacity-90 mt-2 font-medium">Engagement is up 45% in the last 48 hours for ethical AI content.</p>
+<button class="mt-4 w-full py-2 bg-white/20 hover:bg-white/30 rounded-full text-xs font-bold transition-all">Explore Trend Map</button>
+</div>
+</section>
+<section class="mt-auto">
+<div class="bg-surface-container-low p-4 rounded-2xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500">bolt</span>
+</div>
+<div class="flex-1">
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">PRO TIP</p>
+<p class="text-xs text-slate-700">Add 3 tags to any 'Scored' topic to unlock advanced AI hooks.</p>
+</div>
+</div>
+</section>
+</aside>
+</div>
+</body></html>
