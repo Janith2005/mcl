@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(pandoc --version)",
+      "Bash(source env/Scripts/activate)",
+      "Bash(python -c \"import reportlab; print\\(''ok''\\)\")",
+      "Bash(python docs/generate_pdf.py)"
+    ]
+  }
+}

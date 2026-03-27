@@ -17,3 +17,6 @@ dependencies = [
 
 [project.scripts]
 mcl = "mcl_cli.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mcl_cli"]
