@@ -37,3 +37,4 @@ dump.rdb
 *.log
 logs/
 .gstack/
+packages/landing/tsconfig.tsbuildinfo
