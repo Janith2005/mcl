@@ -5,7 +5,15 @@
       "Bash(pandoc --version)",
       "Bash(source env/Scripts/activate)",
       "Bash(python -c \"import reportlab; print\\(''ok''\\)\")",
-      "Bash(python docs/generate_pdf.py)"
+      "Bash(python docs/generate_pdf.py)",
+      "Bash(grep -h \"^from\\\\|^import\" C:UsersreddyStudentLearningagencymclpackages/**/*.py)",
+      "Bash(find C:UsersreddyStudentLearningagencymclpackages -name *.py -type f -exec grep -h \"^from\\\\|^import\" {} +)",
+      "Bash(while read:*)",
+      "Bash(do grep:*)",
+      "Bash(done)",
+      "Bash(find C:UsersreddyStudentLearningagencymclpackages -name *.py -type f -exec head -30 {})",
+      "Bash(2)",
+      "Bash(xargs grep:*)"
     ]
   }
 }
