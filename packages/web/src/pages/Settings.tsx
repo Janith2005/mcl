@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Sparkles,
   Users,
@@ -13,7 +14,10 @@ import {
   Settings as SettingsIcon,
   Anchor,
   CheckCircle,
+  Loader2,
+  X,
 } from 'lucide-react'
+import { saveSettings, inviteTeamMember, configureApiKey, uploadDocument } from '@/api/services'
 
 const tabs = ['Workspace', 'Team', 'Connections', 'API Keys', 'Billing'] as const
 type Tab = (typeof tabs)[number]
@@ -42,10 +46,10 @@ interface ApiKeyEntry {
   maskedKey?: string
 }
 
-const apiKeys: ApiKeyEntry[] = [
-  { name: 'OpenAI', status: 'Active', maskedKey: 'sk-...u9f2' },
+const initialApiKeys: ApiKeyEntry[] = [
+  { name: 'OpenAI', status: 'Active', maskedKey: '••••••••u9f2' },
   { name: 'Claude (Anthropic)', status: 'Unconfigured' },
-  { name: 'Supabase', status: 'Active', maskedKey: 'ey...M3cx' },
+  { name: 'Supabase', status: 'Active', maskedKey: '••••••••M3cx' },
 ]
 
 interface PlatformConnection {
@@ -57,23 +61,10 @@ interface PlatformConnection {
 }
 
 const platforms: PlatformConnection[] = [
-  {
-    platform: 'YouTube',
-    handle: 'Luminous_VLOGS',
-    connected: true,
-    lastSync: 'Connected 3 days ago',
-    color: '#FF0000',
-  },
-  {
-    platform: 'TikTok',
-    handle: 'PirateHacks_Official',
-    connected: true,
-    lastSync: 'Last fetch: 1h ago',
-    color: '#000000',
-  },
+  { platform: 'YouTube', handle: 'Luminous_VLOGS', connected: true, lastSync: 'Connected 3 days ago', color: '#FF0000' },
+  { platform: 'TikTok', handle: 'PirateHacks_Official', connected: true, lastSync: 'Last fetch: 1h ago', color: '#000000' },
 ]
 
-/* Shared glassmorphic card style */
 const glassCard: React.CSSProperties = {
   background: 'var(--ip-card-glass-bg)',
   backdropFilter: 'blur(var(--ip-card-glass-blur))',
@@ -87,19 +78,83 @@ export function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('Workspace')
   const [workspaceName, setWorkspaceName] = useState('Influence Pirates Main Lab')
   const [defaultNiche, setDefaultNiche] = useState('B2B SaaS Growth')
+  const [inviteEmail, setInviteEmail] = useState('')
+  const [showInviteInput, setShowInviteInput] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
+  const [apiKeyInputs, setApiKeyInputs] = useState<Record<string, string>>({})
+  const [configuringKey, setConfiguringKey] = useState<string | null>(null)
+  const [apiKeys, setApiKeys] = useState<ApiKeyEntry[]>(initialApiKeys)
+  const [saveSuccess, setSaveSuccess] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const queryClient = useQueryClient()
+
+  const saveMutation = useMutation({
+    mutationFn: () => saveSettings({ workspace_name: workspaceName, default_niche: defaultNiche }),
+    onSuccess: () => {
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    },
+  })
+
+  const inviteMutation = useMutation({
+    mutationFn: () => inviteTeamMember(inviteEmail),
+    onSuccess: () => {
+      setInviteEmail('')
+      setShowInviteInput(false)
+      queryClient.invalidateQueries({ queryKey: ['team'] })
+    },
+  })
+
+  const configKeyMutation = useMutation({
+    mutationFn: ({ name, key }: { name: string; key: string }) => configureApiKey(name, key),
+    onSuccess: (_, { name }) => {
+      setApiKeys((prev) =>
+        prev.map((k) =>
+          k.name === name
+            ? { ...k, status: 'Active', maskedKey: `••••••••${apiKeyInputs[name]?.slice(-4) ?? '???'}` }
+            : k
+        )
+      )
+      setConfiguringKey(null)
+      setApiKeyInputs((prev) => ({ ...prev, [name]: '' }))
+    },
+  })
+
+  const uploadMutation = useMutation({
+    mutationFn: (file: File) => uploadDocument(file),
+    onSuccess: (_, file) => {
+      setUploadedFiles((prev) => [...prev, file.name])
+    },
+  })
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) uploadMutation.mutate(file)
+  }
+
+  function handleDropZoneClick() {
+    fileInputRef.current?.click()
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    const file = e.dataTransfer.files?.[0]
+    if (file) uploadMutation.mutate(file)
+  }
+
+  function handleDiscard() {
+    setWorkspaceName('Influence Pirates Main Lab')
+    setDefaultNiche('B2B SaaS Growth')
+  }
 
   return (
     <div className="flex-1 overflow-y-auto" style={{ background: 'transparent' }}>
       <div className="max-w-5xl mx-auto">
-        {/* Top Bar: Search + Actions */}
+        {/* Top Bar */}
         <div className="flex items-center justify-between mb-6">
           <div
             className="flex items-center gap-2 py-2 px-4 flex-1 max-w-xs"
-            style={{
-              background: 'var(--ip-surface)',
-              border: '1px solid var(--ip-border-subtle)',
-              borderRadius: 'var(--ip-radius-full)',
-            }}
+            style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)', borderRadius: 'var(--ip-radius-full)' }}
           >
             <Search size={14} style={{ color: 'var(--ip-text-tertiary)' }} />
             <input
@@ -110,44 +165,58 @@ export function SettingsPage() {
             />
           </div>
           <div className="flex items-center gap-3">
-            <button
-              className="w-8 h-8 flex items-center justify-center rounded-full"
-              style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)' }}
-            >
+            <button className="w-8 h-8 flex items-center justify-center rounded-full" style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)' }}>
               <Bell size={14} style={{ color: 'var(--ip-text-secondary)' }} />
             </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center rounded-full"
-              style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)' }}
-            >
+            <button className="w-8 h-8 flex items-center justify-center rounded-full" style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)' }}>
               <SettingsIcon size={14} style={{ color: 'var(--ip-text-secondary)' }} />
             </button>
             <button
+              onClick={() => setShowInviteInput(true)}
               className="py-1.5 px-4 text-xs font-semibold flex items-center gap-2"
-              style={{
-                background: 'var(--ip-surface)',
-                border: '1px solid var(--ip-border)',
-                borderRadius: 'var(--ip-radius-full)',
-                color: 'var(--ip-text)',
-              }}
+              style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)', color: 'var(--ip-text)' }}
             >
               Invite Team
             </button>
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-              style={{ background: 'var(--ip-primary-gradient)', color: 'white' }}
-            >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: 'var(--ip-primary-gradient)', color: 'white' }}>
               CV
             </div>
           </div>
         </div>
 
-        {/* Header */}
-        <div className="mb-6">
-          <h1
-            className="text-3xl md:text-4xl font-bold mb-1"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
+        {showInviteInput && (
+          <div
+            className="mb-6 p-4 flex items-center gap-3"
+            style={{ background: 'var(--ip-surface)', border: '1px solid var(--ip-border-subtle)', borderRadius: 'var(--ip-radius-lg)' }}
           >
+            <input
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              placeholder="team@example.com"
+              className="flex-1 text-sm outline-none bg-transparent"
+              style={{ color: 'var(--ip-text)' }}
+            />
+            <button
+              onClick={() => inviteEmail && inviteMutation.mutate()}
+              disabled={!inviteEmail || inviteMutation.isPending}
+              className="px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50 flex items-center gap-1"
+              style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+            >
+              {inviteMutation.isPending && <Loader2 size={12} className="animate-spin" />}
+              Send Invite
+            </button>
+            <button onClick={() => setShowInviteInput(false)}>
+              <X size={16} style={{ color: 'var(--ip-text-tertiary)' }} />
+            </button>
+            {inviteMutation.isSuccess && (
+              <span className="text-xs" style={{ color: 'var(--ip-success)' }}>Invite sent!</span>
+            )}
+          </div>
+        )}
+
+        <div className="mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold mb-1" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
             Settings
           </h1>
           <p className="text-sm" style={{ color: 'var(--ip-text-secondary)' }}>
@@ -155,14 +224,9 @@ export function SettingsPage() {
           </p>
         </div>
 
-        {/* Tab Bar — pill active state */}
         <div
           className="flex gap-1 p-1 mb-8 w-fit"
-          style={{
-            background: 'var(--ip-surface)',
-            borderRadius: 'var(--ip-radius-full)',
-            border: '1px solid var(--ip-border-subtle)',
-          }}
+          style={{ background: 'var(--ip-surface)', borderRadius: 'var(--ip-radius-full)', border: '1px solid var(--ip-border-subtle)' }}
         >
           {tabs.map((tab) => (
             <button
@@ -181,26 +245,18 @@ export function SettingsPage() {
           ))}
         </div>
 
-        {/* Two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Workspace Identity */}
           <div className="p-6" style={glassCard}>
             <div className="flex items-center gap-2 mb-5">
               <Sparkles size={16} style={{ color: 'var(--ip-primary)' }} />
-              <h2
-                className="text-base font-bold"
-                style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-              >
+              <h2 className="text-base font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
                 Workspace Identity
               </h2>
             </div>
-
             <div className="space-y-4">
               <div>
-                <label
-                  className="block text-[10px] tracking-widest font-semibold mb-1.5"
-                  style={{ color: 'var(--ip-text-tertiary)' }}
-                >
+                <label className="block text-[10px] tracking-widest font-semibold mb-1.5" style={{ color: 'var(--ip-text-tertiary)' }}>
                   WORKSPACE NAME
                 </label>
                 <input
@@ -208,19 +264,11 @@ export function SettingsPage() {
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   className="w-full py-2.5 px-4 text-sm outline-none"
-                  style={{
-                    border: '1px solid var(--ip-border)',
-                    borderRadius: 'var(--ip-radius-md)',
-                    background: 'var(--ip-surface)',
-                    color: 'var(--ip-text)',
-                  }}
+                  style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-surface)', color: 'var(--ip-text)' }}
                 />
               </div>
               <div>
-                <label
-                  className="block text-[10px] tracking-widest font-semibold mb-1.5"
-                  style={{ color: 'var(--ip-text-tertiary)' }}
-                >
+                <label className="block text-[10px] tracking-widest font-semibold mb-1.5" style={{ color: 'var(--ip-text-tertiary)' }}>
                   DEFAULT NICHE
                 </label>
                 <div className="relative">
@@ -228,23 +276,14 @@ export function SettingsPage() {
                     value={defaultNiche}
                     onChange={(e) => setDefaultNiche(e.target.value)}
                     className="w-full py-2.5 px-4 text-sm outline-none appearance-none cursor-pointer"
-                    style={{
-                      border: '1px solid var(--ip-border)',
-                      borderRadius: 'var(--ip-radius-md)',
-                      background: 'var(--ip-surface)',
-                      color: 'var(--ip-text)',
-                    }}
+                    style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-surface)', color: 'var(--ip-text)' }}
                   >
                     <option>B2B SaaS Growth</option>
                     <option>Creator Economy</option>
                     <option>Tech Education</option>
                     <option>Fitness & Wellness</option>
                   </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                    style={{ color: 'var(--ip-text-tertiary)' }}
-                  />
+                  <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--ip-text-tertiary)' }} />
                 </div>
               </div>
             </div>
@@ -255,47 +294,31 @@ export function SettingsPage() {
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
                 <Anchor size={16} style={{ color: 'var(--ip-primary)' }} />
-                <h2
-                  className="text-base font-bold"
-                  style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-                >
+                <h2 className="text-base font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
                   Crew Members
                 </h2>
               </div>
               <button
+                onClick={() => setShowInviteInput(true)}
                 className="text-[10px] tracking-wider font-semibold py-1 px-3"
-                style={{
-                  color: 'var(--ip-primary)',
-                  border: '1px solid var(--ip-border)',
-                  borderRadius: 'var(--ip-radius-full)',
-                }}
+                style={{ color: 'var(--ip-primary)', border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)' }}
               >
                 INVITE
               </button>
             </div>
-
             <div className="space-y-3">
               {crewMembers.map((member) => (
                 <div key={member.name} className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                    style={{
-                      background: 'var(--ip-primary-gradient)',
-                      color: 'white',
-                    }}
+                    style={{ background: 'var(--ip-primary-gradient)', color: 'white' }}
                   >
                     {member.avatar}
                   </div>
-                  <span className="flex-1 text-sm font-medium" style={{ color: 'var(--ip-text)' }}>
-                    {member.name}
-                  </span>
+                  <span className="flex-1 text-sm font-medium" style={{ color: 'var(--ip-text)' }}>{member.name}</span>
                   <span
                     className="text-[10px] tracking-wider font-bold py-0.5 px-2.5"
-                    style={{
-                      ...roleBadgeStyles[member.role],
-                      color: 'white',
-                      borderRadius: 'var(--ip-radius-full)',
-                    }}
+                    style={{ ...roleBadgeStyles[member.role], color: 'white', borderRadius: 'var(--ip-radius-full)' }}
                   >
                     {member.role}
                   </span>
@@ -308,49 +331,53 @@ export function SettingsPage() {
           <div className="p-6" style={glassCard}>
             <div className="flex items-center gap-2 mb-3">
               <FileText size={16} style={{ color: 'var(--ip-primary)' }} />
-              <h2
-                className="text-base font-bold"
-                style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-              >
+              <h2 className="text-base font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
                 Brand Voice Documents
               </h2>
             </div>
             <p className="text-xs mb-4" style={{ color: 'var(--ip-text-secondary)' }}>
-              Upload style guides, past successful scripts, or manifestos to train your
-              AI Coach on your unique linguistic fingerprint.
+              Upload style guides, past successful scripts, or manifestos to train your AI Coach.
             </p>
 
-            {/* Upload area */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.md,.txt,.doc,.docx"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
             <div
+              onClick={handleDropZoneClick}
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
               className="flex flex-col items-center justify-center p-6 mb-3 cursor-pointer hover:opacity-80 transition-opacity"
-              style={{
-                border: '2px dashed var(--ip-border)',
-                borderRadius: 'var(--ip-radius-md)',
-                background: 'var(--ip-bg-subtle)',
-              }}
+              style={{ border: '2px dashed var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-bg-subtle)' }}
             >
-              <Upload size={20} style={{ color: 'var(--ip-text-tertiary)' }} className="mb-2" />
+              {uploadMutation.isPending ? (
+                <Loader2 size={20} className="animate-spin mb-2" style={{ color: 'var(--ip-primary)' }} />
+              ) : (
+                <Upload size={20} style={{ color: 'var(--ip-text-tertiary)' }} className="mb-2" />
+              )}
               <p className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
-                Drop PDF or MD
+                {uploadMutation.isPending ? 'Uploading...' : 'Drop PDF or MD, or click to browse'}
               </p>
             </div>
 
-            {/* Uploaded files */}
             <div className="space-y-2">
-              {['Manifesto_2024.pdf', 'TikTok_Style.md'].map((file) => (
+              {uploadedFiles.map((file) => (
                 <div
                   key={file}
                   className="flex items-center gap-2 py-2 px-3 text-xs"
-                  style={{
-                    background: 'var(--ip-bg-subtle)',
-                    borderRadius: 'var(--ip-radius-sm)',
-                    color: 'var(--ip-text-secondary)',
-                  }}
+                  style={{ background: 'var(--ip-bg-subtle)', borderRadius: 'var(--ip-radius-sm)', color: 'var(--ip-text-secondary)' }}
                 >
                   <FileText size={14} style={{ color: 'var(--ip-primary)' }} />
                   {file}
                 </div>
               ))}
+              {uploadMutation.isError && (
+                <p className="text-xs" style={{ color: 'var(--ip-error)' }}>Upload failed. Please try again.</p>
+              )}
             </div>
           </div>
 
@@ -358,52 +385,61 @@ export function SettingsPage() {
           <div className="p-6" style={glassCard}>
             <div className="flex items-center gap-2 mb-5">
               <Key size={16} style={{ color: 'var(--ip-primary)' }} />
-              <h2
-                className="text-base font-bold"
-                style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-              >
+              <h2 className="text-base font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
                 API Keys
               </h2>
             </div>
-
-            <div className="space-y-3">
+            <div className="space-y-4">
               {apiKeys.map((key) => (
                 <div key={key.name}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium" style={{ color: 'var(--ip-text)' }}>
-                      {key.name}
-                    </span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--ip-text)' }}>{key.name}</span>
                     <span
                       className="flex items-center gap-1 text-[10px] font-bold tracking-wider"
-                      style={{
-                        color: key.status === 'Active' ? 'var(--ip-success)' : 'var(--ip-text-tertiary)',
-                      }}
+                      style={{ color: key.status === 'Active' ? 'var(--ip-success)' : 'var(--ip-text-tertiary)' }}
                     >
                       <span
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{
-                          background: key.status === 'Active' ? 'var(--ip-success)' : 'var(--ip-text-tertiary)',
-                        }}
+                        style={{ background: key.status === 'Active' ? 'var(--ip-success)' : 'var(--ip-text-tertiary)' }}
                       />
                       {key.status}
                     </span>
                   </div>
                   {key.maskedKey && (
-                    <p className="text-xs font-mono" style={{ color: 'var(--ip-text-tertiary)' }}>
-                      {key.maskedKey}
-                    </p>
+                    <p className="text-xs font-mono" style={{ color: 'var(--ip-text-tertiary)' }}>{key.maskedKey}</p>
                   )}
-                  {key.status === 'Unconfigured' && (
+                  {key.status === 'Unconfigured' && configuringKey !== key.name && (
                     <button
+                      onClick={() => setConfiguringKey(key.name)}
                       className="mt-1.5 py-1.5 px-4 text-xs font-medium transition-colors"
-                      style={{
-                        background: 'var(--ip-text)',
-                        color: 'var(--ip-text-on-primary)',
-                        borderRadius: 'var(--ip-radius-full)',
-                      }}
+                      style={{ background: 'var(--ip-text)', color: 'var(--ip-text-on-primary)', borderRadius: 'var(--ip-radius-full)' }}
                     >
                       Configure
                     </button>
+                  )}
+                  {configuringKey === key.name && (
+                    <div className="mt-2 flex gap-2">
+                      <input
+                        type="password"
+                        value={apiKeyInputs[key.name] ?? ''}
+                        onChange={(e) => setApiKeyInputs((prev) => ({ ...prev, [key.name]: e.target.value }))}
+                        placeholder={`Paste ${key.name} key...`}
+                        className="flex-1 py-1.5 px-3 text-xs outline-none font-mono"
+                        style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-surface)', color: 'var(--ip-text)' }}
+                      />
+                      <button
+                        onClick={() => configKeyMutation.mutate({ name: key.name, key: apiKeyInputs[key.name] ?? '' })}
+                        disabled={!apiKeyInputs[key.name] || configKeyMutation.isPending}
+                        className="px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50 flex items-center gap-1"
+                        style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+                      >
+                        {configKeyMutation.isPending && <Loader2 size={12} className="animate-spin" />}
+                        Save
+                      </button>
+                      <button onClick={() => setConfiguringKey(null)}>
+                        <X size={14} style={{ color: 'var(--ip-text-tertiary)' }} />
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
@@ -411,12 +447,9 @@ export function SettingsPage() {
           </div>
         </div>
 
-        {/* Platform Connections — full-width glassmorphic card */}
+        {/* Platform Connections */}
         <div className="mb-8 p-6" style={glassCard}>
-          <h2
-            className="text-lg font-bold mb-4"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-          >
+          <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
             Platform Connections
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -424,18 +457,9 @@ export function SettingsPage() {
               <div
                 key={p.platform}
                 className="p-5 relative overflow-hidden"
-                style={{
-                  background: 'var(--ip-surface)',
-                  borderRadius: 'var(--ip-radius-lg)',
-                  boxShadow: 'var(--ip-shadow-sm)',
-                  border: '1px solid var(--ip-border-subtle)',
-                }}
+                style={{ background: 'var(--ip-surface)', borderRadius: 'var(--ip-radius-lg)', boxShadow: 'var(--ip-shadow-sm)', border: '1px solid var(--ip-border-subtle)' }}
               >
-                {/* Accent stripe at top */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-1"
-                  style={{ background: p.color }}
-                />
+                <div className="absolute top-0 left-0 right-0 h-1" style={{ background: p.color }} />
                 <div className="flex items-center gap-2 mb-2">
                   <span
                     className="text-[10px] tracking-wider font-bold py-0.5 px-2 rounded text-white"
@@ -443,67 +467,46 @@ export function SettingsPage() {
                   >
                     {p.platform.toUpperCase()}
                   </span>
-                  {p.connected && (
-                    <ExternalLink size={12} style={{ color: 'var(--ip-text-tertiary)' }} />
-                  )}
+                  {p.connected && <ExternalLink size={12} style={{ color: 'var(--ip-text-tertiary)' }} />}
                 </div>
-                <p className="text-sm font-bold mb-1" style={{ color: 'var(--ip-text)' }}>
-                  {p.handle}
-                </p>
+                <p className="text-sm font-bold mb-1" style={{ color: 'var(--ip-text)' }}>{p.handle}</p>
                 <div className="flex items-center gap-1.5">
-                  <p className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
-                    {p.lastSync}
-                  </p>
-                  {p.connected && (
-                    <RefreshCw size={10} style={{ color: 'var(--ip-text-tertiary)' }} />
-                  )}
+                  <p className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>{p.lastSync}</p>
+                  {p.connected && <RefreshCw size={10} style={{ color: 'var(--ip-text-tertiary)' }} />}
                 </div>
                 {p.connected && (
-                  <CheckCircle
-                    size={14}
-                    className="absolute top-4 right-4"
-                    style={{ color: 'var(--ip-success)' }}
-                  />
+                  <CheckCircle size={14} className="absolute top-4 right-4" style={{ color: 'var(--ip-success)' }} />
                 )}
               </div>
             ))}
-            {/* Connect Instagram placeholder */}
             <div
               className="p-5 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-              style={{
-                background: 'var(--ip-bg-subtle)',
-                borderRadius: 'var(--ip-radius-lg)',
-                border: '2px dashed var(--ip-border)',
-              }}
+              style={{ background: 'var(--ip-bg-subtle)', borderRadius: 'var(--ip-radius-lg)', border: '2px dashed var(--ip-border)' }}
             >
-              <p className="text-xs font-medium" style={{ color: 'var(--ip-text-tertiary)' }}>
-                + Connect Instagram
-              </p>
+              <p className="text-xs font-medium" style={{ color: 'var(--ip-text-tertiary)' }}>+ Connect Instagram</p>
             </div>
           </div>
         </div>
 
         {/* Footer Actions */}
         <div className="flex items-center justify-end gap-4 pt-4 pb-8">
+          {saveSuccess && (
+            <span className="text-xs" style={{ color: 'var(--ip-success)' }}>Settings saved!</span>
+          )}
           <button
+            onClick={handleDiscard}
             className="py-2.5 px-6 text-sm font-medium transition-colors"
-            style={{
-              color: 'var(--ip-text-secondary)',
-              background: 'transparent',
-              border: '1px solid var(--ip-border)',
-              borderRadius: 'var(--ip-radius-full)',
-            }}
+            style={{ color: 'var(--ip-text-secondary)', background: 'transparent', border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)' }}
           >
             Discard Changes
           </button>
           <button
-            className="py-2.5 px-6 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-            style={{
-              background: 'var(--ip-primary-gradient)',
-              borderRadius: 'var(--ip-radius-full)',
-              boxShadow: 'var(--ip-shadow-md)',
-            }}
+            onClick={() => saveMutation.mutate()}
+            disabled={saveMutation.isPending}
+            className="py-2.5 px-6 text-sm font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center gap-2"
+            style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)', boxShadow: 'var(--ip-shadow-md)' }}
           >
+            {saveMutation.isPending && <Loader2 size={14} className="animate-spin" />}
             Save Laboratory Config
           </button>
         </div>

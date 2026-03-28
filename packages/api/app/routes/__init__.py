@@ -1,12 +1,18 @@
 """API route registration."""
 from fastapi import FastAPI
-from app.routes import health, auth, workspaces, brain, topics, angles, hooks, scripts, analytics, pipeline, recon, webhooks, admin, monitoring, feedback
+from app.routes import (
+    health, auth, workspaces, brain, topics, angles, hooks, scripts,
+    analytics, pipeline, recon, webhooks, admin, monitoring, feedback,
+    dashboard, chat, dev,
+)
 
 
 def register_routes(app: FastAPI) -> None:
     app.include_router(health.router)
     app.include_router(auth.router)
     app.include_router(workspaces.router)
+    app.include_router(dashboard.router)
+    app.include_router(chat.router)
     app.include_router(brain.router)
     app.include_router(topics.router)
     app.include_router(angles.router)
@@ -19,3 +25,4 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(admin.router)
     app.include_router(monitoring.router)
     app.include_router(feedback.router)
+    app.include_router(dev.router)

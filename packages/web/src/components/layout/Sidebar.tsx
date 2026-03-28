@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/lib/auth'
 import {
   LayoutDashboard,
   Compass,
@@ -29,6 +30,15 @@ const bottomItems = [
 ]
 
 export function Sidebar() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const displayName = user?.user_metadata?.full_name
+    || user?.user_metadata?.name
+    || user?.email?.split('@')[0]
+    || 'Agent'
+  const initials = displayName.slice(0, 2).toUpperCase()
+
   return (
     <aside
       className="flex flex-col h-screen fixed left-0 top-0 z-40"
@@ -87,6 +97,7 @@ export function Sidebar() {
       {/* New Content CTA */}
       <div className="px-3 pb-2">
         <button
+          onClick={() => navigate('/topics')}
           className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90"
           style={{
             background: 'var(--ip-primary-gradient)',
@@ -118,17 +129,17 @@ export function Sidebar() {
         {/* User avatar */}
         <div className="flex items-center gap-3 px-3 py-2 mt-2">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
             style={{ background: 'var(--ip-accent-maroon)' }}
           >
-            CV
+            {initials}
           </div>
-          <div className="flex-1">
-            <div className="text-sm font-medium" style={{ color: 'var(--ip-text)' }}>
-              Captain Vane
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-medium truncate" style={{ color: 'var(--ip-text)' }}>
+              {displayName}
             </div>
-            <div className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
-              Pro Plan
+            <div className="text-xs truncate" style={{ color: 'var(--ip-text-tertiary)' }}>
+              {user?.email || ''}
             </div>
           </div>
           <ThemeToggle />

@@ -1,13 +1,24 @@
 import { supabase } from './supabase'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const DEV_SKIP_AUTH = import.meta.env.VITE_DEV_SKIP_AUTH === 'true'
+
+// Cache the token in memory — avoids a Supabase round-trip on every request
+let _cachedToken: string | null = null
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
+  if (DEV_SKIP_AUTH) return {}
+  if (_cachedToken) return { Authorization: `Bearer ${_cachedToken}` }
   const { data } = await supabase.auth.getSession()
-  const token = data.session?.access_token
-  if (!token) return {}
-  return { Authorization: `Bearer ${token}` }
+  _cachedToken = data.session?.access_token ?? null
+  if (!_cachedToken) return {}
+  return { Authorization: `Bearer ${_cachedToken}` }
 }
+
+// Clear token cache on sign-out so next request fetches fresh
+supabase.auth.onAuthStateChange((_event, session) => {
+  _cachedToken = session?.access_token ?? null
+})
 
 export async function api<T = unknown>(
   path: string,

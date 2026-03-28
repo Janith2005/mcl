@@ -15,6 +15,8 @@ class CreateWorkspaceRequest(BaseModel):
 
 class UpdateWorkspaceRequest(BaseModel):
     name: str | None = None
+    workspace_name: str | None = None
+    default_niche: str | None = None
 
 
 class InviteMemberRequest(BaseModel):
@@ -84,6 +86,9 @@ async def update_workspace(
     supabase: Client = Depends(get_supabase),
 ):
     update_data = req.model_dump(exclude_none=True)
+    # Normalize alias field
+    if 'workspace_name' in update_data:
+        update_data['name'] = update_data.pop('workspace_name')
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
     result = supabase.table("workspaces").update(update_data).eq("id", workspace_id).execute()

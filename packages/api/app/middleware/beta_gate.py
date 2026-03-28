@@ -4,9 +4,12 @@ Checks whether the authenticated user's email is in the Redis-backed
 beta allowlist.  Unauthenticated or non-allowlisted users receive a 403
 for any path that is not explicitly exempt.
 """
+import os
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+
+DEV_SKIP_AUTH = os.environ.get("DEV_SKIP_AUTH", "").lower() == "true"
 
 # Paths that are accessible without beta access
 EXEMPT_PREFIXES = (
@@ -31,6 +34,10 @@ class BetaGateMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next):
+        # In dev mode, skip all gate checks
+        if DEV_SKIP_AUTH:
+            return await call_next(request)
+
         # Skip exempt paths
         path = request.url.path
         if any(path.startswith(prefix) for prefix in EXEMPT_PREFIXES):
