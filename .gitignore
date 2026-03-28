@@ -18,6 +18,7 @@ packages/web/dist/
 .env
 .env.local
 .env.*.local
+.env.example
 
 # IDE
 .idea/
