@@ -1,31 +1,35 @@
-"""Azure OpenAI client utility."""
+"""Azure OpenAI client utility — calls REST API directly via httpx."""
 import os
-from openai import AzureOpenAI
+import httpx
 
-_client: AzureOpenAI | None = None
+_http_client: httpx.Client | None = None
 
 
-def get_client() -> AzureOpenAI:
-    global _client
-    if _client is None:
-        _client = AzureOpenAI(
-            azure_endpoint=os.environ.get("AZURE_OPENAI_ENDPOINT", ""),
-            api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
-            api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-05-01-preview"),
-        )
-    return _client
+def _get_http_client() -> httpx.Client:
+    global _http_client
+    if _http_client is None:
+        _http_client = httpx.Client(timeout=60.0)
+    return _http_client
 
 
 def chat(messages: list[dict], temperature: float = 0.7) -> str:
-    """Send messages to Azure OpenAI and return the reply text."""
+    """Send messages to Azure OpenAI REST API and return the reply text."""
+    endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "").rstrip("/")
+    api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
     deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "Kimi-K2.5")
+    api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-05-01-preview")
+
+    url = f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
+
     try:
-        response = get_client().chat.completions.create(
-            model=deployment,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=1024,
+        response = _get_http_client().post(
+            url,
+            headers={"api-key": api_key, "Content-Type": "application/json"},
+            json={"messages": messages, "temperature": temperature, "max_tokens": 8192},
         )
-        return response.choices[0].message.content or ""
+        response.raise_for_status()
+        data = response.json()
+        msg = data["choices"][0]["message"]
+        return msg.get("content") or msg.get("reasoning_content") or ""
     except Exception as e:
         raise RuntimeError(f"Azure OpenAI error: {e}") from e

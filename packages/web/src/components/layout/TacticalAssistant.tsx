@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { Send, X, MessageSquare, BarChart3, ScrollText, Loader2 } from 'lucide-react'
-import { useMutation } from '@tanstack/react-query'
-import { sendChatMessage, askStrategy, type ChatMessage } from '@/api/services'
+import { Send, X, MessageSquare, BarChart3, ScrollText, Loader2, CheckCircle, Clock, AlertCircle, RefreshCw } from 'lucide-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { sendChatMessage, askStrategy, getAnalytics, listJobs, type ChatMessage } from '@/api/services'
 
 type Tab = 'chat' | 'insights' | 'logs'
 
@@ -14,8 +14,105 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   },
 ]
 
-export function TacticalAssistant() {
-  const [isOpen, setIsOpen] = useState(true)
+function InsightsTab() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['analytics', '7d'],
+    queryFn: () => getAnalytics('7d'),
+  })
+
+  if (isLoading) return <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--ip-primary)' }} /></div>
+  if (!data) return <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>Run an analytics job to see insights here.</p>
+
+  return (
+    <div className="space-y-5">
+      {data.top_performers?.length > 0 && (
+        <div>
+          <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>TOP PERFORMERS</p>
+          <div className="space-y-2">
+            {data.top_performers.slice(0, 4).map(p => (
+              <div key={p.id} className="p-2.5 rounded-lg" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
+                <p className="text-xs font-medium leading-snug mb-1" style={{ color: 'var(--ip-text)' }}>{p.title}</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold" style={{ color: p.trend === 'up' ? 'var(--ip-success)' : 'var(--ip-error)' }}>
+                    {p.trend === 'up' ? '↑' : '↓'} {p.views}
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: p.accent_color + '22', color: p.accent_color }}>
+                    {p.category_label}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {data.hook_pattern_data?.length > 0 && (
+        <div>
+          <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>HOOK PATTERNS</p>
+          <div className="space-y-1.5">
+            {data.hook_pattern_data.slice(0, 4).map((h, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--ip-border)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${Math.min(h.avg_view, 100)}%`, background: h.color || 'var(--ip-primary)' }} />
+                </div>
+                <span className="text-[10px] w-20 truncate" style={{ color: 'var(--ip-text-secondary)' }}>{h.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function LogsTab() {
+  const { data: jobs = [], isLoading } = useQuery({
+    queryKey: ['jobs'],
+    queryFn: listJobs,
+    refetchInterval: 10000,
+  })
+
+  const statusIcon = (status: string) => {
+    if (status === 'completed') return <CheckCircle size={12} style={{ color: 'var(--ip-success)' }} />
+    if (status === 'failed') return <AlertCircle size={12} style={{ color: 'var(--ip-error)' }} />
+    if (status === 'running') return <RefreshCw size={12} className="animate-spin" style={{ color: 'var(--ip-primary)' }} />
+    return <Clock size={12} style={{ color: 'var(--ip-text-tertiary)' }} />
+  }
+
+  if (isLoading) return <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--ip-primary)' }} /></div>
+  if (!jobs.length) return <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>No pipeline activity yet.</p>
+
+  return (
+    <div className="space-y-2">
+      {jobs.slice(0, 15).map(job => (
+        <div key={job.id} className="flex items-start gap-2 py-1.5">
+          <span className="mt-0.5 shrink-0">{statusIcon(job.status)}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium capitalize" style={{ color: 'var(--ip-text)' }}>{job.type.replace(/_/g, ' ')}</p>
+            <p className="text-[10px]" style={{ color: 'var(--ip-text-tertiary)' }}>
+              {new Date(job.created_at).toLocaleString()}
+            </p>
+          </div>
+          <span
+            className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full shrink-0"
+            style={{
+              background: job.status === 'completed' ? 'var(--ip-success)22' : job.status === 'failed' ? 'var(--ip-error)22' : job.status === 'running' ? 'var(--ip-primary)22' : 'var(--ip-border)',
+              color: job.status === 'completed' ? 'var(--ip-success)' : job.status === 'failed' ? 'var(--ip-error)' : job.status === 'running' ? 'var(--ip-primary)' : 'var(--ip-text-tertiary)',
+            }}
+          >
+            {job.status}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+interface TacticalAssistantProps {
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+}
+
+export function TacticalAssistant({ isOpen, setIsOpen }: TacticalAssistantProps) {
   const [activeTab, setActiveTab] = useState<Tab>('chat')
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES)
@@ -187,16 +284,8 @@ export function TacticalAssistant() {
             )}
           </div>
         )}
-        {activeTab === 'insights' && (
-          <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>
-            Performance insights will appear after your first analytics run.
-          </p>
-        )}
-        {activeTab === 'logs' && (
-          <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>
-            Activity logs will appear as you use the pipeline.
-          </p>
-        )}
+        {activeTab === 'insights' && <InsightsTab />}
+        {activeTab === 'logs' && <LogsTab />}
       </div>
 
       {/* Input */}

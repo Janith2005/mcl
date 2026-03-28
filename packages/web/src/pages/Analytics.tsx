@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   TrendingUp,
   TrendingDown,
@@ -7,11 +7,12 @@ import {
   Eye,
   AlertTriangle,
   ArrowUpRight,
-  Bell,
-  Settings,
   Loader2,
+  BarChart3,
 } from 'lucide-react'
-import { getAnalytics, exportAnalytics } from '@/api/services'
+import { getAnalytics, exportAnalytics, triggerAnalyze } from '@/api/services'
+import { useJobPoller } from '@/hooks/useJobPoller'
+import { toast } from 'sonner'
 
 type TimeRange = '7 Days' | '30 Days' | 'All Time'
 
@@ -44,16 +45,44 @@ function MiniSparkline({ color }: { color: string }) {
 }
 
 export function Analytics() {
+  const queryClient = useQueryClient()
   const [timeRange, setTimeRange] = useState<TimeRange>('30 Days')
   const timeRanges: TimeRange[] = ['7 Days', '30 Days', 'All Time']
   const maxBarHeight = 120
+  const analyzePoller = useJobPoller()
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['analytics', timeRange],
     queryFn: () => getAnalytics(timeRange),
   })
 
-  const exportMutation = useMutation({ mutationFn: exportAnalytics })
+  const exportMutation = useMutation({
+    mutationFn: exportAnalytics,
+    onSuccess: () => toast.success('Report exported'),
+    onError: () => toast.error('Export failed'),
+  })
+
+  async function handleRunAnalysis() {
+    try {
+      const { job_id } = await triggerAnalyze()
+      analyzePoller.startPolling(job_id)
+      toast.info('Analysis started…')
+    } catch {
+      toast.error('Failed to start analysis')
+    }
+  }
+
+  useEffect(() => {
+    if (analyzePoller.status === 'completed') {
+      toast.success('Analysis complete! Brain weights updated.')
+      queryClient.invalidateQueries({ queryKey: ['analytics'] })
+      setTimeout(analyzePoller.reset, 3000)
+    }
+    if (analyzePoller.status === 'failed') {
+      toast.error('Analysis failed')
+      setTimeout(analyzePoller.reset, 3000)
+    }
+  }, [analyzePoller.status])
 
   const topPerformers = data?.top_performers ?? []
   const hookPatternData = data?.hook_pattern_data ?? []
@@ -92,26 +121,24 @@ export function Analytics() {
           </div>
 
           <button
-            onClick={() => exportMutation.mutate()}
-            disabled={exportMutation.isPending}
+            onClick={handleRunAnalysis}
+            disabled={analyzePoller.isActive}
             className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-50"
             style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
           >
-            {exportMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-            Export Report
+            {analyzePoller.isActive ? <Loader2 size={14} className="animate-spin" /> : <BarChart3 size={14} />}
+            {analyzePoller.isActive ? 'Analyzing…' : 'Run Analysis'}
           </button>
 
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--ip-bg-subtle)', color: 'var(--ip-text-tertiary)' }}>
-            <Bell size={16} />
-          </div>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--ip-bg-subtle)', color: 'var(--ip-text-tertiary)' }}>
-            <Settings size={16} />
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'var(--ip-primary-gradient)' }}>
-              CV
-            </div>
-          </div>
+          <button
+            onClick={() => exportMutation.mutate()}
+            disabled={exportMutation.isPending}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+            style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)', color: 'var(--ip-text-secondary)', background: 'transparent' }}
+          >
+            {exportMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+            Export
+          </button>
         </div>
       </div>
 
@@ -126,10 +153,21 @@ export function Analytics() {
             {/* Top Performer Cards */}
             <div className="grid grid-cols-3 gap-4">
               {topPerformers.length === 0 ? (
-                <div className="col-span-3 p-8 text-center" style={glassCard}>
-                  <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>
-                    No analytics data yet. Publish content and analyze performance to see results.
-                  </p>
+                <div className="col-span-3 p-10 text-center flex flex-col items-center gap-4" style={glassCard}>
+                  <BarChart3 size={36} style={{ color: 'var(--ip-border)' }} />
+                  <div>
+                    <p className="font-semibold mb-1" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-display)' }}>No analytics data yet</p>
+                    <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>Add analytics entries then run an analysis to see performance insights.</p>
+                  </div>
+                  <button
+                    onClick={handleRunAnalysis}
+                    disabled={analyzePoller.isActive}
+                    className="flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                    style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+                  >
+                    {analyzePoller.isActive ? <Loader2 size={14} className="animate-spin" /> : <BarChart3 size={14} />}
+                    {analyzePoller.isActive ? 'Analyzing…' : 'Run First Analysis'}
+                  </button>
                 </div>
               ) : (
                 topPerformers.map((perf) => (

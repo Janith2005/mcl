@@ -13,6 +13,7 @@ interface AuthContextValue {
   user: User | null
   loading: boolean
   hasWorkspace: boolean
+  refreshWorkspace: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextValue>({
   user: null,
   loading: true,
   hasWorkspace: false,
+  refreshWorkspace: async () => {},
 })
 
 export function useAuth() {
@@ -39,6 +41,7 @@ async function bootstrapWorkspace(): Promise<boolean> {
   } catch {
     // Non-fatal — user may be offline or workspace not created yet
   }
+  // No workspace found — will redirect to onboarding
   return false
 }
 
@@ -46,6 +49,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [hasWorkspace, setHasWorkspace] = useState(false)
+
+  async function refreshWorkspace() {
+    const found = await bootstrapWorkspace()
+    setHasWorkspace(found)
+  }
 
   useEffect(() => {
     // Dev mode: skip Supabase entirely
@@ -80,6 +88,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (s) {
         const found = await bootstrapWorkspace()
         setHasWorkspace(found)
+        // Identify user in PostHog if analytics is configured
+        if (import.meta.env.VITE_POSTHOG_KEY) {
+          import('./analytics').then(({ identifyUser }) => {
+            identifyUser(s.user.id, { email: s.user.email })
+          })
+        }
       }
       setLoading(false)
     }
@@ -98,8 +112,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (s) {
         const found = await bootstrapWorkspace()
         setHasWorkspace(found)
+        if (import.meta.env.VITE_POSTHOG_KEY) {
+          import('./analytics').then(({ identifyUser }) => {
+            identifyUser(s.user.id, { email: s.user.email })
+          })
+        }
       } else {
         setHasWorkspace(false)
+        if (import.meta.env.VITE_POSTHOG_KEY) {
+          import('./analytics').then(({ resetUser }) => resetUser())
+        }
       }
       setLoading(false)
     })
@@ -111,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, hasWorkspace }}>
+    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, hasWorkspace, refreshWorkspace }}>
       {children}
     </AuthContext.Provider>
   )

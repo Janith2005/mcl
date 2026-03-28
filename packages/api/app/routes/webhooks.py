@@ -1,10 +1,17 @@
 """Stripe webhook handler."""
+import os
 from fastapi import APIRouter, Request, HTTPException
-import stripe
 import structlog
+from supabase import create_client
 
 from app.config import Settings
-from app.deps import get_supabase
+
+try:
+    import stripe
+    _STRIPE_AVAILABLE = True
+except ImportError:
+    stripe = None  # type: ignore
+    _STRIPE_AVAILABLE = False
 
 logger = structlog.get_logger(__name__)
 settings = Settings()
@@ -18,6 +25,9 @@ async def stripe_webhook(request: Request):
 
     No auth required -- verification is done via Stripe signature.
     """
+    if not _STRIPE_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Stripe not configured")
+
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
 
@@ -42,7 +52,10 @@ async def stripe_webhook(request: Request):
     data_object = event["data"]["object"]
     logger.info("stripe_webhook_received", event_type=event_type, event_id=event["id"])
 
-    supabase = get_supabase()
+    supabase = create_client(
+        os.environ.get("SUPABASE_URL", ""),
+        os.environ.get("SUPABASE_SERVICE_ROLE_KEY", ""),
+    )
 
     try:
         if event_type == "customer.subscription.created":

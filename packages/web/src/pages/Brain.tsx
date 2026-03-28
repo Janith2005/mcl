@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Users, ShieldAlert, Zap, ChevronRight, Loader2, Plus } from 'lucide-react'
-import { getBrain, syncBrain, exportBrainSchema, addGuardrail } from '@/api/services'
+import { Users, ShieldAlert, Zap, ChevronRight, Loader2, Plus, Search, Link, CheckCircle } from 'lucide-react'
+import { getBrain, syncBrain, exportBrainSchema, addGuardrail, triggerScrape, triggerRipper, getReconReports, getReconReport } from '@/api/services'
+import { useJobPoller } from '@/hooks/useJobPoller'
+import { toast } from 'sonner'
 
 const glassCard: React.CSSProperties = {
   background: 'var(--ip-surface-glass)',
@@ -9,6 +11,240 @@ const glassCard: React.CSSProperties = {
   borderRadius: 'var(--ip-radius-lg)',
   boxShadow: 'var(--ip-shadow-md)',
   border: '1px solid var(--ip-border-subtle)',
+}
+
+function ReconPanel() {
+  const queryClient = useQueryClient()
+  const [handles, setHandles] = useState('')
+  const [urls, setUrls] = useState('')
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null)
+  const scrapePoller = useJobPoller()
+  const ripperPoller = useJobPoller()
+
+  const { data: reports = [] } = useQuery({
+    queryKey: ['recon-reports'],
+    queryFn: getReconReports,
+  })
+
+  const { data: selectedReport } = useQuery({
+    queryKey: ['recon-report', selectedReportId],
+    queryFn: () => getReconReport(selectedReportId!),
+    enabled: !!selectedReportId,
+  })
+
+  async function handleScrape() {
+    const list = handles.split(',').map(h => h.trim()).filter(Boolean)
+    if (!list.length) return
+    try {
+      const { job_id } = await triggerScrape(list)
+      scrapePoller.startPolling(job_id)
+      toast.info('Competitor scrape started…')
+    } catch {
+      toast.error('Failed to start scrape')
+    }
+  }
+
+  async function handleRipper() {
+    const list = urls.split('\n').map(u => u.trim()).filter(Boolean)
+    if (!list.length) return
+    try {
+      const { job_id } = await triggerRipper(list)
+      ripperPoller.startPolling(job_id)
+      toast.info('Skeleton rip started…')
+    } catch {
+      toast.error('Failed to start ripper')
+    }
+  }
+
+  if (scrapePoller.status === 'completed') {
+    queryClient.invalidateQueries({ queryKey: ['recon-reports'] })
+    toast.success('Competitor scrape complete!')
+    setTimeout(scrapePoller.reset, 3000)
+  }
+  if (ripperPoller.status === 'completed') {
+    queryClient.invalidateQueries({ queryKey: ['recon-reports'] })
+    toast.success('Skeleton rip complete!')
+    setTimeout(ripperPoller.reset, 3000)
+  }
+
+  return (
+    <div className="mb-8 p-6" style={glassCard}>
+      <h2 className="text-lg font-bold mb-5" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
+        Recon Intelligence
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* Competitor Scraper */}
+        <div className="p-4 rounded-lg" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Search size={14} style={{ color: 'var(--ip-primary)' }} />
+            <span className="text-sm font-semibold" style={{ color: 'var(--ip-text)' }}>Competitor Scraper</span>
+          </div>
+          <input
+            value={handles}
+            onChange={e => setHandles(e.target.value)}
+            placeholder="@handle1, @handle2, @handle3"
+            className="w-full py-2 px-3 text-sm outline-none mb-3"
+            style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-surface)', color: 'var(--ip-text)' }}
+          />
+          <button
+            onClick={handleScrape}
+            disabled={scrapePoller.isActive || !handles.trim()}
+            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white disabled:opacity-50"
+            style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+          >
+            {scrapePoller.isActive ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
+            {scrapePoller.isActive ? 'Scraping…' : 'Run Scrape'}
+          </button>
+        </div>
+
+        {/* Skeleton Ripper */}
+        <div className="p-4 rounded-lg" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Link size={14} style={{ color: 'var(--ip-primary)' }} />
+            <span className="text-sm font-semibold" style={{ color: 'var(--ip-text)' }}>Skeleton Ripper</span>
+          </div>
+          <textarea
+            value={urls}
+            onChange={e => setUrls(e.target.value)}
+            placeholder="Paste YouTube URLs (one per line)"
+            rows={2}
+            className="w-full py-2 px-3 text-sm outline-none resize-none mb-3"
+            style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-md)', background: 'var(--ip-surface)', color: 'var(--ip-text)' }}
+          />
+          <button
+            onClick={handleRipper}
+            disabled={ripperPoller.isActive || !urls.trim()}
+            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white disabled:opacity-50"
+            style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+          >
+            {ripperPoller.isActive ? <Loader2 size={12} className="animate-spin" /> : <Link size={12} />}
+            {ripperPoller.isActive ? 'Ripping…' : 'Rip Skeleton'}
+          </button>
+        </div>
+      </div>
+
+      {/* Recent Reports */}
+      {reports.length > 0 && (
+        <div>
+          <p className="text-[10px] tracking-widest font-semibold mb-3" style={{ color: 'var(--ip-text-tertiary)' }}>RECENT REPORTS</p>
+          <div className="space-y-2 mb-4">
+            {reports.slice(0, 5).map(r => {
+              const type = r.config?.type as string
+              const handles = r.config?.handles as string[] | undefined
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => setSelectedReportId(selectedReportId === r.id ? null : r.id)}
+                  className="w-full flex items-center gap-3 py-2 px-3 rounded-lg text-left transition-colors hover:opacity-80"
+                  style={{
+                    background: selectedReportId === r.id ? 'var(--ip-bg-subtle)' : 'var(--ip-surface)',
+                    border: `1px solid ${selectedReportId === r.id ? 'var(--ip-primary)' : 'var(--ip-border-subtle)'}`,
+                  }}
+                >
+                  <CheckCircle size={14} style={{ color: 'var(--ip-success)' }} />
+                  <span className="text-xs font-medium flex-1" style={{ color: 'var(--ip-text)' }}>
+                    {type === 'competitor_scrape' ? 'Competitor Scrape' : 'Skeleton Rip'}
+                    {type === 'competitor_scrape' && handles?.length ? ` — ${handles.slice(0,2).join(', ')}` : ''}
+                  </span>
+                  <span className="text-[10px]" style={{ color: 'var(--ip-text-tertiary)' }}>
+                    {new Date(r.created_at).toLocaleDateString()}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Report Detail */}
+          {selectedReport && (() => {
+            const type = selectedReport.config?.type as string
+            const s = selectedReport.synthesis || {}
+            return (
+              <div className="p-4 rounded-lg space-y-4" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
+                {type === 'competitor_scrape' && (
+                  <>
+                    {(s.top_patterns as any[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>TOP PATTERNS</p>
+                        <div className="space-y-1">
+                          {(s.top_patterns as any[]).map((p: any, i: number) => (
+                            <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>• <strong>{p.pattern}</strong> — {p.example_title}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {(s.content_gaps as string[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>CONTENT GAPS TO EXPLOIT</p>
+                        <div className="space-y-1">
+                          {(s.content_gaps as string[]).map((g: string, i: number) => (
+                            <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>→ {g}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {(s.hook_styles as string[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>HOOK FORMULAS THEY USE</p>
+                        <div className="space-y-1">
+                          {(s.hook_styles as string[]).map((h: string, i: number) => (
+                            <p key={i} className="text-xs font-mono" style={{ color: 'var(--ip-text-brand)' }}>{h}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {s.posting_insights && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-1" style={{ color: 'var(--ip-text-tertiary)' }}>POSTING INSIGHTS</p>
+                        <p className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>{s.posting_insights as string}</p>
+                      </div>
+                    )}
+                  </>
+                )}
+                {type === 'skeleton_rip' && (
+                  <>
+                    {(s.engagement_drivers as string[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>ENGAGEMENT DRIVERS</p>
+                        {(s.engagement_drivers as string[]).map((d: string, i: number) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>• {d}</p>
+                        ))}
+                      </div>
+                    )}
+                    {(s.adaptable_elements as string[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>STEAL & ADAPT</p>
+                        {(s.adaptable_elements as string[]).map((e: string, i: number) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>→ {e}</p>
+                        ))}
+                      </div>
+                    )}
+                    {(s.avoid_elements as string[])?.length > 0 && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>DON'T COPY</p>
+                        {(s.avoid_elements as string[]).map((e: string, i: number) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-error)' }}>✗ {e}</p>
+                        ))}
+                      </div>
+                    )}
+                    {s.skeleton && (
+                      <div>
+                        <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>CONTENT SKELETON</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--ip-text-brand)' }}>Hook: {(s.skeleton as any).hook_formula}</p>
+                        {((s.skeleton as any).section_flow as string[])?.map((sec: string, i: number) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>{i + 1}. {sec}</p>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )
+          })()}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export function BrainPage() {
@@ -321,6 +557,9 @@ export function BrainPage() {
             </div>
           </div>
         )}
+
+        {/* Recon Section */}
+        <ReconPanel />
 
         {/* Usage Meter */}
         <div
