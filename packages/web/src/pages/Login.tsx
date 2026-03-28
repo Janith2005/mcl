@@ -1,22 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/api/supabase'
+import { useAuth } from '@/lib/auth'
 import { Skull, Shield, Hexagon } from 'lucide-react'
 
 export function Login() {
   const navigate = useNavigate()
+  const { session } = useAuth()
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSignUp, setIsSignUp] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
-  async function handleMagicLink(e: React.FormEvent) {
+  useEffect(() => {
+    if (session) navigate('/', { replace: true })
+  }, [session, navigate])
+
+  async function handleEmailPassword(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({ email })
-    if (error) {
-      setMessage(error.message)
+    setMessage('')
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setMessage(error.message)
+      } else {
+        setMessage('Account created! You are now signed in.')
+      }
     } else {
-      setMessage('Check your email for the magic link!')
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setMessage(error.message)
+      }
     }
     setLoading(false)
   }
@@ -135,14 +151,51 @@ export function Login() {
           <div className="flex-1 h-px" style={{ background: 'var(--ip-border)' }} />
         </div>
 
-        {/* Magic Link */}
-        <form onSubmit={handleMagicLink}>
+        {/* Toggle sign in / sign up */}
+        <div
+          className="flex items-center p-1 mb-4"
+          style={{ background: 'var(--ip-bg-subtle)', borderRadius: 'var(--ip-radius-full)', border: '1px solid var(--ip-border-subtle)' }}
+        >
+          {(['Sign In', 'Sign Up'] as const).map((label, i) => (
+            <button
+              key={label}
+              onClick={() => { setIsSignUp(i === 1); setMessage('') }}
+              className="flex-1 py-2 text-sm font-medium transition-all"
+              style={{
+                borderRadius: 'var(--ip-radius-full)',
+                background: isSignUp === (i === 1) ? 'var(--ip-surface)' : 'transparent',
+                color: isSignUp === (i === 1) ? 'var(--ip-text)' : 'var(--ip-text-tertiary)',
+                boxShadow: isSignUp === (i === 1) ? 'var(--ip-shadow-sm)' : 'none',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Email + Password */}
+        <form onSubmit={handleEmailPassword}>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="agent@luminous-lab.io"
             required
+            className="w-full py-3 px-4 text-sm mb-3 outline-none"
+            style={{
+              border: '1px solid var(--ip-border)',
+              borderRadius: 'var(--ip-radius-full)',
+              color: 'var(--ip-text)',
+              background: 'var(--ip-surface)',
+            }}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+            minLength={6}
             className="w-full py-3 px-4 text-sm mb-4 outline-none"
             style={{
               border: '1px solid var(--ip-border)',
@@ -161,7 +214,7 @@ export function Login() {
               boxShadow: 'var(--ip-shadow-md)',
             }}
           >
-            ⚡ Sign in with Magic Link
+            {loading ? '...' : isSignUp ? '⚡ Create Account' : '⚡ Sign In'}
           </button>
         </form>
 
@@ -171,11 +224,8 @@ export function Login() {
           </p>
         )}
 
-        <p className="text-center text-sm mt-6" style={{ color: 'var(--ip-text-secondary)' }}>
-          Don't have an account?{' '}
-          <button onClick={() => navigate('/onboarding')} className="font-medium underline" style={{ color: 'var(--ip-text-brand)' }}>
-            Sign up
-          </button>
+        <p className="text-center text-xs mt-4" style={{ color: 'var(--ip-text-tertiary)' }}>
+          Password must be at least 6 characters
         </p>
       </div>
 

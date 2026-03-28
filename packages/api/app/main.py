@@ -1,4 +1,9 @@
 """MCL API - FastAPI application factory."""
+# Load the root .env before any other imports so os.environ is populated
+from pathlib import Path as _Path
+from dotenv import load_dotenv as _load_dotenv
+_load_dotenv(_Path(__file__).resolve().parent.parent.parent.parent / ".env", override=False)
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

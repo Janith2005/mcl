@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { useAuth } from '@/lib/auth'
 import {
   Zap,
   Flame,
@@ -9,49 +12,42 @@ import {
   PenTool,
   ChevronRight,
 } from 'lucide-react'
+import { getDashboardStages, getDashboardFeed, getAnalytics } from '@/api/services'
 
 /* ------------------------------------------------------------------ */
-/*  Static data — replace with API calls                               */
+/*  Fallback static data (shown while API loads or on error)           */
 /* ------------------------------------------------------------------ */
 
-const PIPELINE_STAGES = [
-  { label: 'Discover', count: 124, color: 'var(--ip-stage-discover)' },
-  { label: 'Angle', count: 86, color: 'var(--ip-stage-angle)' },
-  { label: 'Hook', count: 42, color: 'var(--ip-stage-hook)' },
-  { label: 'Script', count: 18, color: 'var(--ip-stage-script)' },
-  { label: 'Publish', count: 7, color: 'var(--ip-stage-publish)' },
-] as const
+const FALLBACK_STAGES = [
+  { label: 'Discover', count: 0, color: 'var(--ip-stage-discover)' },
+  { label: 'Angle', count: 0, color: 'var(--ip-stage-angle)' },
+  { label: 'Hook', count: 0, color: 'var(--ip-stage-hook)' },
+  { label: 'Script', count: 0, color: 'var(--ip-stage-script)' },
+  { label: 'Publish', count: 0, color: 'var(--ip-stage-publish)' },
+]
 
-const FEED_ITEMS = [
+const FALLBACK_FEED = [
   {
-    icon: Zap,
-    iconBg: 'var(--ip-stage-hook)',
-    title: 'New hook generated for "Retention Drops"',
-    meta: '10 minutes ago  ·  AI Agent',
+    id: '1',
+    type: 'hook',
+    title: 'Pipeline ready — start by discovering topics',
+    created_at: new Date().toISOString(),
   },
-  {
-    icon: BarChart3,
-    iconBg: 'var(--ip-stage-angle)',
-    title: 'Competitor report ready: @rivalcreator',
-    meta: '2 hours ago  ·  System',
-  },
-  {
-    icon: AlertTriangle,
-    iconBg: 'var(--ip-error)',
-    title: 'Alert: High churn detected in Wellness niche',
-    meta: '4 hours ago  ·  Analytics',
-  },
-] as const
+]
+
+/* ------------------------------------------------------------------ */
+/*  Quick actions map                                                  */
+/* ------------------------------------------------------------------ */
 
 const QUICK_ACTIONS = [
-  { icon: Search, label: 'Discover Topics' },
-  { icon: PenTool, label: 'Generate Hook' },
-  { icon: FileText, label: 'Draft Script' },
-  { icon: BarChart3, label: 'View Analytics' },
+  { icon: Search, label: 'Discover Topics', to: '/topics' },
+  { icon: PenTool, label: 'Generate Hook', to: '/hooks' },
+  { icon: FileText, label: 'Draft Script', to: '/scripts' },
+  { icon: BarChart3, label: 'View Analytics', to: '/analytics' },
 ] as const
 
 /* ------------------------------------------------------------------ */
-/*  Shared style objects                                               */
+/*  Shared style                                                       */
 /* ------------------------------------------------------------------ */
 
 const cardStyle: React.CSSProperties = {
@@ -60,6 +56,28 @@ const cardStyle: React.CSSProperties = {
   borderRadius: 'var(--ip-radius-lg)',
   boxShadow: 'var(--ip-shadow-md)',
   border: '1px solid var(--ip-border-subtle)',
+}
+
+/* ------------------------------------------------------------------ */
+/*  Feed icon map                                                      */
+/* ------------------------------------------------------------------ */
+
+function feedIcon(type: string) {
+  switch (type) {
+    case 'hook': return { icon: Zap, color: 'var(--ip-stage-hook)' }
+    case 'analytics': return { icon: BarChart3, color: 'var(--ip-stage-angle)' }
+    case 'alert': return { icon: AlertTriangle, color: 'var(--ip-error)' }
+    default: return { icon: Sparkles, color: 'var(--ip-primary)' }
+  }
+}
+
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  return `${Math.floor(hrs / 24)}d ago`
 }
 
 /* ------------------------------------------------------------------ */
@@ -85,7 +103,6 @@ function WorkspaceTabs() {
           </button>
         ))}
       </div>
-      {/* Search bar */}
       <div
         className="flex items-center gap-2 px-3 py-1.5 text-sm"
         style={{
@@ -109,12 +126,14 @@ function WorkspaceTabs() {
 }
 
 function PipelineFunnel() {
+  const { data } = useQuery({
+    queryKey: ['dashboard-stages'],
+    queryFn: getDashboardStages,
+  })
+  const stages = data ?? FALLBACK_STAGES
+
   return (
-    <div
-      className="p-6"
-      style={cardStyle}
-    >
-      {/* Section header */}
+    <div className="p-6" style={cardStyle}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Sparkles size={14} style={{ color: 'var(--ip-primary)' }} />
@@ -125,15 +144,11 @@ function PipelineFunnel() {
             Content Pipeline Funnel
           </span>
         </div>
-        <span
-          className="text-xs"
-          style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-        >
-          Last 14h velocity
+        <span className="text-xs" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
+          Live counts
         </span>
       </div>
 
-      {/* Sparkline placeholder */}
       <div className="flex items-end gap-1 mb-6 h-16 px-2">
         {[35, 42, 28, 55, 48, 60, 72, 65, 50, 80, 70, 85, 78, 92].map((h, i) => (
           <div
@@ -141,24 +156,15 @@ function PipelineFunnel() {
             className="flex-1 rounded-sm transition-all"
             style={{
               height: `${h}%`,
-              background: i >= 12
-                ? 'var(--ip-primary-gradient)'
-                : 'var(--ip-border-subtle)',
+              background: i >= 12 ? 'var(--ip-primary-gradient)' : 'var(--ip-border-subtle)',
               opacity: i >= 12 ? 1 : 0.5,
             }}
           />
         ))}
-        <span
-          className="text-xs font-semibold ml-2"
-          style={{ color: 'var(--ip-success)', fontFamily: 'var(--ip-font-body)' }}
-        >
-          +42%
-        </span>
       </div>
 
-      {/* Stage pills with connecting arrows */}
       <div className="flex items-center gap-2">
-        {PIPELINE_STAGES.map((stage, i) => (
+        {stages.map((stage, i) => (
           <div key={stage.label} className="flex items-center flex-1">
             <div className="flex flex-col items-center gap-1.5 flex-1">
               <div
@@ -174,20 +180,13 @@ function PipelineFunnel() {
               </div>
               <span
                 className="text-[10px] font-medium uppercase tracking-wider"
-                style={{
-                  color: 'var(--ip-text-tertiary)',
-                  fontFamily: 'var(--ip-font-body)',
-                }}
+                style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
               >
                 {stage.label}
               </span>
             </div>
-            {i < PIPELINE_STAGES.length - 1 && (
-              <ChevronRight
-                size={16}
-                className="shrink-0 mx-1"
-                style={{ color: 'var(--ip-border)' }}
-              />
+            {i < stages.length - 1 && (
+              <ChevronRight size={16} className="shrink-0 mx-1" style={{ color: 'var(--ip-border)' }} />
             )}
           </div>
         ))}
@@ -197,114 +196,79 @@ function PipelineFunnel() {
 }
 
 function TopPerformer() {
+  const navigate = useNavigate()
+  const { data: analytics } = useQuery({
+    queryKey: ['analytics', '30d'],
+    queryFn: () => getAnalytics('30d'),
+  })
+  const top = analytics?.top_performers?.[0]
+
+  if (!top) {
+    return (
+      <div style={cardStyle} className="overflow-hidden flex flex-col items-center justify-center p-10 text-center gap-4">
+        <Flame size={32} style={{ color: 'var(--ip-border)' }} />
+        <div>
+          <p className="font-semibold mb-1" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-display)' }}>
+            No top performer yet
+          </p>
+          <p className="text-sm" style={{ color: 'var(--ip-text-secondary)', fontFamily: 'var(--ip-font-body)' }}>
+            Publish content and run analytics to see your best-performing pieces here.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/topics')}
+          className="px-4 py-2 text-sm font-semibold text-white"
+          style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+        >
+          Start Creating
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div style={cardStyle} className="overflow-hidden">
-      {/* Section header */}
       <div className="px-6 pt-5 pb-3">
-        <span
-          className="text-[10px] font-semibold tracking-widest uppercase"
-          style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-        >
+        <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
           Top Performer
         </span>
       </div>
 
-      {/* Thumbnail */}
-      <div
-        className="relative mx-4 overflow-hidden"
-        style={{ borderRadius: 'var(--ip-radius-md)', height: 180 }}
-      >
-        {/* Placeholder gradient mimicking the design's golden-wave thumbnail */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(145deg, #1a1008 0%, #4a3520 30%, #8b6914 60%, #d4af37 100%)',
-          }}
-        />
-        {/* Viral Potential badge */}
-        <div
-          className="absolute bottom-3 left-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white"
-          style={{
-            background: 'var(--ip-success)',
-            borderRadius: 'var(--ip-radius-full)',
-            fontFamily: 'var(--ip-font-body)',
-          }}
-        >
-          Viral Potential
+      <div className="relative mx-4 overflow-hidden" style={{ borderRadius: 'var(--ip-radius-md)', height: 120 }}>
+        <div className="absolute inset-0" style={{ background: `linear-gradient(145deg, color-mix(in srgb, ${top.accent_color} 80%, #000) 0%, ${top.accent_color} 100%)` }} />
+        <div className="absolute bottom-3 left-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white"
+          style={{ background: top.category_color, borderRadius: 'var(--ip-radius-full)', fontFamily: 'var(--ip-font-body)' }}>
+          {top.category_label}
         </div>
-        {/* Duration badge */}
-        <div
-          className="absolute bottom-3 right-3 px-2 py-0.5 text-[10px] font-medium text-white"
-          style={{
-            background: 'rgba(0,0,0,0.6)',
-            borderRadius: 'var(--ip-radius-sm)',
-            fontFamily: 'var(--ip-font-body)',
-          }}
-        >
-          00:58
+        <div className="absolute top-3 right-3 px-2 py-0.5 text-[10px] font-medium text-white"
+          style={{ background: 'rgba(0,0,0,0.5)', borderRadius: 'var(--ip-radius-sm)', fontFamily: 'var(--ip-font-body)' }}>
+          {top.trend === 'up' ? '↑' : '↓'} {top.trend_label}
         </div>
       </div>
 
-      {/* Title */}
       <div className="px-6 pt-4">
-        <h3
-          className="text-lg font-bold"
-          style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-        >
-          The Anti-Guru Angle
+        <h3 className="text-lg font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
+          {top.title}
         </h3>
       </div>
 
-      {/* Stats row */}
-      <div className="flex gap-8 px-6 pt-4 pb-2">
+      <div className="flex gap-8 px-6 pt-4 pb-5">
         <div>
-          <p
-            className="text-[10px] font-medium uppercase tracking-wider mb-0.5"
-            style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-          >
+          <p className="text-[10px] font-medium uppercase tracking-wider mb-0.5" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
             Total Views
           </p>
-          <p
-            className="text-2xl font-bold"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-          >
-            12,492
+          <p className="text-2xl font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
+            {top.views}
           </p>
         </div>
-        <div>
-          <p
-            className="text-[10px] font-medium uppercase tracking-wider mb-0.5"
-            style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-          >
-            Conv Rate
-          </p>
-          <p
-            className="text-2xl font-bold"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-          >
-            8.2%
-          </p>
-        </div>
-      </div>
-
-      {/* Why it won */}
-      <div className="px-6 pb-5 pt-2">
-        <div className="flex items-start gap-2">
-          <Flame size={14} className="mt-0.5 shrink-0" style={{ color: 'var(--ip-error)' }} />
+        <div className="flex items-start gap-2 flex-1">
+          <Flame size={14} className="mt-5 shrink-0" style={{ color: 'var(--ip-error)' }} />
           <div>
-            <span
-              className="text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: 'var(--ip-error)', fontFamily: 'var(--ip-font-body)' }}
-            >
+            <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--ip-error)', fontFamily: 'var(--ip-font-body)' }}>
               Why it won
-            </span>
-            <p
-              className="text-xs mt-0.5 leading-relaxed"
-              style={{ color: 'var(--ip-text-secondary)', fontFamily: 'var(--ip-font-body)' }}
-            >
-              "Contrarian Hook: Leveraged 'Negative Credibility' to break typical pattern
-              recognition in the first 1.5s."
+            </p>
+            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--ip-text-secondary)', fontFamily: 'var(--ip-font-body)' }}>
+              Published {new Date(top.published_at).toLocaleDateString()}
             </p>
           </div>
         </div>
@@ -314,6 +278,12 @@ function TopPerformer() {
 }
 
 function TacticalFeed() {
+  const { data } = useQuery({
+    queryKey: ['dashboard-feed'],
+    queryFn: getDashboardFeed,
+  })
+  const items = data ?? FALLBACK_FEED
+
   return (
     <div className="p-6" style={cardStyle}>
       <div className="flex items-center justify-between mb-5">
@@ -326,28 +296,22 @@ function TacticalFeed() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {FEED_ITEMS.map((item, i) => {
-          const Icon = item.icon
+        {items.map((item) => {
+          const { icon: Icon, color } = feedIcon(item.type)
           return (
-            <div key={i} className="flex items-start gap-3">
+            <div key={item.id} className="flex items-start gap-3">
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: `color-mix(in srgb, ${item.iconBg} 15%, transparent)` }}
+                style={{ background: `color-mix(in srgb, ${color} 15%, transparent)` }}
               >
-                <Icon size={16} style={{ color: item.iconBg }} />
+                <Icon size={16} style={{ color }} />
               </div>
               <div className="min-w-0">
-                <p
-                  className="text-sm font-medium leading-snug truncate"
-                  style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-body)' }}
-                >
+                <p className="text-sm font-medium leading-snug truncate" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-body)' }}>
                   {item.title}
                 </p>
-                <p
-                  className="text-[11px] mt-0.5"
-                  style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-                >
-                  {item.meta}
+                <p className="text-[11px] mt-0.5" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
+                  {timeAgo(item.created_at)}
                 </p>
               </div>
             </div>
@@ -359,6 +323,8 @@ function TacticalFeed() {
 }
 
 function QuickActions() {
+  const navigate = useNavigate()
+
   return (
     <div className="p-6" style={cardStyle}>
       <span
@@ -374,6 +340,7 @@ function QuickActions() {
           return (
             <button
               key={action.label}
+              onClick={() => navigate(action.to)}
               className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-all hover:scale-[1.02]"
               style={{
                 background: 'transparent',
@@ -398,38 +365,32 @@ function QuickActions() {
 /* ------------------------------------------------------------------ */
 
 export function Dashboard() {
+  const { user } = useAuth()
+  const displayName = user?.user_metadata?.full_name
+    || user?.user_metadata?.name
+    || user?.email?.split('@')[0]
+    || 'Agent'
+
   return (
     <div className="max-w-full">
-      {/* Header area */}
       <header className="mb-8">
         <WorkspaceTabs />
         <div className="mt-4">
-          <h1
-            className="text-3xl font-bold"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-          >
-            Vessel Command
+          <h1 className="text-3xl font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
+            Welcome back, {displayName}
           </h1>
-          <p
-            className="text-xs tracking-widest mt-1 uppercase"
-            style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}
-          >
-            Global Operations Status for Agency Pro
+          <p className="text-xs tracking-widest mt-1 uppercase" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
+            Vessel Command — Global Operations Status
           </p>
         </div>
       </header>
 
-      {/* Pipeline Funnel — full width */}
       <section className="mb-8">
         <PipelineFunnel />
       </section>
 
-      {/* Two-column layout: Top Performer | Tactical Feed + Quick Actions */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left column */}
         <TopPerformer />
-
-        {/* Right column */}
         <div className="flex flex-col gap-8">
           <TacticalFeed />
           <QuickActions />

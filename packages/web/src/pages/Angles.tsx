@@ -1,47 +1,11 @@
 import { useState } from 'react'
-import { ArrowRightLeft, ArrowRight, Bookmark } from 'lucide-react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { ArrowRightLeft, ArrowRight, Bookmark, Loader2, Sparkles } from 'lucide-react'
+import { getAngles, saveAngle, generateAngles, type Angle } from '@/api/services'
 
 type Tab = 'angles-lab' | 'drafts' | 'published'
 type FormatTab = 'longform' | 'shortform' | 'linkedin-twitter'
-
-interface AngleCard {
-  id: string
-  badge: string
-  badgeColor: string
-  badgeBg: string
-  title: string
-  description: string
-  strengthLabel: string
-  strengthLevel: 'high' | 'medium' | 'low'
-  strengthPercent: number
-}
-
-const MOCK_ANGLES: AngleCard[] = [
-  {
-    id: '1',
-    badge: 'THE REBEL',
-    badgeColor: 'var(--ip-text-on-primary)',
-    badgeBg: 'var(--ip-score-low)',
-    title: 'Forget what you were told about seniority.',
-    description:
-      'Traditional career paths are dead. In the AI era, the \'Rebel\' uses tools to automate seniority, making years of experience irrelevant for those who dare to skip the queue.',
-    strengthLabel: 'STRENGTH: HIGH',
-    strengthLevel: 'high',
-    strengthPercent: 85,
-  },
-  {
-    id: '2',
-    badge: 'THE EXPERT',
-    badgeColor: 'var(--ip-text-on-primary)',
-    badgeBg: 'var(--ip-stage-angle)',
-    title: 'Precision over Volume: The AI Strategist.',
-    description:
-      "It's not about how much code you write, but the architectural decisions you enable. AI isn't the developer; it's the workforce, and you are the CEO.",
-    strengthLabel: 'STRENGTH: MEDIUM',
-    strengthLevel: 'medium',
-    strengthPercent: 60,
-  },
-]
 
 function getStrengthColor(level: 'high' | 'medium' | 'low'): string {
   if (level === 'high') return 'var(--ip-success)'
@@ -49,11 +13,108 @@ function getStrengthColor(level: 'high' | 'medium' | 'low'): string {
   return 'var(--ip-error)'
 }
 
+const cardStyle: React.CSSProperties = {
+  background: 'var(--ip-card-glass-bg)',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
+  borderRadius: 'var(--ip-radius-lg)',
+  boxShadow: 'var(--ip-shadow-md)',
+  border: '1px solid var(--ip-border-subtle)',
+}
+
+function AngleCard({ angle }: { angle: Angle }) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const saveMutation = useMutation({
+    mutationFn: () => saveAngle(angle.id, { title: angle.title }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['angles'] }),
+  })
+
+  return (
+    <div className="p-5 transition-all hover:translate-y-[-2px]" style={cardStyle}>
+      <span
+        className="inline-block text-[10px] font-bold tracking-widest px-3 py-1 mb-3"
+        style={{
+          color: angle.badge_color,
+          background: angle.badge_bg,
+          borderRadius: 'var(--ip-radius-full)',
+        }}
+      >
+        {angle.badge}
+      </span>
+
+      <h3
+        className="text-base font-bold mb-2 leading-snug"
+        style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
+      >
+        {angle.title}
+      </h3>
+
+      <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--ip-text-secondary)' }}>
+        {angle.description}
+      </p>
+
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-1.5">
+          <span
+            className="text-[10px] font-bold tracking-widest"
+            style={{ color: getStrengthColor(angle.strength_level) }}
+          >
+            {angle.strength_label}
+          </span>
+        </div>
+        <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--ip-border)' }}>
+          <div
+            className="h-full rounded-full transition-all"
+            style={{
+              width: `${angle.strength_percent}%`,
+              background: getStrengthColor(angle.strength_level),
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => saveMutation.mutate()}
+          disabled={saveMutation.isPending}
+          className="flex items-center gap-1 text-xs font-medium transition-colors hover:opacity-80"
+          style={{ color: 'var(--ip-text-secondary)' }}
+        >
+          {saveMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : null}
+          Save
+        </button>
+        <button
+          onClick={() => navigate('/scripts')}
+          className="flex items-center gap-1 text-xs font-medium transition-colors hover:opacity-80"
+          style={{ color: 'var(--ip-text-brand)' }}
+        >
+          Edit Draft <ArrowRight size={12} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function Angles() {
   const [activeTab, setActiveTab] = useState<Tab>('angles-lab')
   const [formatTab, setFormatTab] = useState<FormatTab>('longform')
   const [commonBelief, setCommonBelief] = useState('')
   const [surprisingTruth, setSurprisingTruth] = useState('')
+
+  const { data: angles = [], isLoading } = useQuery({
+    queryKey: ['angles'],
+    queryFn: getAngles,
+  })
+
+  const generateMutation = useMutation({
+    mutationFn: () => generateAngles({
+      common_belief: commonBelief,
+      surprising_truth: surprisingTruth,
+      format: formatTab,
+    }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['angles'] }),
+  })
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'angles-lab', label: 'Angles Lab' },
@@ -73,36 +134,28 @@ export function Angles() {
     setSurprisingTruth(temp)
   }
 
+  const draftAngles = angles.filter((a: Angle & { status?: string }) => a.status === 'draft')
+  const publishedAngles = angles.filter((a: Angle & { status?: string }) => a.status === 'published')
+
   return (
     <div>
-      {/* Active Focus Header */}
       <div className="mb-2">
-        <p
-          className="text-[10px] font-bold tracking-widest mb-1 uppercase"
-          style={{ color: 'var(--ip-text-brand)' }}
-        >
+        <p className="text-[10px] font-bold tracking-widest mb-1 uppercase" style={{ color: 'var(--ip-text-brand)' }}>
           ACTIVE FOCUS
         </p>
         <div className="flex items-center gap-3">
-          <h1
-            className="text-2xl font-bold"
-            style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-          >
+          <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
             Niche Authority in AI
           </h1>
           <button
             className="px-4 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-            style={{
-              background: 'var(--ip-primary-gradient)',
-              borderRadius: 'var(--ip-radius-full)',
-            }}
+            style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
           >
             Save Topic
           </button>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
       <div className="flex gap-1 mb-6" style={{ borderBottom: '1px solid var(--ip-border-subtle)' }}>
         {tabs.map(({ id, label }) => (
           <button
@@ -121,35 +174,17 @@ export function Angles() {
 
       {activeTab === 'angles-lab' && (
         <>
-          {/* Contrast Formula Section — glassmorphic card */}
-          <div
-            className="p-6 mb-6"
-            style={{
-              background: 'var(--ip-card-glass-bg)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              borderRadius: 'var(--ip-radius-lg)',
-              boxShadow: 'var(--ip-shadow-md)',
-              border: '1px solid var(--ip-border-subtle)',
-            }}
-          >
+          <div className="p-6 mb-6" style={cardStyle}>
             <div className="flex items-center gap-2 mb-4">
               <Bookmark size={18} style={{ color: 'var(--ip-text)' }} />
-              <h2
-                className="text-base font-semibold"
-                style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-              >
+              <h2 className="text-base font-semibold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
                 The Contrast Formula
               </h2>
             </div>
 
             <div className="flex items-center gap-4">
-              {/* Common Belief */}
               <div className="flex-1">
-                <p
-                  className="text-[10px] font-bold tracking-widest mb-2"
-                  style={{ color: 'var(--ip-text-tertiary)' }}
-                >
+                <p className="text-[10px] font-bold tracking-widest mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>
                   THE COMMON BELIEF (GOD)
                 </p>
                 <textarea
@@ -167,7 +202,6 @@ export function Angles() {
                 />
               </div>
 
-              {/* Swap Icon */}
               <button
                 onClick={swapBeliefs}
                 className="flex-shrink-0 p-2.5 transition-colors hover:bg-[var(--ip-bg-subtle)]"
@@ -181,12 +215,8 @@ export function Angles() {
                 <ArrowRightLeft size={18} />
               </button>
 
-              {/* Surprising Truth */}
               <div className="flex-1">
-                <p
-                  className="text-[10px] font-bold tracking-widest mb-2"
-                  style={{ color: 'var(--ip-text-tertiary)' }}
-                >
+                <p className="text-[10px] font-bold tracking-widest mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>
                   THE SURPRISING TRUTH
                 </p>
                 <textarea
@@ -206,147 +236,91 @@ export function Angles() {
             </div>
           </div>
 
-          {/* Format Tabs — pill-shaped toggles */}
-          <div
-            className="inline-flex items-center p-1 mb-6"
-            style={{
-              background: 'var(--ip-bg-subtle)',
-              borderRadius: 'var(--ip-radius-full)',
-              border: '1px solid var(--ip-border-subtle)',
-            }}
-          >
-            {formatTabs.map(({ id, label }) => (
-              <button
-                key={id}
-                onClick={() => setFormatTab(id)}
-                className="px-4 py-2 text-sm font-medium transition-all"
-                style={{
-                  borderRadius: 'var(--ip-radius-full)',
-                  background: formatTab === id ? 'var(--ip-surface)' : 'transparent',
-                  color: formatTab === id ? 'var(--ip-text)' : 'var(--ip-text-tertiary)',
-                  boxShadow: formatTab === id ? 'var(--ip-shadow-sm)' : 'none',
-                }}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {/* Angle Cards */}
-          <div className="grid grid-cols-2 gap-6">
-            {MOCK_ANGLES.map((angle) => (
-              <div
-                key={angle.id}
-                className="p-5 transition-all hover:translate-y-[-2px]"
-                style={{
-                  background: 'var(--ip-card-glass-bg)',
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  borderRadius: 'var(--ip-radius-lg)',
-                  boxShadow: 'var(--ip-shadow-md)',
-                  border: '1px solid var(--ip-border-subtle)',
-                }}
-              >
-                {/* Badge pill */}
-                <span
-                  className="inline-block text-[10px] font-bold tracking-widest px-3 py-1 mb-3"
+          <div className="flex items-center justify-between mb-4">
+            <div
+              className="inline-flex items-center p-1"
+              style={{
+                background: 'var(--ip-bg-subtle)',
+                borderRadius: 'var(--ip-radius-full)',
+                border: '1px solid var(--ip-border-subtle)',
+              }}
+            >
+              {formatTabs.map(({ id, label }) => (
+                <button
+                  key={id}
+                  onClick={() => setFormatTab(id)}
+                  className="px-4 py-2 text-sm font-medium transition-all"
                   style={{
-                    color: angle.badgeColor,
-                    background: angle.badgeBg,
                     borderRadius: 'var(--ip-radius-full)',
+                    background: formatTab === id ? 'var(--ip-surface)' : 'transparent',
+                    color: formatTab === id ? 'var(--ip-text)' : 'var(--ip-text-tertiary)',
+                    boxShadow: formatTab === id ? 'var(--ip-shadow-sm)' : 'none',
                   }}
                 >
-                  {angle.badge}
-                </span>
-
-                {/* Title */}
-                <h3
-                  className="text-base font-bold mb-2 leading-snug"
-                  style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
-                >
-                  {angle.title}
-                </h3>
-
-                {/* Description */}
-                <p
-                  className="text-sm leading-relaxed mb-4"
-                  style={{ color: 'var(--ip-text-secondary)' }}
-                >
-                  {angle.description}
-                </p>
-
-                {/* Contrast Strength progress bar */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span
-                      className="text-[10px] font-bold tracking-widest"
-                      style={{ color: getStrengthColor(angle.strengthLevel) }}
-                    >
-                      {angle.strengthLabel}
-                    </span>
-                  </div>
-                  <div
-                    className="w-full h-1.5 rounded-full overflow-hidden"
-                    style={{ background: 'var(--ip-border)' }}
-                  >
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${angle.strengthPercent}%`,
-                        background: getStrengthColor(angle.strengthLevel),
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Edit Draft link */}
-                <div className="flex items-center justify-end">
-                  <button
-                    className="flex items-center gap-1 text-xs font-medium transition-colors hover:opacity-80"
-                    style={{ color: 'var(--ip-text-brand)' }}
-                  >
-                    Edit Draft <ArrowRight size={12} />
-                  </button>
-                </div>
-              </div>
-            ))}
+                  {label}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => generateMutation.mutate()}
+              disabled={generateMutation.isPending || !commonBelief || !surprisingTruth}
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+              style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+            >
+              {generateMutation.isPending
+                ? <><Loader2 size={14} className="animate-spin" /> Generating...</>
+                : <><Sparkles size={14} /> Generate Angles</>}
+            </button>
           </div>
+
+          {isLoading || generateMutation.isPending ? (
+            <div className="flex justify-center py-12">
+              <Loader2 size={24} className="animate-spin" style={{ color: 'var(--ip-primary)' }} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-6">
+              {angles.map((angle) => (
+                <AngleCard key={angle.id} angle={angle} />
+              ))}
+              {angles.length === 0 && (
+                <div className="col-span-2 text-center py-12" style={{ color: 'var(--ip-text-tertiary)' }}>
+                  No angles generated yet. Use the Contrast Formula above to get started.
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
 
       {activeTab === 'drafts' && (
-        <div
-          className="p-8 text-center"
-          style={{
-            background: 'var(--ip-card-glass-bg)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: 'var(--ip-radius-lg)',
-            border: '1px solid var(--ip-border-subtle)',
-            boxShadow: 'var(--ip-shadow-md)',
-          }}
-        >
-          <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>
-            Your drafted angles will appear here once you start editing.
-          </p>
+        <div className="p-8" style={cardStyle}>
+          {draftAngles.length === 0 ? (
+            <p className="text-sm text-center" style={{ color: 'var(--ip-text-tertiary)' }}>
+              Your drafted angles will appear here once you start editing.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-6">
+              {draftAngles.map((angle) => (
+                <AngleCard key={angle.id} angle={angle} />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {activeTab === 'published' && (
-        <div
-          className="p-8 text-center"
-          style={{
-            background: 'var(--ip-card-glass-bg)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: 'var(--ip-radius-lg)',
-            border: '1px solid var(--ip-border-subtle)',
-            boxShadow: 'var(--ip-shadow-md)',
-          }}
-        >
-          <p className="text-sm" style={{ color: 'var(--ip-text-tertiary)' }}>
-            Published angles will appear here after you finalize and ship content.
-          </p>
+        <div className="p-8" style={cardStyle}>
+          {publishedAngles.length === 0 ? (
+            <p className="text-sm text-center" style={{ color: 'var(--ip-text-tertiary)' }}>
+              Published angles will appear here after you finalize and ship content.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-6">
+              {publishedAngles.map((angle) => (
+                <AngleCard key={angle.id} angle={angle} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

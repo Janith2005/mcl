@@ -69,7 +69,7 @@ BEGIN
             'brains', 'topics', 'angles', 'hooks', 'scripts',
             'analytics_entries', 'insights', 'swipe_hooks', 'competitor_reels',
             'skeleton_reports', 'recon_tracker_state', 'assets', 'collections', 'jobs',
-            'plans', 'workspace_usage', 'workspace_connections', 'subscriptions',
+            'workspace_usage', 'workspace_connections', 'subscriptions',
             'dead_letter_jobs', 'workspace_access_grants'
         ])
     LOOP
@@ -80,6 +80,9 @@ BEGIN
     END LOOP;
 END
 $$;
+
+-- Plans: global pricing table, readable by anyone (no workspace_id column)
+CREATE POLICY plans_select ON plans FOR SELECT USING (true);
 
 -- API keys: users can only manage their own
 CREATE POLICY apikeys_select ON api_keys FOR SELECT USING (user_id = auth.uid());

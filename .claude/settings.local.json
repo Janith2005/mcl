@@ -13,7 +13,24 @@
       "Bash(done)",
       "Bash(find C:UsersreddyStudentLearningagencymclpackages -name *.py -type f -exec head -30 {})",
       "Bash(2)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(env/Scripts/pip install:*)",
+      "Bash(python -c \"from dotenv import load_dotenv; print\\(''dotenv ok''\\)\")",
+      "Bash(python -c \":*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(\"C:/Users/reddy/Student/Learning/agency/mcl/env/Scripts/python.exe\" -c \"\nimport httpx, time\nt = time.time\\(\\)\ntry:\n    r = httpx.get\\('https://mydgrsnrvidzcagvvkrc.supabase.co/rest/v1/', timeout=5\\)\n    print\\(f'OK {r.status_code} in {time.time\\(\\)-t:.2f}s'\\)\nexcept Exception as e:\n    print\\(f'FAILED in {time.time\\(\\)-t:.2f}s: {e}'\\)\n\")",
+      "Bash(powershell -command \"Test-NetConnection -ComputerName mydgrsnrvidzcagvvkrc.supabase.co -Port 443 -InformationLevel Quiet\")",
+      "Bash(powershell -command \"Resolve-DnsName mydgrsnrvidzcagvvkrc.supabase.co | Select-Object Name,IPAddress\")",
+      "Bash(powershell -command \"Test-NetConnection -ComputerName 172.64.149.246 -Port 443 -InformationLevel Quiet\")",
+      "Bash(powershell -command \"Get-Content 'C:\\\\Windows\\\\System32\\\\drivers\\\\etc\\\\hosts' | Select-String 'supabase'\")",
+      "Bash(powershell -command \"ipconfig /flushdns\")",
+      "Bash(\"C:/Users/reddy/Student/Learning/agency/mcl/env/Scripts/python.exe\" -c \"import httpx; r = httpx.get\\(''https://mydgrsnrvidzcagvvkrc.supabase.co/rest/v1/'', timeout=8\\); print\\(''Status:'', r.status_code\\)\")",
+      "Bash(\"C:/Users/reddy/Student/Learning/agency/mcl/env/Scripts/python.exe\" -c \"\nimport httpx\nr = httpx.get\\('https://ai-research-development-resource.cognitiveservices.azure.com/', timeout=8\\)\nprint\\('Status:', r.status_code\\)\n\")",
+      "Bash(\"C:/Users/reddy/Student/Learning/agency/mcl/env/Scripts/python.exe\" -c \"\nimport sys\nsys.path.insert\\(0, 'C:/Users/reddy/Student/Learning/agency/mcl/packages/api'\\)\nfrom app.utils.llm import chat\ntry:\n    result = chat\\([{'role': 'user', 'content': 'Say hello in 5 words'}]\\)\n    print\\('OK:', result\\)\nexcept Exception as e:\n    print\\('ERROR:', e\\)\n\")",
+      "Bash(\"C:/Users/reddy/Student/Learning/agency/mcl/env/Scripts/python.exe\" -c \"\nimport httpx, json\nendpoint = 'https://ai-research-development-resource.cognitiveservices.azure.com'\nkey = '2KX4FmTXdG4cqDwrgyBwCvpZhfFEtrVS8gupKbkbfvcMVBVD4Al4JQQJ99BKACHYHv6XJ3w3AAAAACOGdA9n'\nurl = f'{endpoint}/openai/deployments/Kimi-K2.5/chat/completions?api-version=2024-05-01-preview'\nr = httpx.post\\(url, headers={'api-key': key, 'Content-Type': 'application/json'},\n    json={'messages': [{'role': 'user', 'content': 'hi'}], 'max_tokens': 10}, timeout=15\\)\nprint\\(r.status_code, r.text[:300]\\)\n\")"
     ]
   }
 }
