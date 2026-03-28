@@ -11,30 +11,48 @@ services:
 
   api:
     build:
-      context: ../../
+      context: ../
       dockerfile: packages/api/Dockerfile
     ports:
       - "8000:8000"
     env_file:
-      - ../../.env
+      - ../.env
+    environment:
+      - REDIS_HOST=redis
     depends_on:
       - redis
     volumes:
-      - ../../packages/pipeline:/app/packages/pipeline
-      - ../../packages/api:/app/packages/api
+      - ../packages/pipeline:/app/packages/pipeline
+      - ../packages/api:/app/packages/api
     command: uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload
+
+  web:
+    build:
+      context: ../packages/web
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_SUPABASE_URL=https://mydgrsnrvidzcagvvkrc.supabase.co
+      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15ZGdyc25ydmlkemNhZ3Z2a3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTM5NzgsImV4cCI6MjA5MDE2OTk3OH0.nCeNRXSNvcO1aED3UJoA9NiCHqZljxoUx2uelgN_btw
+      - VITE_SENTRY_DSN=
+      - VITE_POSTHOG_KEY=
+    depends_on:
+      - api
 
   worker:
     build:
-      context: ../../
+      context: ../
       dockerfile: packages/worker/Dockerfile
     env_file:
-      - ../../.env
+      - ../.env
+    environment:
+      - REDIS_HOST=redis
     depends_on:
       - redis
     volumes:
-      - ../../packages/pipeline:/app/packages/pipeline
-      - ../../packages/worker:/app/packages/worker
+      - ../packages/pipeline:/app/packages/pipeline
+      - ../packages/worker:/app/packages/worker
     command: arq worker.main.WorkerSettings
 
 volumes:

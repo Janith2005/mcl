@@ -39,13 +39,27 @@ def create_app() -> FastAPI:
     app.add_middleware(BetaGateMiddleware)
     app.add_middleware(RateLimitMiddleware)
 
+    import os
+    default_origins = "http://localhost:5173,http://localhost:4173"
+    raw_origins = os.environ.get("ALLOWED_ORIGINS", default_origins)
+    allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173"],  # Vite dev server
+        allow_origins=allowed_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # --- Sentry (init before routes so it captures startup errors) ---
+    import os
+    sentry_dsn = os.environ.get("SENTRY_DSN", "")
+    if sentry_dsn:
+        try:
+            from app.integrations.sentry import init_sentry
+            init_sentry(sentry_dsn, os.environ.get("ENVIRONMENT", "development"))
+        except Exception:
+            pass  # Non-fatal if sentry-sdk not installed
 
     from app.routes import register_routes
     register_routes(app)

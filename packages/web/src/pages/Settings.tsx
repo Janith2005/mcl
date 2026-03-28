@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Sparkles,
   Users,
@@ -17,7 +17,8 @@ import {
   Loader2,
   X,
 } from 'lucide-react'
-import { saveSettings, inviteTeamMember, configureApiKey, uploadDocument } from '@/api/services'
+import { saveSettings, inviteTeamMember, configureApiKey, revokeApiKey, uploadDocument, listDocuments, deleteDocument } from '@/api/services'
+import { toast } from 'sonner'
 
 const tabs = ['Workspace', 'Team', 'Connections', 'API Keys', 'Billing'] as const
 type Tab = (typeof tabs)[number]
@@ -44,6 +45,7 @@ interface ApiKeyEntry {
   name: string
   status: 'Active' | 'Unconfigured'
   maskedKey?: string
+  id?: string
 }
 
 const initialApiKeys: ApiKeyEntry[] = [
@@ -80,7 +82,6 @@ export function SettingsPage() {
   const [defaultNiche, setDefaultNiche] = useState('B2B SaaS Growth')
   const [inviteEmail, setInviteEmail] = useState('')
   const [showInviteInput, setShowInviteInput] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
   const [apiKeyInputs, setApiKeyInputs] = useState<Record<string, string>>({})
   const [configuringKey, setConfiguringKey] = useState<string | null>(null)
   const [apiKeys, setApiKeys] = useState<ApiKeyEntry[]>(initialApiKeys)
@@ -88,12 +89,15 @@ export function SettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
 
+  const { data: documents = [] } = useQuery({
+    queryKey: ['documents'],
+    queryFn: listDocuments,
+  })
+
   const saveMutation = useMutation({
     mutationFn: () => saveSettings({ workspace_name: workspaceName, default_niche: defaultNiche }),
-    onSuccess: () => {
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 3000)
-    },
+    onSuccess: () => { setSaveSuccess(true); toast.success('Settings saved'); setTimeout(() => setSaveSuccess(false), 3000) },
+    onError: () => toast.error('Failed to save settings'),
   })
 
   const inviteMutation = useMutation({
@@ -102,29 +106,47 @@ export function SettingsPage() {
       setInviteEmail('')
       setShowInviteInput(false)
       queryClient.invalidateQueries({ queryKey: ['team'] })
+      toast.success('Invite sent!')
     },
+    onError: () => toast.error('Failed to send invite'),
   })
 
   const configKeyMutation = useMutation({
     mutationFn: ({ name, key }: { name: string; key: string }) => configureApiKey(name, key),
-    onSuccess: (_, { name }) => {
+    onSuccess: (data: any, { name }) => {
       setApiKeys((prev) =>
         prev.map((k) =>
           k.name === name
-            ? { ...k, status: 'Active', maskedKey: `••••••••${apiKeyInputs[name]?.slice(-4) ?? '???'}` }
+            ? { ...k, status: 'Active', maskedKey: `••••••••${apiKeyInputs[name]?.slice(-4) ?? '???'}`, id: data?.id }
             : k
         )
       )
       setConfiguringKey(null)
       setApiKeyInputs((prev) => ({ ...prev, [name]: '' }))
+      toast.success('API key saved')
     },
+    onError: () => toast.error('Failed to save API key'),
+  })
+
+  const revokeMutation = useMutation({
+    mutationFn: (keyId: string) => revokeApiKey(keyId),
+    onSuccess: (_, keyId) => {
+      setApiKeys((prev) => prev.map((k) => k.id === keyId ? { ...k, status: 'Unconfigured', maskedKey: undefined, id: undefined } : k))
+      toast.success('API key revoked')
+    },
+    onError: () => toast.error('Failed to revoke API key'),
   })
 
   const uploadMutation = useMutation({
     mutationFn: (file: File) => uploadDocument(file),
-    onSuccess: (_, file) => {
-      setUploadedFiles((prev) => [...prev, file.name])
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['documents'] }); toast.success('Document uploaded') },
+    onError: () => toast.error('Upload failed'),
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteDocument(id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['documents'] }); toast.success('Document deleted') },
+    onError: () => toast.error('Failed to delete document'),
   })
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -365,14 +387,22 @@ export function SettingsPage() {
             </div>
 
             <div className="space-y-2">
-              {uploadedFiles.map((file) => (
+              {documents.map((doc) => (
                 <div
-                  key={file}
+                  key={doc.id}
                   className="flex items-center gap-2 py-2 px-3 text-xs"
                   style={{ background: 'var(--ip-bg-subtle)', borderRadius: 'var(--ip-radius-sm)', color: 'var(--ip-text-secondary)' }}
                 >
                   <FileText size={14} style={{ color: 'var(--ip-primary)' }} />
-                  {file}
+                  <span className="flex-1 truncate">{doc.name}</span>
+                  <span style={{ color: 'var(--ip-text-tertiary)' }}>{(doc.size / 1024).toFixed(1)}kb</span>
+                  <button
+                    onClick={() => deleteMutation.mutate(doc.id)}
+                    disabled={deleteMutation.isPending}
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    <X size={12} style={{ color: 'var(--ip-text-tertiary)' }} />
+                  </button>
                 </div>
               ))}
               {uploadMutation.isError && (
@@ -407,6 +437,16 @@ export function SettingsPage() {
                   </div>
                   {key.maskedKey && (
                     <p className="text-xs font-mono" style={{ color: 'var(--ip-text-tertiary)' }}>{key.maskedKey}</p>
+                  )}
+                  {key.status === 'Active' && key.id && (
+                    <button
+                      onClick={() => revokeMutation.mutate(key.id!)}
+                      disabled={revokeMutation.isPending}
+                      className="mt-1.5 py-1.5 px-4 text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50"
+                      style={{ border: '1px solid var(--ip-error)', color: 'var(--ip-error)', borderRadius: 'var(--ip-radius-full)', background: 'transparent' }}
+                    >
+                      Revoke
+                    </button>
                   )}
                   {key.status === 'Unconfigured' && configuringKey !== key.name && (
                     <button

@@ -16,7 +16,7 @@ const platforms = ['YouTube', 'Instagram', 'TikTok', 'LinkedIn', 'X/Twitter']
 
 export function Onboarding() {
   const navigate = useNavigate()
-  const { session } = useAuth()
+  const { session, refreshWorkspace } = useAuth()
 
   // If already authenticated, skip the email step
   const [step, setStep] = useState(session ? 1 : 0)
@@ -62,8 +62,9 @@ export function Onboarding() {
       })
       if (ws?.id) setWorkspaceId(ws.id)
     } catch {
-      // Workspace may already exist
+      // Workspace may already exist — still proceed
     }
+    await refreshWorkspace()
     navigate('/')
   }
 

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Bold,
   Italic,
@@ -17,12 +17,14 @@ import {
   BarChart3,
   Loader2,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   getScripts,
   getScript,
   exportScriptPdf,
   rewriteScript,
   toneCheck,
+  updateSection,
   type ScriptSection,
 } from '@/api/services'
 
@@ -121,9 +123,20 @@ function BeatSheetPanel({
 }
 
 export function Scripts() {
+  const queryClient = useQueryClient()
   const [activeSection, setActiveSection] = useState<string>('')
   const [toneResult, setToneResult] = useState<string | null>(null)
   const [rewriteResult, setRewriteResult] = useState<string | null>(null)
+  const [editedContent, setEditedContent] = useState<string>('')
+  const [isEditing, setIsEditing] = useState(false)
+
+  function handleSectionSelect(id: string) {
+    setActiveSection(id)
+    setRewriteResult(null)
+    setToneResult(null)
+    setIsEditing(false)
+    setEditedContent('')
+  }
 
   const { data: scriptList = [] } = useQuery({
     queryKey: ['scripts'],
@@ -142,21 +155,74 @@ export function Scripts() {
   const resolvedSection = activeSection || sections[0]?.id || ''
   const currentContent = sections.find((s) => s.id === resolvedSection)
 
+  // Sync editedContent when section changes
+  useEffect(() => {
+    if (currentContent) setEditedContent(currentContent.content)
+  }, [resolvedSection, currentContent?.content])
+
+  const saveSectionMutation = useMutation({
+    mutationFn: () => updateSection(currentScriptId, resolvedSection, editedContent),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['script', currentScriptId] })
+      setIsEditing(false)
+      toast.success('Section saved')
+    },
+    onError: () => toast.error('Save failed'),
+  })
+
   const exportMutation = useMutation({
     mutationFn: () => exportScriptPdf(currentScriptId),
+    onSuccess: () => {
+      toast.success('PDF downloaded')
+      if (import.meta.env.VITE_POSTHOG_KEY) {
+        import('@/lib/analytics').then(({ trackPdfDownloaded }) => trackPdfDownloaded(currentScriptId, 'script'))
+      }
+    },
+    onError: () => toast.error('PDF export failed'),
   })
 
   const rewriteMutation = useMutation({
     mutationFn: () => rewriteScript(currentScriptId, resolvedSection),
-    onSuccess: (data) => setRewriteResult(data.content),
+    onSuccess: (data) => { setRewriteResult(data.content); toast.success('Section rewritten') },
+    onError: () => toast.error('Rewrite failed'),
   })
 
   const toneMutation = useMutation({
     mutationFn: () => toneCheck(currentScriptId),
-    onSuccess: (data) => setToneResult(data.result),
+    onSuccess: (data) => { setToneResult(data.result); toast.success('Tone analysis complete') },
+    onError: () => toast.error('Tone check failed'),
   })
 
   const scriptTitle = script?.title ?? scriptList[0]?.title ?? 'No Script'
+
+  // Empty state — no scripts exist yet
+  if (!scriptList.length) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] gap-6 text-center">
+        <FileText size={48} style={{ color: 'var(--ip-border)' }} />
+        <div>
+          <p className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
+            No scripts yet
+          </p>
+          <p className="text-sm" style={{ color: 'var(--ip-text-secondary)' }}>
+            Generate a script from an angle to get started.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 items-center">
+          <a
+            href="/angles"
+            className="px-6 py-3 text-sm font-semibold text-white rounded-full"
+            style={{ background: 'var(--ip-primary-gradient)' }}
+          >
+            Go to Angles → Generate Script
+          </a>
+          <p className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
+            Pick an angle card and click "Generate Script"
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] -m-8">
@@ -280,7 +346,7 @@ export function Scripts() {
             <BeatSheetPanel
               sections={sections}
               activeSection={resolvedSection}
-              onSelect={setActiveSection}
+              onSelect={handleSectionSelect}
             />
 
             {/* Center Editor */}
@@ -354,19 +420,66 @@ export function Scripts() {
                       </span>
                     </div>
 
-                    <div className="space-y-6">
-                      {currentContent.content.split('\n\n').map((paragraph, idx) => (
-                        <p
-                          key={idx}
-                          className={idx === 0 ? 'text-3xl font-bold leading-tight' : 'text-base leading-relaxed'}
+                    <div className="space-y-4">
+                      {isEditing ? (
+                        <textarea
+                          value={editedContent}
+                          onChange={e => setEditedContent(e.target.value)}
+                          className="w-full text-base leading-relaxed outline-none resize-none min-h-[200px] p-3 rounded-lg"
                           style={{
-                            fontFamily: idx === 0 ? 'var(--ip-font-display)' : 'var(--ip-font-body)',
+                            fontFamily: 'var(--ip-font-body)',
                             color: 'var(--ip-text)',
+                            background: 'var(--ip-bg-subtle)',
+                            border: '1px solid var(--ip-primary)',
                           }}
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
+                          autoFocus
+                        />
+                      ) : (
+                        <>
+                          {currentContent.content.split('\n\n').map((paragraph, idx) => (
+                            <p
+                              key={idx}
+                              className={idx === 0 ? 'text-3xl font-bold leading-tight' : 'text-base leading-relaxed'}
+                              style={{
+                                fontFamily: idx === 0 ? 'var(--ip-font-display)' : 'var(--ip-font-body)',
+                                color: 'var(--ip-text)',
+                              }}
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
+                        </>
+                      )}
+                      <div className="flex items-center gap-2 pt-1">
+                        {isEditing ? (
+                          <>
+                            <button
+                              onClick={() => saveSectionMutation.mutate()}
+                              disabled={saveSectionMutation.isPending}
+                              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                              style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
+                            >
+                              {saveSectionMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : null}
+                              Save
+                            </button>
+                            <button
+                              onClick={() => { setIsEditing(false); setEditedContent(currentContent.content) }}
+                              className="px-4 py-1.5 text-xs font-medium"
+                              style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)', color: 'var(--ip-text-secondary)' }}
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => setIsEditing(true)}
+                            className="px-4 py-1.5 text-xs font-medium"
+                            style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)', color: 'var(--ip-text-secondary)' }}
+                          >
+                            Edit
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {(rewriteResult || toneResult) && (

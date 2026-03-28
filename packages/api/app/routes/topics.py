@@ -116,11 +116,21 @@ Return ONLY the JSON array, no other text."""
     try:
         raw = llm_chat([{"role": "user", "content": prompt}], temperature=0.85)
         raw = raw.strip()
+        # Strip markdown code fences
         if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        topics_data = json.loads(raw.strip())
+            lines = raw.split("\n")
+            raw = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+        raw = raw.strip()
+        # If JSON is truncated, try to salvage complete objects
+        if not raw.endswith("]"):
+            last_brace = raw.rfind("},")
+            if last_brace != -1:
+                raw = raw[:last_brace + 1] + "]"
+            else:
+                raw = raw + "]" if raw.endswith("}") else "[]"
+        topics_data = json.loads(raw)
+        if not isinstance(topics_data, list):
+            topics_data = []
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"AI generation failed: {e}")
 

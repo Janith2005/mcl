@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from app.routes import (
     health, auth, workspaces, brain, topics, angles, hooks, scripts,
     analytics, pipeline, recon, webhooks, admin, monitoring, feedback,
-    dashboard, chat, dev,
+    dashboard, chat, dev, documents, settings_api,
 )
 
 
@@ -26,3 +26,5 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(monitoring.router)
     app.include_router(feedback.router)
     app.include_router(dev.router)
+    app.include_router(documents.router)
+    app.include_router(settings_api.router)

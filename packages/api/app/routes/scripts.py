@@ -41,6 +41,10 @@ class AddHookRequest(BaseModel):
     hook_id: str
 
 
+class SectionUpdateRequest(BaseModel):
+    content: str
+
+
 @router.get("")
 async def list_scripts(
     workspace_id: str,
@@ -71,6 +75,128 @@ async def create_script(
     return result.data[0]
 
 
+def _build_sections(data: dict) -> list[dict]:
+    """Transform raw script_structure / shortform_structure JSONB into ScriptSection list."""
+    accent_colors = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"]
+    sections: list[dict] = []
+
+    structure = data.get("script_structure") or {}
+    shortform = data.get("shortform_structure") or {}
+
+    if shortform and shortform.get("beats"):
+        # Shortform: each beat becomes a section
+        beats = shortform.get("beats", [])
+        total_words = sum(len((b.get("action") or "").split()) for b in beats)
+        for i, beat in enumerate(beats):
+            text = beat.get("action") or beat.get("say") or ""
+            wc = len(text.split())
+            sections.append({
+                "id": f"beat-{i}",
+                "label": beat.get("timestamp", f"Beat {i + 1}"),
+                "title": f"Beat {beat.get('beat_number', i + 1)}",
+                "description": beat.get("visual", ""),
+                "content": text,
+                "word_count": wc,
+                "total_words": total_words,
+                "accent_color": accent_colors[i % len(accent_colors)],
+            })
+        # Add caption as a section
+        if shortform.get("caption"):
+            sections.append({
+                "id": "caption",
+                "label": "CAPTION",
+                "title": "Caption & CTA",
+                "description": f"CTA: {shortform.get('cta', '')}",
+                "content": shortform.get("caption", ""),
+                "word_count": len(shortform.get("caption", "").split()),
+                "total_words": total_words,
+                "accent_color": "#10b981",
+            })
+        return sections
+
+    # Longform structure
+    if structure.get("opening_hook"):
+        hook = structure["opening_hook"]
+        sections.append({
+            "id": "opening-hook",
+            "label": "HOOK",
+            "title": "Opening Hook",
+            "description": "Grab attention in the first 30 seconds",
+            "content": hook if isinstance(hook, str) else str(hook),
+            "word_count": len(str(hook).split()),
+            "total_words": 0,
+            "accent_color": "#ef4444",
+        })
+
+    if structure.get("intro"):
+        intro = structure["intro"]
+        sections.append({
+            "id": "intro",
+            "label": "INTRO",
+            "title": "Introduction",
+            "description": "Proof / Promise / Plan framework",
+            "content": intro if isinstance(intro, str) else str(intro),
+            "word_count": len(str(intro).split()),
+            "total_words": 0,
+            "accent_color": "#f59e0b",
+        })
+
+    for i, sec in enumerate(structure.get("sections", [])):
+        points = sec.get("talking_points") or []
+        content = (sec.get("title") or "") + "\n\n" + "\n".join(f"• {p}" for p in points)
+        if sec.get("proof_element"):
+            content += f"\n\n{sec['proof_element']}"
+        if sec.get("transition"):
+            content += f"\n\n→ {sec['transition']}"
+        sections.append({
+            "id": f"section-{i}",
+            "label": f"SECTION {i + 1}",
+            "title": sec.get("title", f"Section {i + 1}"),
+            "description": ", ".join(points[:2]) if points else "",
+            "content": content,
+            "word_count": len(content.split()),
+            "total_words": 0,
+            "accent_color": accent_colors[(i + 2) % len(accent_colors)],
+        })
+
+    if structure.get("mid_cta"):
+        mid = structure["mid_cta"]
+        sections.append({
+            "id": "mid-cta",
+            "label": "MID-CTA",
+            "title": "Mid-Roll CTA",
+            "description": "Drive subscribe / like action",
+            "content": mid if isinstance(mid, str) else str(mid),
+            "word_count": len(str(mid).split()),
+            "total_words": 0,
+            "accent_color": "#8b5cf6",
+        })
+
+    if structure.get("closing_cta"):
+        closing = structure["closing_cta"]
+        outro = structure.get("outro", "")
+        content = (closing if isinstance(closing, str) else str(closing))
+        if outro:
+            content += f"\n\n{outro}"
+        sections.append({
+            "id": "closing",
+            "label": "OUTRO",
+            "title": "Closing CTA & Outro",
+            "description": "Final call to action",
+            "content": content,
+            "word_count": len(content.split()),
+            "total_words": 0,
+            "accent_color": "#06b6d4",
+        })
+
+    # Fill total_words
+    total = sum(s["word_count"] for s in sections)
+    for s in sections:
+        s["total_words"] = total
+
+    return sections
+
+
 @router.get("/{script_id}")
 async def get_script(
     workspace_id: str,
@@ -83,7 +209,81 @@ async def get_script(
     ).single().execute()
     if not result.data:
         raise HTTPException(status_code=404, detail="Script not found")
-    return result.data
+    data = result.data
+    return {
+        "id": data["id"],
+        "title": data.get("title", "Untitled"),
+        "sections": _build_sections(data),
+    }
+
+
+@router.put("/{script_id}/sections/{section_id}")
+async def update_section(
+    workspace_id: str,
+    script_id: str,
+    section_id: str,
+    req: SectionUpdateRequest,
+    user: dict = Depends(get_current_user),
+    supabase: Client = Depends(get_supabase),
+):
+    """Update a single section's content in script_structure / shortform_structure JSONB."""
+    result = supabase.table("scripts").select("script_structure, shortform_structure").eq(
+        "id", script_id
+    ).eq("workspace_id", workspace_id).single().execute()
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Script not found")
+
+    structure: dict = result.data.get("script_structure") or {}
+    shortform: dict = result.data.get("shortform_structure") or {}
+    content = req.content
+
+    if section_id == "opening-hook":
+        structure["opening_hook"] = content
+    elif section_id == "intro":
+        structure["intro"] = content
+    elif section_id.startswith("section-"):
+        try:
+            idx = int(section_id.split("-")[1])
+            secs = structure.get("sections", [])
+            if 0 <= idx < len(secs):
+                # Store edited content as talking_points (split on newlines)
+                lines = [l.lstrip("•").strip() for l in content.split("\n") if l.strip()]
+                secs[idx]["talking_points"] = lines if lines else [content]
+                structure["sections"] = secs
+        except (ValueError, IndexError):
+            pass
+    elif section_id == "mid-cta":
+        structure["mid_cta"] = content
+    elif section_id == "closing":
+        parts = content.split("\n\n", 1)
+        structure["closing_cta"] = parts[0]
+        structure["outro"] = parts[1] if len(parts) > 1 else ""
+    elif section_id.startswith("beat-"):
+        try:
+            idx = int(section_id.split("-")[1])
+            beats = shortform.get("beats", [])
+            if 0 <= idx < len(beats):
+                beats[idx]["action"] = content
+                shortform["beats"] = beats
+        except (ValueError, IndexError):
+            pass
+    elif section_id == "caption":
+        shortform["caption"] = content
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown section_id: {section_id}")
+
+    update_payload: dict = {}
+    if structure:
+        update_payload["script_structure"] = structure
+    if shortform:
+        update_payload["shortform_structure"] = shortform
+
+    if update_payload:
+        supabase.table("scripts").update(update_payload).eq("id", script_id).eq(
+            "workspace_id", workspace_id
+        ).execute()
+
+    return {"section_id": section_id, "content": content}
 
 
 @router.put("/{script_id}")
@@ -206,32 +406,43 @@ async def export_script(
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
 ):
-    """Export script as plain text (PDF generation requires a PDF library in production)."""
+    """Export script as a branded PDF."""
     result = supabase.table("scripts").select("*").eq(
         "id", script_id
     ).eq("workspace_id", workspace_id).single().execute()
     if not result.data:
         raise HTTPException(status_code=404, detail="Script not found")
+
     data = result.data
-    lines = [
-        f"SCRIPT: {data.get('title', 'Untitled')}",
-        f"Platform: {data.get('platform', '')}",
-        f"Status: {data.get('status', '')}",
-        "",
-        "--- SCRIPT STRUCTURE ---",
-        str(data.get("script_structure") or ""),
-        "",
-        "--- FILMING CARDS ---",
-    ]
-    for card in data.get("filming_cards") or []:
-        lines.append(str(card))
-    content = "\n".join(lines)
-    filename = f"script-{script_id}.txt"
-    return StreamingResponse(
-        io.BytesIO(content.encode()),
-        media_type="application/octet-stream",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
-    )
+    safe_title = (data.get("title") or "script").replace(" ", "-").replace("/", "-")[:40]
+
+    try:
+        from mcl_pipeline.pdf.generator import generate_script_pdf
+        pdf_bytes = generate_script_pdf(data)
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.pdf"'},
+        )
+    except Exception:
+        # Fallback to plain text if PDF generation fails
+        lines = [
+            f"SCRIPT: {data.get('title', 'Untitled')}",
+            f"Platform: {data.get('platform', '')}",
+            f"Status: {data.get('status', '')}",
+            "",
+            "--- SCRIPT STRUCTURE ---",
+            str(data.get("script_structure") or ""),
+            "",
+            "--- FILMING CARDS ---",
+        ]
+        for card in data.get("filming_cards") or []:
+            lines.append(str(card))
+        return StreamingResponse(
+            io.BytesIO("\n".join(lines).encode()),
+            media_type="text/plain",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.txt"'},
+        )
 
 
 @router.post("/{script_id}/hooks")

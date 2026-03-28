@@ -22,11 +22,13 @@ export function Login() {
     setLoading(true)
     setMessage('')
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password })
+      const { data, error } = await supabase.auth.signUp({ email, password })
       if (error) {
         setMessage(error.message)
+      } else if (data.session) {
+        // Signed in immediately — auth context will handle redirect
       } else {
-        setMessage('Account created! You are now signed in.')
+        setMessage('Check your email to confirm your account.')
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })

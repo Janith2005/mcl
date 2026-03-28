@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRightLeft, ArrowRight, Bookmark, Loader2, Sparkles } from 'lucide-react'
-import { getAngles, saveAngle, generateAngles, type Angle } from '@/api/services'
+import { ArrowRightLeft, ArrowRight, Bookmark, Loader2, Sparkles, FileText, CheckCircle, XCircle } from 'lucide-react'
+import { getAngles, saveAngle, generateAngles, triggerScript, type Angle } from '@/api/services'
+import { useJobPoller } from '@/hooks/useJobPoller'
+import { toast } from 'sonner'
+import { CardSkeleton } from '@/components/Skeleton'
 
 type Tab = 'angles-lab' | 'drafts' | 'published'
 type FormatTab = 'longform' | 'shortform' | 'linkedin-twitter'
@@ -25,10 +28,41 @@ const cardStyle: React.CSSProperties = {
 function AngleCard({ angle }: { angle: Angle }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { status, isActive, startPolling, reset } = useJobPoller()
+
+  useEffect(() => {
+    if (status === 'completed') toast.success('Script generated! Click to view.')
+    if (status === 'failed') toast.error('Script generation failed. Try again.')
+  }, [status])
+
   const saveMutation = useMutation({
     mutationFn: () => saveAngle(angle.id, { title: angle.title }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['angles'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['angles'] }); toast.success('Angle saved') },
+    onError: () => toast.error('Failed to save angle'),
   })
+
+  async function handleGenerateScript() {
+    try {
+      const { job_id } = await triggerScript(angle.id)
+      startPolling(job_id)
+      toast.info('Script generation started…')
+    } catch (e) {
+      toast.error('Failed to start script generation')
+    }
+  }
+
+  const scriptBtnLabel = isActive
+    ? (status === 'running' ? 'Generating…' : 'Queued…')
+    : status === 'completed'
+    ? 'Done! View Script'
+    : status === 'failed'
+    ? 'Failed — Retry'
+    : 'Generate Script'
+
+  const ScriptIcon = status === 'completed' ? CheckCircle
+    : status === 'failed' ? XCircle
+    : isActive ? Loader2
+    : FileText
 
   return (
     <div className="p-5 transition-all hover:translate-y-[-2px]" style={cardStyle}>
@@ -74,7 +108,7 @@ function AngleCard({ angle }: { angle: Angle }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <button
           onClick={() => saveMutation.mutate()}
           disabled={saveMutation.isPending}
@@ -84,12 +118,20 @@ function AngleCard({ angle }: { angle: Angle }) {
           {saveMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : null}
           Save
         </button>
+
         <button
-          onClick={() => navigate('/scripts')}
-          className="flex items-center gap-1 text-xs font-medium transition-colors hover:opacity-80"
-          style={{ color: 'var(--ip-text-brand)' }}
+          onClick={status === 'completed' ? () => navigate('/scripts') : handleGenerateScript}
+          disabled={isActive}
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 transition-all hover:opacity-90 disabled:opacity-60"
+          style={{
+            background: status === 'completed' ? 'var(--ip-primary-gradient)' : 'var(--ip-surface)',
+            borderRadius: 'var(--ip-radius-full)',
+            border: '1px solid var(--ip-border)',
+            color: status === 'completed' ? '#fff' : 'var(--ip-text-brand)',
+          }}
         >
-          Edit Draft <ArrowRight size={12} />
+          <ScriptIcon size={12} className={isActive ? 'animate-spin' : ''} />
+          {scriptBtnLabel}
         </button>
       </div>
     </div>
@@ -274,8 +316,8 @@ export function Angles() {
           </div>
 
           {isLoading || generateMutation.isPending ? (
-            <div className="flex justify-center py-12">
-              <Loader2 size={24} className="animate-spin" style={{ color: 'var(--ip-primary)' }} />
+            <div className="grid grid-cols-2 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-6">

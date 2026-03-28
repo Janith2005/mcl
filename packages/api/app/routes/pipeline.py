@@ -1,11 +1,50 @@
 """Pipeline orchestration routes - trigger background jobs."""
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel
 from supabase import Client
 from redis.asyncio import Redis
-from arq.connections import ArqRedis
+from arq import create_pool
+from arq.connections import RedisSettings
 from app.deps import get_supabase, get_redis
 from app.middleware.auth import get_current_user
+import os
+
+FREE_PLAN_JOB_LIMIT = 50  # jobs per month for free plan
+
+
+async def check_plan_limit(
+    workspace_id: str,
+    supabase: Client = Depends(get_supabase),
+) -> None:
+    """Gate AI pipeline jobs based on workspace plan. Free plan: 50 jobs/month."""
+    try:
+        ws = supabase.table("workspaces").select("plan").eq("id", workspace_id).single().execute()
+        plan = (ws.data or {}).get("plan", "free")
+        if plan != "free":
+            return  # Paid plans have no limit
+
+        # Count jobs created in the last 30 days
+        from datetime import datetime, timezone, timedelta
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        result = supabase.table("jobs").select("id", count="exact").eq(
+            "workspace_id", workspace_id
+        ).gte("created_at", cutoff).execute()
+        job_count = result.count or 0
+
+        if job_count >= FREE_PLAN_JOB_LIMIT:
+            raise HTTPException(
+                status_code=402,
+                detail={
+                    "code": "PLAN_LIMIT_EXCEEDED",
+                    "message": f"Free plan limit of {FREE_PLAN_JOB_LIMIT} AI jobs/month reached. Upgrade to continue.",
+                    "jobs_used": job_count,
+                    "limit": FREE_PLAN_JOB_LIMIT,
+                },
+            )
+    except HTTPException:
+        raise
+    except Exception:
+        pass  # Fail open — don't block jobs if plan check errors
 
 router = APIRouter(prefix="/api/v1/workspaces/{workspace_id}", tags=["pipeline"])
 
@@ -37,11 +76,10 @@ async def _create_job(
     supabase: Client,
     workspace_id: str,
     job_type: str,
-    redis: Redis,
     task_name: str,
     **kwargs,
 ) -> dict:
-    """Create a job record and enqueue the ARQ task."""
+    """Create a job record in Supabase and enqueue the ARQ task."""
     job_result = supabase.table("jobs").insert({
         "workspace_id": workspace_id,
         "type": job_type,
@@ -49,8 +87,13 @@ async def _create_job(
     }).execute()
     job_id = job_result.data[0]["id"]
 
-    arq = ArqRedis(redis)
+    redis_settings = RedisSettings(
+        host=os.environ.get("REDIS_HOST", "localhost"),
+        port=int(os.environ.get("REDIS_PORT", 6379)),
+    )
+    arq = await create_pool(redis_settings)
     await arq.enqueue_job(task_name, workspace_id=workspace_id, job_id=job_id, **kwargs)
+    await arq.aclose()
 
     return {"job_id": job_id, "status": "pending", "type": job_type}
 
@@ -61,10 +104,10 @@ async def start_discover(
     req: DiscoverRequest,
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
-    redis: Redis = Depends(get_redis),
+    _: None = Depends(check_plan_limit),
 ):
     return await _create_job(
-        supabase, workspace_id, "discover", redis, "run_discovery",
+        supabase, workspace_id, "discover", "run_discovery",
         mode=req.mode, keywords=req.keywords,
     )
 
@@ -75,10 +118,10 @@ async def start_angle(
     req: AngleRequest,
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
-    redis: Redis = Depends(get_redis),
+    _: None = Depends(check_plan_limit),
 ):
     return await _create_job(
-        supabase, workspace_id, "angle", redis, "run_angle_generation",
+        supabase, workspace_id, "angle", "run_angle_generation",
         topic_ids=req.topic_ids, format=req.format,
     )
 
@@ -89,10 +132,10 @@ async def start_script(
     req: ScriptRequest,
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
-    redis: Redis = Depends(get_redis),
+    _: None = Depends(check_plan_limit),
 ):
     return await _create_job(
-        supabase, workspace_id, "script", redis, "run_script_generation",
+        supabase, workspace_id, "script", "run_script_generation",
         angle_id=req.angle_id, hook_ids=req.hook_ids,
     )
 
@@ -103,10 +146,9 @@ async def start_analyze(
     req: AnalyzeRequest,
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
-    redis: Redis = Depends(get_redis),
 ):
     return await _create_job(
-        supabase, workspace_id, "analyze", redis, "run_analytics",
+        supabase, workspace_id, "analyze", "run_analytics",
         content_ids=req.content_ids,
     )
 
@@ -117,10 +159,9 @@ async def start_rescore(
     req: RescoreRequest,
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
-    redis: Redis = Depends(get_redis),
 ):
     return await _create_job(
-        supabase, workspace_id, "rescore", redis, "run_rescore",
+        supabase, workspace_id, "rescore", "run_rescore",
     )
 
 

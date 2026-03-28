@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from 'sonner'
 import { AuthProvider, useAuth } from '@/lib/auth'
 import { AppLayout } from './components/layout/AppLayout'
 import { Login } from './pages/Login'
@@ -15,6 +16,7 @@ import { SettingsPage } from './pages/Settings'
 import { Support } from './pages/Support'
 import { Legal } from './pages/Legal'
 import { FeedbackWidget } from './components/FeedbackWidget'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,13 +70,27 @@ function AppRoutes() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
           <AppRoutes />
           <FeedbackWidget />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: 'var(--ip-surface)',
+                border: '1px solid var(--ip-border-subtle)',
+                color: 'var(--ip-text)',
+                fontFamily: 'var(--ip-font-body)',
+                fontSize: '13px',
+              },
+            }}
+          />
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
+    </ErrorBoundary>
   )
 }

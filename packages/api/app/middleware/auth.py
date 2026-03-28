@@ -40,8 +40,9 @@ async def get_current_user(
             import bcrypt
             key_data = result.data[0]
             if bcrypt.checkpw(token.encode(), key_data["key_hash"].encode()):
+                from datetime import datetime, timezone
                 supabase.table("api_keys").update(
-                    {"last_used_at": "now()"}
+                    {"last_used_at": datetime.now(timezone.utc).isoformat()}
                 ).eq("id", key_data["id"]).execute()
                 return {
                     "user_id": key_data["user_id"],

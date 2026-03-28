@@ -27,15 +27,44 @@ class CreateApiKeyRequest(BaseModel):
 
 @router.post("/signup")
 async def signup(req: SignupRequest, supabase: Client = Depends(get_supabase)):
+    import re
     try:
         result = supabase.auth.sign_up({
             "email": req.email,
             "password": req.password,
             "options": {"data": {"full_name": req.full_name}},
         })
-        return {"user_id": result.user.id, "email": result.user.email}
+        user_id = result.user.id
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+    # Auto-provision workspace + brain so user lands on dashboard, not onboarding
+    try:
+        name = req.full_name or req.email.split("@")[0]
+        slug_base = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+        slug = f"{slug_base}-{secrets.token_hex(3)}"
+        ws = supabase.table("workspaces").insert({
+            "name": f"{name}'s Workspace",
+            "slug": slug,
+            "owner_id": user_id,
+        }).execute()
+        workspace_id = ws.data[0]["id"]
+
+        supabase.table("workspace_members").insert({
+            "workspace_id": workspace_id,
+            "user_id": user_id,
+            "role": "owner",
+            "accepted_at": "now()",
+        }).execute()
+
+        supabase.table("brains").insert({
+            "workspace_id": workspace_id,
+            "data": {},
+        }).execute()
+    except Exception:
+        pass  # Non-fatal — user can still complete onboarding
+
+    return {"user_id": user_id, "email": result.user.email}
 
 
 @router.post("/login")

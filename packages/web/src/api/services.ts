@@ -163,6 +163,37 @@ export interface ChatMessage {
   created_at: string
 }
 
+// ─── Jobs ─────────────────────────────────────────────────────────────────────
+
+export interface Job {
+  id: string
+  type: string
+  status: 'pending' | 'running' | 'completed' | 'failed'
+  result?: Record<string, unknown>
+  created_at: string
+}
+
+export const getJob = (jobId: string) =>
+  apiGet<Job>(wsPath(`/jobs/${jobId}`))
+
+export const listJobs = () =>
+  apiGet<Job[]>(wsPath('/jobs'))
+
+export const triggerDiscover = (mode: string, keywords: string[]) =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/pipeline/discover'), { mode, keywords })
+
+export const triggerAngle = (topic_ids: string[], format = 'longform') =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/pipeline/angle'), { topic_ids, format })
+
+export const triggerScript = (angle_id: string, hook_ids: string[] = []) =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/pipeline/script'), { angle_id, hook_ids })
+
+export const triggerAnalyze = () =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/pipeline/analyze'), {})
+
+export const triggerRescore = () =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/pipeline/rescore'), {})
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 export const getDashboardStages = () =>
@@ -224,6 +255,9 @@ export const getScripts = () =>
 
 export const getScript = (id: string) =>
   apiGet<Script>(wsPath(`/scripts/${id}`))
+
+export const updateSection = (id: string, section_id: string, content: string) =>
+  apiPut<{ section_id: string; content: string }>(wsPath(`/scripts/${id}/sections/${section_id}`), { content })
 
 export const rewriteScript = (id: string, section_id: string) =>
   apiPost<{ content: string }>(wsPath(`/scripts/${id}/rewrite`), { section_id })
@@ -297,6 +331,15 @@ export const inviteTeamMember = (email: string) =>
 export const configureApiKey = (name: string, key: string) =>
   apiPost('/api/v1/settings/api-keys', { name, key })
 
+export const revokeApiKey = (keyId: string) =>
+  apiDelete(`/api/v1/auth/api-key/${keyId}`)
+
+export const listDocuments = () =>
+  apiGet<{ id: string; name: string; size: number; created_at: string }[]>(wsPath('/documents'))
+
+export const deleteDocument = (id: string) =>
+  apiDelete(wsPath(`/documents/${id}`))
+
 export const uploadDocument = async (file: File) => {
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
   const formData = new FormData()
@@ -316,3 +359,17 @@ export const sendChatMessage = (content: string) =>
 
 export const askStrategy = (context?: string) =>
   apiPost<ChatMessage>(wsPath('/chat/strategy'), { context: context ?? '' })
+
+// ─── Recon ───────────────────────────────────────────────────────────────────
+
+export const triggerScrape = (competitor_handles: string[], platform = 'youtube') =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/recon/scrape'), { competitor_handles, platform, max_items: 20 })
+
+export const triggerRipper = (video_urls: string[], synthesis_mode = 'detailed') =>
+  apiPost<{ job_id: string; status: string }>(wsPath('/recon/ripper'), { video_urls, synthesis_mode })
+
+export const getReconReports = () =>
+  apiGet<{ id: string; config: Record<string, unknown>; created_at: string; status: string; synthesis?: Record<string, unknown> }[]>(wsPath('/recon/reports'))
+
+export const getReconReport = (id: string) =>
+  apiGet<{ id: string; config: Record<string, unknown>; created_at: string; status: string; skeletons?: unknown[]; synthesis?: Record<string, unknown> }>(wsPath(`/recon/reports/${id}`))

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   MoreHorizontal, Plus, ArrowUpRight, Clock, TrendingUp, Loader2,
   Sparkles, X, ChevronDown, Target, Zap, Shield,
@@ -626,18 +627,21 @@ export function Topics() {
 
   const createMutation = useMutation({
     mutationFn: () => createTopic({ title: 'New Topic', category: 'GENERAL' }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['topics'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['topics'] }); toast.success('Topic created') },
+    onError: () => toast.error('Failed to create topic'),
   })
 
   const deleteMutation = useMutation({
     mutationFn: deleteTopic,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['topics'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['topics'] }); toast.success('Topic deleted') },
+    onError: () => toast.error('Failed to delete topic'),
   })
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateTopic(id, { status: status as Topic['status'] }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['topics'] }),
+    onError: () => toast.error('Failed to update topic'),
   })
 
   const generateMutation = useMutation({
@@ -645,7 +649,9 @@ export function Topics() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['topics'] })
       setShowDiscoverModal(false)
+      toast.success('Topics generated!')
     },
+    onError: () => toast.error('Failed to generate topics'),
   })
 
   const discoveredTopics = topics.filter(t => t.status === 'new')
