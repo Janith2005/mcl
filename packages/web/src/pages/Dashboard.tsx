@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 import {
   Zap,
   Flame,
-  FileText,
   AlertTriangle,
   Sparkles,
   Search,

@@ -2,7 +2,6 @@ import { useState, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Sparkles,
-  Users,
   FileText,
   Key,
   Upload,
