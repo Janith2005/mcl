@@ -6,6 +6,12 @@ from fastapi import APIRouter, Request
 router = APIRouter(tags=["health"])
 
 
+@router.get("/health")
+async def health_simple():
+    """Lightweight health check for Railway/load balancer probes."""
+    return {"status": "ok"}
+
+
 @router.get("/api/v1/health")
 async def health_check(request: Request):
     checks: dict = {}

@@ -42,3 +42,4 @@ dump.rdb
 logs/
 .gstack/
 packages/landing/tsconfig.tsbuildinfo
+.vercel
