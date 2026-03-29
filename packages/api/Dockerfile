@@ -1,5 +1,6 @@
 FROM python:3.11-slim
 WORKDIR /app
+ARG CACHEBUST=20260329
 COPY packages/pipeline /app/packages/pipeline
 COPY packages/api /app/packages/api
 RUN pip install --no-cache-dir /app/packages/pipeline /app/packages/api
