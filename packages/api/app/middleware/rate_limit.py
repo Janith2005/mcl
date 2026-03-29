@@ -7,7 +7,7 @@ from starlette.responses import JSONResponse
 
 
 # Paths exempt from rate limiting
-EXEMPT_PATHS = {"/api/v1/health"}
+EXEMPT_PATHS = {"/health", "/api/v1/health"}
 
 # Limits
 ANON_RPM = 100  # requests per minute for anonymous (per IP)
