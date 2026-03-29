@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete } from './client'
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './client'
 import { wsPath } from '@/lib/workspace'
 
 // ─── Types ───────────────────────────────────────────────────────────────────

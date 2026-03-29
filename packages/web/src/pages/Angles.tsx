@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRightLeft, Bookmark, Loader2, Sparkles, FileText, CheckCircle, XCircle } from 'lucide-react'
+import { ArrowRightLeft, ArrowRight, Bookmark, Loader2, Sparkles, FileText, CheckCircle, XCircle } from 'lucide-react'
 import { getAngles, saveAngle, generateAngles, triggerScript, type Angle } from '@/api/services'
 import { useJobPoller } from '@/hooks/useJobPoller'
 import { toast } from 'sonner'
@@ -28,7 +28,7 @@ const cardStyle: React.CSSProperties = {
 function AngleCard({ angle }: { angle: Angle }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { status, isActive, startPolling } = useJobPoller()
+  const { status, isActive, startPolling, reset } = useJobPoller()
 
   useEffect(() => {
     if (status === 'completed') toast.success('Script generated! Click to view.')
@@ -139,7 +139,6 @@ function AngleCard({ angle }: { angle: Angle }) {
 }
 
 export function Angles() {
-  const queryClient = useQueryClient()
   const [activeTab, setActiveTab] = useState<Tab>('angles-lab')
   const [formatTab, setFormatTab] = useState<FormatTab>('longform')
   const [commonBelief, setCommonBelief] = useState('')
