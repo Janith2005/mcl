@@ -25,7 +25,7 @@ def chat(messages: list[dict], temperature: float = 0.7) -> str:
     response = _get_client().post(
         url,
         headers={"api-key": api_key, "Content-Type": "application/json"},
-        json={"messages": messages, "temperature": temperature, "max_tokens": 4096},
+        json={"messages": messages, "max_completion_tokens": 4096},
     )
     response.raise_for_status()
     data = response.json()
