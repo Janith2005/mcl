@@ -51,7 +51,7 @@ export function Analytics() {
   const maxBarHeight = 120
   const analyzePoller = useJobPoller()
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['analytics', timeRange],
     queryFn: () => getAnalytics(timeRange),
   })
