@@ -40,8 +40,10 @@ async def startup(ctx: dict) -> None:
     # Synchronous Redis client for brain caching
     redis_host = os.environ.get("REDIS_HOST", "localhost")
     redis_port = int(os.environ.get("REDIS_PORT", 6379))
+    redis_password = os.environ.get("REDIS_PASSWORD") or None
+    redis_ssl = os.environ.get("REDIS_SSL", "").lower() == "true"
     try:
-        ctx["redis"] = redis_sync.Redis(host=redis_host, port=redis_port, decode_responses=True)
+        ctx["redis"] = redis_sync.Redis(host=redis_host, port=redis_port, password=redis_password, ssl=redis_ssl, decode_responses=True)
         ctx["redis"].ping()
         logger.info("Redis sync client initialized at %s:%s", redis_host, redis_port)
     except Exception as e:
@@ -73,6 +75,8 @@ class WorkerSettings:
     redis_settings = RedisSettings(
         host=os.environ.get("REDIS_HOST", "localhost"),
         port=int(os.environ.get("REDIS_PORT", 6379)),
+        password=os.environ.get("REDIS_PASSWORD") or None,
+        ssl=os.environ.get("REDIS_SSL", "").lower() == "true",
     )
     max_jobs = 10
     job_timeout = 600  # 10 minutes

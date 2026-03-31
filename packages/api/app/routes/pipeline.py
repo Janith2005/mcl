@@ -90,6 +90,8 @@ async def _create_job(
     redis_settings = RedisSettings(
         host=os.environ.get("REDIS_HOST", "localhost"),
         port=int(os.environ.get("REDIS_PORT", 6379)),
+        password=os.environ.get("REDIS_PASSWORD") or None,
+        ssl=os.environ.get("REDIS_SSL", "").lower() == "true",
     )
     arq = await create_pool(redis_settings)
     await arq.enqueue_job(task_name, workspace_id=workspace_id, job_id=job_id, **kwargs)
