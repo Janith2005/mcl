@@ -147,6 +147,7 @@ export function Angles() {
   const { data: angles = [], isLoading } = useQuery({
     queryKey: ['angles'],
     queryFn: getAngles,
+    refetchInterval: 5000,
   })
 
   const generateMutation = useMutation({

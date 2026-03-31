@@ -7,7 +7,7 @@ import {
   Sparkles, X, ChevronDown, Target, Zap, Shield,
 } from 'lucide-react'
 import {
-  getTopics, createTopic, deleteTopic, updateTopic, generateTopics, type Topic,
+  getTopics, createTopic, deleteTopic, updateTopic, generateTopics, triggerAngle, type Topic,
 } from '@/api/services'
 
 type ViewMode = 'kanban' | 'table'
@@ -94,6 +94,21 @@ function TopicDetailModal({
   const scoring = topic.scoring || {}
   const [status, setStatus] = useState(topic.status)
   const [showStatusMenu, setShowStatusMenu] = useState(false)
+  const [generatingAngles, setGeneratingAngles] = useState(false)
+
+  async function handleGenerateAngles() {
+    setGeneratingAngles(true)
+    try {
+      await triggerAngle([topic.id])
+      toast.success('Angle generation started — check Angles page in a moment')
+      onClose()
+      navigate('/angles')
+    } catch {
+      toast.error('Failed to start angle generation')
+    } finally {
+      setGeneratingAngles(false)
+    }
+  }
 
   const statuses: Array<{ value: Topic['status']; label: string }> = [
     { value: 'new', label: 'Discovered' },
@@ -290,16 +305,17 @@ function TopicDetailModal({
             Delete Topic
           </button>
           <button
-            onClick={() => navigate('/angles')}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all hover:opacity-90"
+            onClick={handleGenerateAngles}
+            disabled={generatingAngles}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60"
             style={{
               background: 'var(--ip-primary-gradient)',
               color: '#fff',
               borderRadius: 'var(--ip-radius-md)',
             }}
           >
-            <Sparkles size={13} />
-            Generate Angles
+            {generatingAngles ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+            {generatingAngles ? 'Starting...' : 'Generate Angles'}
           </button>
         </div>
       </div>
