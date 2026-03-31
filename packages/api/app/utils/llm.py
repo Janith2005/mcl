@@ -16,8 +16,8 @@ def chat(messages: list[dict], temperature: float = 0.7) -> str:
     """Send messages to Azure OpenAI REST API and return the reply text."""
     endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "").rstrip("/")
     api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
-    deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "Kimi-K2.5")
-    api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-05-01-preview")
+    deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "o4-mini")
+    api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
 
     url = f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
 
@@ -25,7 +25,7 @@ def chat(messages: list[dict], temperature: float = 0.7) -> str:
         response = _get_http_client().post(
             url,
             headers={"api-key": api_key, "Content-Type": "application/json"},
-            json={"messages": messages, "temperature": temperature, "max_completion_tokens": 8192},
+            json={"messages": messages, "max_completion_tokens": 8192},
         )
         response.raise_for_status()
         data = response.json()

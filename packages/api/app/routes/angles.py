@@ -151,7 +151,7 @@ Return a JSON array of exactly 4 angles. Each angle must have:
 Return ONLY the JSON array, no other text."""
 
     try:
-        raw = llm_chat([{"role": "user", "content": prompt}], temperature=0.8)
+        raw = llm_chat([{"role": "user", "content": prompt}])
         # Strip markdown code fences if present
         raw = raw.strip()
         if raw.startswith("```"):

@@ -114,7 +114,7 @@ Return a JSON array of exactly {req.count} topics. Each must have:
 Return ONLY the JSON array, no other text."""
 
     try:
-        raw = llm_chat([{"role": "user", "content": prompt}], temperature=0.85)
+        raw = llm_chat([{"role": "user", "content": prompt}])
         raw = raw.strip()
         # Strip markdown code fences
         if raw.startswith("```"):
