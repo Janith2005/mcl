@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM mcr.microsoft.com/mirror/docker/library/python:3.11-slim
 WORKDIR /app
 ARG CACHEBUST=20260330b
 COPY packages/pipeline /app/packages/pipeline

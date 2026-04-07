@@ -28,15 +28,18 @@ def chat(messages: list[dict], temperature: float = 0.7) -> str:
     api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-05-01-preview")
 
     url = f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
+    payload = {
+        "messages": messages,
+        "max_completion_tokens": 4096,
+    }
+    # Reasoning deployments (for example o4/o3) often reject custom temperature values.
+    if not deployment.lower().startswith("o"):
+        payload["temperature"] = temperature
 
     response = _get_client().post(
         url,
         headers={"api-key": api_key, "Content-Type": "application/json"},
-        json={
-            "messages": messages,
-            "max_completion_tokens": 4096,
-            "temperature": temperature,
-        },
+        json=payload,
     )
     response.raise_for_status()
     data = response.json()
