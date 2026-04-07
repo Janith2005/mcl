@@ -1,0 +1,85 @@
+name: Deploy Backend (Azure)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy-azure-backend.yml"
+      - "infra/azure/**"
+      - "packages/api/**"
+      - "packages/worker/**"
+      - "packages/pipeline/**"
+
+concurrency:
+  group: azure-backend-production
+  cancel-in-progress: true
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: |
+          pip install -e "packages/pipeline[dev]" -e "packages/api[dev]"
+
+      - name: Run pipeline tests
+        run: pytest packages/pipeline/tests/ -v
+
+      - name: Run API tests
+        run: pytest packages/api/tests/ -v
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: backend-tests
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy API + worker + redis to Azure Container Apps
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+          AZURE_CONTAINERAPPS_ENV: ${{ vars.AZURE_CONTAINERAPPS_ENV }}
+          AZURE_ACR_NAME: ${{ vars.AZURE_ACR_NAME }}
+          AZURE_API_APP_NAME: ${{ vars.AZURE_API_APP_NAME }}
+          AZURE_WORKER_APP_NAME: ${{ vars.AZURE_WORKER_APP_NAME }}
+          AZURE_REDIS_APP_NAME: ${{ vars.AZURE_REDIS_APP_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+          ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
+
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        run: |
+          chmod +x infra/azure/deploy-backend-container-apps.sh
+          ./infra/azure/deploy-backend-container-apps.sh
