@@ -42,10 +42,12 @@ def create_app() -> FastAPI:
     import os
     default_origins = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173"
     raw_origins = os.environ.get("ALLOWED_ORIGINS", default_origins)
+    allow_origin_regex = os.environ.get("ALLOWED_ORIGIN_REGEX", r"https://.*\.vercel\.app")
     allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_origins,
+        allow_origin_regex=allow_origin_regex,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
