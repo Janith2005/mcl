@@ -17,6 +17,9 @@ async def check_plan_limit(
     supabase: Client = Depends(get_supabase),
 ) -> None:
     """Gate AI pipeline jobs based on workspace plan. Free plan: 50 jobs/month."""
+    if os.environ.get("DEV_SKIP_AUTH", "").lower() == "true":
+        return
+
     try:
         ws = supabase.table("workspaces").select("plan").eq("id", workspace_id).single().execute()
         plan = (ws.data or {}).get("plan", "free")

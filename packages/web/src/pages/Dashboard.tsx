@@ -1,444 +1,411 @@
+import { useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '@/lib/auth'
-import { useJobPoller } from '@/hooks/useJobPoller'
 import { toast } from 'sonner'
 import {
-  Zap,
-  Flame,
-  AlertTriangle,
   Sparkles,
+  TrendingUp,
+  Target,
+  Layers3,
   Search,
+  WandSparkles,
+  PenLine,
+  Rocket,
   BarChart3,
-  PenTool,
-  ChevronRight,
-  Play,
-  CheckCircle,
-  XCircle,
   Loader2,
-  RefreshCw,
+  CircleCheckBig,
+  CircleAlert,
+  Play,
+  Clock3,
+  ChevronRight,
 } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
+import { useJobPoller } from '@/hooks/useJobPoller'
 import {
-  getDashboardStages, getDashboardFeed, getAnalytics,
-  triggerDiscover, triggerRescore, triggerAnalyze,
+  getDashboardStages,
+  getDashboardFeed,
+  getAnalytics,
+  triggerDiscover,
+  triggerRescore,
+  triggerAnalyze,
+  type PipelineStage,
 } from '@/api/services'
 
-/* ------------------------------------------------------------------ */
-/*  Fallback static data                                               */
-/* ------------------------------------------------------------------ */
-
-const FALLBACK_STAGES = [
+const FALLBACK_STAGES: PipelineStage[] = [
   { label: 'Discover', count: 0, color: 'var(--ip-stage-discover)' },
-  { label: 'Angle',   count: 0, color: 'var(--ip-stage-angle)'   },
-  { label: 'Hook',    count: 0, color: 'var(--ip-stage-hook)'    },
-  { label: 'Script',  count: 0, color: 'var(--ip-stage-script)'  },
+  { label: 'Angle', count: 0, color: 'var(--ip-stage-angle)' },
+  { label: 'Hook', count: 0, color: 'var(--ip-stage-hook)' },
+  { label: 'Script', count: 0, color: 'var(--ip-stage-script)' },
   { label: 'Publish', count: 0, color: 'var(--ip-stage-publish)' },
 ]
 
 const FALLBACK_FEED = [
-  { id: '1', type: 'hook', title: 'Pipeline ready — start by discovering topics', created_at: new Date().toISOString() },
+  { id: 'fallback-1', title: 'Pipeline ready. Start with AI discovery.', created_at: new Date().toISOString() },
 ]
 
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
 const cardStyle: React.CSSProperties = {
-  background: 'var(--ip-surface-glass)',
-  backdropFilter: 'blur(var(--ip-glass-blur))',
+  background: 'var(--ip-card-glass-bg)',
+  backdropFilter: 'blur(var(--ip-card-glass-blur))',
   borderRadius: 'var(--ip-radius-lg)',
-  boxShadow: 'var(--ip-shadow-md)',
-  border: '1px solid var(--ip-border-subtle)',
+  border: '1px solid var(--ip-card-glass-border)',
+  boxShadow: 'var(--ip-card-glass-shadow)',
 }
 
-function feedIcon(type: string) {
-  switch (type) {
-    case 'hook':      return { icon: Zap,           color: 'var(--ip-stage-hook)'  }
-    case 'analytics': return { icon: BarChart3,      color: 'var(--ip-stage-angle)' }
-    case 'alert':     return { icon: AlertTriangle,  color: 'var(--ip-error)'       }
-    default:          return { icon: Sparkles,       color: 'var(--ip-primary)'     }
-  }
-}
+const stepCards = [
+  {
+    title: 'Input your URL',
+    desc: 'Anchor content to your brand voice and audience context in one step.',
+    icon: Search,
+  },
+  {
+    title: 'Swipe ideas',
+    desc: 'Review generated opportunities quickly and keep only strong ideas.',
+    icon: WandSparkles,
+  },
+  {
+    title: 'Edit and customize',
+    desc: 'Refine hooks and scripts with assistant support before publishing.',
+    icon: PenLine,
+  },
+  {
+    title: 'Download and publish',
+    desc: 'Ship across your channels and feed results back into your brain.',
+    icon: Rocket,
+  },
+]
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
+  const mins = Math.max(0, Math.floor(diff / 60000))
   if (mins < 60) return `${mins}m ago`
   const hrs = Math.floor(mins / 60)
   if (hrs < 24) return `${hrs}h ago`
   return `${Math.floor(hrs / 24)}d ago`
 }
 
-/* ------------------------------------------------------------------ */
-/*  Pipeline action button with live job polling                       */
-/* ------------------------------------------------------------------ */
-
-function PipelineButton({
-  label,
+function PipelineAction({
+  title,
+  subtitle,
   icon: Icon,
-  onTrigger,
-  onComplete,
+  trigger,
+  onCompleted,
 }: {
-  label: string
+  title: string
+  subtitle: string
   icon: React.ElementType
-  onTrigger: () => Promise<{ job_id: string; status: string }>
-  onComplete?: () => void
+  trigger: () => Promise<{ job_id: string; status: string }>
+  onCompleted?: () => void
 }) {
-  const { status, isActive, error, startPolling, reset } = useJobPoller()
+  const { status, isActive, startPolling, reset } = useJobPoller()
+
+  useEffect(() => {
+    if (status === 'completed') {
+      toast.success(`${title} completed`)
+      onCompleted?.()
+      setTimeout(reset, 1200)
+    }
+    if (status === 'failed') {
+      toast.error(`${title} failed`)
+      setTimeout(reset, 1200)
+    }
+  }, [onCompleted, reset, status, title])
 
   async function handleClick() {
     try {
-      const { job_id } = await onTrigger()
+      const { job_id } = await trigger()
       startPolling(job_id)
-      toast.info(`${label} started…`)
-    } catch (e) {
-      toast.error(`Failed to start ${label}`)
+      toast.info(`${title} started`)
+    } catch {
+      toast.error(`Unable to start ${title.toLowerCase()}`)
     }
   }
 
-  // Call onComplete when job finishes
-  if (status === 'completed' && onComplete) {
-    onComplete()
-    toast.success(`${label} complete!`)
-    setTimeout(reset, 3000)
-  }
-  if (status === 'failed' && error) {
-    toast.error(`${label} failed`)
-  }
-
-  const getState = () => {
-    if (isActive && status === 'pending')   return 'pending'
-    if (isActive && status === 'running')   return 'running'
-    if (status === 'completed')             return 'done'
-    if (status === 'failed')               return 'error'
-    return 'idle'
-  }
-
-  const state = getState()
-
-  const stateConfig = {
-    idle:    { icon: Play,        color: 'var(--ip-primary)',  label,           disabled: false },
-    pending: { icon: Loader2,     color: 'var(--ip-text-tertiary)', label: 'Queued…',  disabled: true  },
-    running: { icon: Loader2,     color: 'var(--ip-primary)',  label: 'Running…', disabled: true  },
-    done:    { icon: CheckCircle, color: 'var(--ip-success, #4ade80)', label: 'Done!',  disabled: false },
-    error:   { icon: XCircle,     color: 'var(--ip-error)',    label: 'Failed', disabled: false },
-  }
-
-  const cfg = stateConfig[state]
-  const StateIcon = cfg.icon
+  const isBusy = isActive && (status === 'pending' || status === 'running')
 
   return (
     <button
-      onClick={state === 'idle' || state === 'done' || state === 'error' ? handleClick : undefined}
-      disabled={cfg.disabled}
-      title={error ?? undefined}
-      className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-all hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed w-full"
+      onClick={handleClick}
+      disabled={isBusy}
+      className="w-full p-4 text-left transition-all disabled:opacity-65"
       style={{
-        background: 'transparent',
-        borderRadius: 'var(--ip-radius-md)',
-        border: `1px solid ${state === 'done' ? 'var(--ip-success, #4ade80)' : state === 'error' ? 'var(--ip-error)' : 'var(--ip-border-subtle)'}`,
-        color: cfg.color,
-        fontFamily: 'var(--ip-font-body)',
+        ...cardStyle,
+        borderColor: status === 'completed' ? 'color-mix(in srgb, var(--ip-success) 45%, transparent)' : 'var(--ip-card-glass-border)',
       }}
     >
-      <Icon size={15} style={{ color: 'var(--ip-text-tertiary)' }} />
-      <StateIcon
-        size={14}
-        style={{ color: cfg.color, marginLeft: 'auto' }}
-        className={state === 'running' || state === 'pending' ? 'animate-spin' : ''}
-      />
-      <span style={{ color: 'var(--ip-text-secondary)', marginLeft: -8 }}>{cfg.label}</span>
+      <div className="flex items-start gap-3">
+        <div
+          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+          style={{ background: 'color-mix(in srgb, var(--ip-primary) 14%, transparent)' }}
+        >
+          <Icon size={16} style={{ color: 'var(--ip-primary)' }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--ip-text)' }}>
+            {title}
+          </p>
+          <p className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>
+            {subtitle}
+          </p>
+        </div>
+        <div className="shrink-0 pt-0.5">
+          {isBusy ? (
+            <Loader2 size={15} className="animate-spin" style={{ color: 'var(--ip-primary)' }} />
+          ) : status === 'completed' ? (
+            <CircleCheckBig size={15} style={{ color: 'var(--ip-success)' }} />
+          ) : status === 'failed' ? (
+            <CircleAlert size={15} style={{ color: 'var(--ip-error)' }} />
+          ) : (
+            <Play size={14} style={{ color: 'var(--ip-text-tertiary)' }} />
+          )}
+        </div>
+      </div>
     </button>
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Sub-components                                                     */
-/* ------------------------------------------------------------------ */
-
-function WorkspaceTabs() {
-  const tabs = ['Workspaces', 'Team', 'API']
-  return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-1">
-        {tabs.map((tab, i) => (
-          <button
-            key={tab}
-            className="px-4 py-1.5 text-sm font-medium transition-colors"
-            style={{
-              fontFamily: 'var(--ip-font-body)',
-              color: i === 0 ? 'var(--ip-primary)' : 'var(--ip-text-tertiary)',
-              borderBottom: i === 0 ? '2px solid var(--ip-primary)' : '2px solid transparent',
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-      <div
-        className="flex items-center gap-2 px-3 py-1.5 text-sm"
-        style={{
-          background: 'var(--ip-surface-glass)',
-          backdropFilter: 'blur(var(--ip-glass-blur))',
-          border: '1px solid var(--ip-border-subtle)',
-          borderRadius: 'var(--ip-radius-full)',
-          color: 'var(--ip-text-tertiary)',
-          fontFamily: 'var(--ip-font-body)',
-          minWidth: 200,
-        }}
-      >
-        <Search size={14} />
-        <span className="text-xs">
-          <span style={{ color: 'var(--ip-text-tertiary)', opacity: 0.7 }}>CMD + K</span>{' '}
-          TO SEARCH
-        </span>
-      </div>
-    </div>
-  )
-}
-
-function PipelineFunnel() {
-  const { data } = useQuery({ queryKey: ['dashboard-stages'], queryFn: getDashboardStages })
-  const stages = data ?? FALLBACK_STAGES
-
-  return (
-    <div className="p-6" style={cardStyle}>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Sparkles size={14} style={{ color: 'var(--ip-primary)' }} />
-          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--ip-primary)', fontFamily: 'var(--ip-font-body)' }}>
-            Content Pipeline Funnel
-          </span>
-        </div>
-        <span className="text-xs" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-          Live counts
-        </span>
-      </div>
-
-      <div className="flex items-end gap-1 mb-6 h-16 px-2">
-        {[35, 42, 28, 55, 48, 60, 72, 65, 50, 80, 70, 85, 78, 92].map((h, i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-sm transition-all"
-            style={{
-              height: `${h}%`,
-              background: i >= 12 ? 'var(--ip-primary-gradient)' : 'var(--ip-border-subtle)',
-              opacity: i >= 12 ? 1 : 0.5,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="flex items-center gap-2">
-        {stages.map((stage, i) => (
-          <div key={stage.label} className="flex items-center flex-1">
-            <div className="flex flex-col items-center gap-1.5 flex-1">
-              <div
-                className="w-full py-3 flex items-center justify-center font-bold text-white text-base"
-                style={{
-                  background: stage.color,
-                  borderRadius: 'var(--ip-radius-full)',
-                  fontFamily: 'var(--ip-font-display)',
-                  boxShadow: `0 4px 12px color-mix(in srgb, ${stage.color} 30%, transparent)`,
-                }}
-              >
-                {stage.count}
-              </div>
-              <span className="text-[10px] font-medium uppercase tracking-wider" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-                {stage.label}
-              </span>
-            </div>
-            {i < stages.length - 1 && (
-              <ChevronRight size={16} className="shrink-0 mx-1" style={{ color: 'var(--ip-border)' }} />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function TopPerformer() {
-  const navigate = useNavigate()
-  const { data: analytics } = useQuery({ queryKey: ['analytics', '30d'], queryFn: () => getAnalytics('30d') })
-  const top = analytics?.top_performers?.[0]
-
-  if (!top) {
-    return (
-      <div style={cardStyle} className="overflow-hidden flex flex-col items-center justify-center p-10 text-center gap-4">
-        <Flame size={32} style={{ color: 'var(--ip-border)' }} />
-        <div>
-          <p className="font-semibold mb-1" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-display)' }}>No top performer yet</p>
-          <p className="text-sm" style={{ color: 'var(--ip-text-secondary)', fontFamily: 'var(--ip-font-body)' }}>
-            Publish content and run analytics to see your best-performing pieces here.
-          </p>
-        </div>
-        <button
-          onClick={() => navigate('/topics')}
-          className="px-4 py-2 text-sm font-semibold text-white"
-          style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)' }}
-        >
-          Start Creating
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div style={cardStyle} className="overflow-hidden">
-      <div className="px-6 pt-5 pb-3">
-        <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-          Top Performer
-        </span>
-      </div>
-      <div className="relative mx-4 overflow-hidden" style={{ borderRadius: 'var(--ip-radius-md)', height: 120 }}>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(145deg, color-mix(in srgb, ${top.accent_color} 80%, #000) 0%, ${top.accent_color} 100%)` }} />
-        <div className="absolute bottom-3 left-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white"
-          style={{ background: top.category_color, borderRadius: 'var(--ip-radius-full)', fontFamily: 'var(--ip-font-body)' }}>
-          {top.category_label}
-        </div>
-      </div>
-      <div className="px-6 pt-4">
-        <h3 className="text-lg font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>{top.title}</h3>
-      </div>
-      <div className="flex gap-8 px-6 pt-4 pb-5">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-wider mb-0.5" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>Total Views</p>
-          <p className="text-2xl font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>{top.views}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function TacticalFeed() {
-  const { data } = useQuery({ queryKey: ['dashboard-feed'], queryFn: getDashboardFeed })
-  const items = data ?? FALLBACK_FEED
-
-  return (
-    <div className="p-6" style={cardStyle}>
-      <span className="text-[10px] font-semibold tracking-widest uppercase block mb-5" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-        Tactical Feed
-      </span>
-      <div className="flex flex-col gap-4">
-        {items.map((item) => {
-          const { icon: Icon, color } = feedIcon(item.type)
-          return (
-            <div key={item.id} className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: `color-mix(in srgb, ${color} 15%, transparent)` }}>
-                <Icon size={16} style={{ color }} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium leading-snug truncate" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-body)' }}>{item.title}</p>
-                <p className="text-[11px] mt-0.5" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>{timeAgo(item.created_at)}</p>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-function PipelineActions() {
-  const navigate = useNavigate()
-  const qc = useQueryClient()
-  const invalidate = () => {
-    qc.invalidateQueries({ queryKey: ['dashboard-stages'] })
-    qc.invalidateQueries({ queryKey: ['dashboard-feed'] })
-    qc.invalidateQueries({ queryKey: ['topics'] })
-  }
-
-  const NAV_ACTIONS = [
-    { icon: PenTool,   label: 'Draft Script',    to: '/scripts'   },
-    { icon: BarChart3, label: 'View Analytics',  to: '/analytics' },
-  ]
-
-  return (
-    <div className="p-6" style={cardStyle}>
-      <span className="text-[10px] font-semibold tracking-widest uppercase block mb-4" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-        Pipeline Actions
-      </span>
-
-      <div className="flex flex-col gap-2 mb-3">
-        <PipelineButton
-          label="Discover Topics"
-          icon={Search}
-          onTrigger={() => triggerDiscover('keywords', [])}
-          onComplete={invalidate}
-        />
-        <PipelineButton
-          label="Re-score Topics"
-          icon={RefreshCw}
-          onTrigger={triggerRescore}
-          onComplete={invalidate}
-        />
-        <PipelineButton
-          label="Run Analytics"
-          icon={BarChart3}
-          onTrigger={triggerAnalyze}
-          onComplete={invalidate}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-2 mt-2">
-        {NAV_ACTIONS.map(({ icon: Icon, label, to }) => (
-          <button
-            key={label}
-            onClick={() => navigate(to)}
-            className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-all hover:scale-[1.02]"
-            style={{
-              background: 'transparent',
-              borderRadius: 'var(--ip-radius-md)',
-              border: '1px solid var(--ip-border-subtle)',
-              color: 'var(--ip-text-secondary)',
-              fontFamily: 'var(--ip-font-body)',
-            }}
-          >
-            <Icon size={16} style={{ color: 'var(--ip-text-tertiary)' }} />
-            {label}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Dashboard — main export                                            */
-/* ------------------------------------------------------------------ */
-
 export function Dashboard() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { user } = useAuth()
+
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
     user?.email?.split('@')[0] ||
-    'Agent'
+    'Operator'
+
+  const { data: stagesData } = useQuery({ queryKey: ['dashboard-stages'], queryFn: getDashboardStages })
+  const { data: feedData } = useQuery({ queryKey: ['dashboard-feed'], queryFn: getDashboardFeed })
+  const { data: analytics } = useQuery({ queryKey: ['analytics', '30d'], queryFn: () => getAnalytics('30d') })
+
+  const stages = stagesData ?? FALLBACK_STAGES
+  const feed = feedData ?? FALLBACK_FEED
+  const topPerformer = analytics?.top_performers?.[0]
+
+  const refreshDashboard = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['dashboard-stages'] })
+    queryClient.invalidateQueries({ queryKey: ['dashboard-feed'] })
+    queryClient.invalidateQueries({ queryKey: ['analytics'] })
+    queryClient.invalidateQueries({ queryKey: ['topics'] })
+  }, [queryClient])
+
+  const stats = useMemo(() => {
+    const totalPipelineItems = stages.reduce((sum, stage) => sum + stage.count, 0)
+    const discoverCount = stages.find((s) => s.label.toLowerCase() === 'discover')?.count ?? 0
+    const publishCount = stages.find((s) => s.label.toLowerCase() === 'publish')?.count ?? 0
+    const conversion = discoverCount > 0 ? Math.round((publishCount / discoverCount) * 100) : 0
+    const topViews = topPerformer ? topPerformer.views : '0'
+
+    return [
+      { label: 'Pipeline Volume', value: `${totalPipelineItems}`, note: 'Active content items', icon: Layers3 },
+      { label: 'Top Asset Views', value: `${topViews}`, note: 'Best performer (30d)', icon: TrendingUp },
+      { label: 'Discover -> Publish', value: `${conversion}%`, note: 'Current conversion rate', icon: Target },
+      { label: 'Live Stages', value: `${stages.length}`, note: 'Workflow nodes active', icon: BarChart3 },
+    ]
+  }, [stages, topPerformer])
 
   return (
-    <div className="max-w-full">
-      <header className="mb-8">
-        <WorkspaceTabs />
-        <div className="mt-4">
-          <h1 className="text-3xl font-bold" style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}>
-            Welcome back, {displayName}
-          </h1>
-          <p className="text-xs tracking-widest mt-1 uppercase" style={{ color: 'var(--ip-text-tertiary)', fontFamily: 'var(--ip-font-body)' }}>
-            Vessel Command — Global Operations Status
-          </p>
+    <div className="space-y-6">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 p-8" style={{ ...cardStyle, position: 'relative', overflow: 'hidden' }}>
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'radial-gradient(500px 180px at 0% 0%, rgba(238,68,84,0.16) 0%, transparent 70%), radial-gradient(420px 160px at 100% 0%, rgba(62,134,198,0.16) 0%, transparent 72%)',
+            }}
+          />
+          <div className="relative z-10">
+            <p className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-3" style={{ color: 'var(--ip-text-tertiary)' }}>
+              Welcome back, {displayName}
+            </p>
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight" style={{ color: 'var(--ip-text)' }}>
+              Launch 10x more content.
+              <br />
+              75% faster.
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm md:text-base" style={{ color: 'var(--ip-text-secondary)' }}>
+              Skip the tabs and move from discovery to publish in one connected workflow.
+              This dashboard tracks execution and tells you exactly where momentum drops.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => navigate('/topics')}
+                className="px-5 py-2.5 text-sm font-semibold text-white"
+                style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)', boxShadow: 'var(--ip-shadow-md)' }}
+              >
+                Start Discovering
+              </button>
+              <button
+                onClick={() => navigate('/scripts')}
+                className="px-5 py-2.5 text-sm font-semibold"
+                style={{ background: 'var(--ip-surface)', color: 'var(--ip-text)', border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)' }}
+              >
+                Open Script Studio
+              </button>
+            </div>
+          </div>
         </div>
-      </header>
 
-      <section className="mb-8">
-        <PipelineFunnel />
+        <div className="p-6 space-y-3" style={cardStyle}>
+          <p className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--ip-text-tertiary)' }}>
+            Quick Proof
+          </p>
+          <div className="space-y-2">
+            {['AI-driven pipeline', 'Real-time stage tracking', 'One place for topics to scripts', 'Built for fast creators'].map((item) => (
+              <div
+                key={item}
+                className="px-3 py-2 rounded-md text-xs font-medium"
+                style={{
+                  background: 'var(--ip-bg-subtle)',
+                  color: 'var(--ip-text-secondary)',
+                  border: '1px solid var(--ip-border-subtle)',
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+          <div
+            className="mt-2 p-3 rounded-lg"
+            style={{
+              background: 'color-mix(in srgb, var(--ip-primary) 10%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--ip-primary) 35%, transparent)',
+            }}
+          >
+            <p className="text-xs font-semibold" style={{ color: 'var(--ip-primary)' }}>
+              Ready to create agency-like content?
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <TopPerformer />
-        <div className="flex flex-col gap-8">
-          <TacticalFeed />
-          <PipelineActions />
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {stats.map(({ label, value, note, icon: Icon }) => (
+          <div key={label} className="p-4" style={cardStyle}>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: 'var(--ip-text-tertiary)' }}>
+                {label}
+              </p>
+              <Icon size={14} style={{ color: 'var(--ip-primary)' }} />
+            </div>
+            <p className="text-3xl font-bold mb-1" style={{ color: 'var(--ip-text)' }}>
+              {value}
+            </p>
+            <p className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>
+              {note}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <section className="p-6" style={cardStyle}>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--ip-text-tertiary)' }}>
+              How It Works
+            </p>
+            <h2 className="text-2xl font-bold mt-1">Your AI marketing workflow in 4 steps</h2>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {stepCards.map((step, idx) => (
+            <div
+              key={step.title}
+              className="p-4 rounded-lg"
+              style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <step.icon size={16} style={{ color: 'var(--ip-primary)' }} />
+                <span className="text-[10px] font-semibold" style={{ color: 'var(--ip-text-tertiary)' }}>
+                  0{idx + 1}
+                </span>
+              </div>
+              <p className="text-sm font-semibold mb-1" style={{ color: 'var(--ip-text)' }}>
+                {step.title}
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--ip-text-secondary)' }}>
+                {step.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        <div className="xl:col-span-2 p-6" style={cardStyle}>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold">Pipeline Status</h2>
+            <button
+              onClick={() => navigate('/analytics')}
+              className="text-xs font-semibold inline-flex items-center gap-1"
+              style={{ color: 'var(--ip-text-brand)' }}
+            >
+              View analytics
+              <ChevronRight size={12} />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+            {stages.map((stage) => (
+              <div
+                key={stage.label}
+                className="p-4 rounded-lg"
+                style={{ border: '1px solid var(--ip-border-subtle)', background: 'var(--ip-surface)' }}
+              >
+                <p className="text-[10px] uppercase tracking-[0.15em] mb-1" style={{ color: 'var(--ip-text-tertiary)' }}>
+                  {stage.label}
+                </p>
+                <p className="text-3xl font-bold" style={{ color: stage.color, fontFamily: 'var(--ip-font-mono)' }}>
+                  {stage.count}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6" style={cardStyle}>
+          <h2 className="text-xl font-bold mb-4">Tactical Feed</h2>
+          <div className="space-y-3">
+            {feed.slice(0, 6).map((item) => (
+              <div key={item.id} className="p-3 rounded-lg" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
+                <p className="text-sm font-medium" style={{ color: 'var(--ip-text)' }}>
+                  {item.title}
+                </p>
+                <p className="text-xs inline-flex items-center gap-1.5 mt-1" style={{ color: 'var(--ip-text-tertiary)' }}>
+                  <Clock3 size={11} />
+                  {timeAgo(item.created_at)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <PipelineAction
+            title="Discover Topics"
+            subtitle="Generate high-potential ideas from your niche signals."
+            icon={Search}
+            trigger={() => triggerDiscover('keywords', [])}
+            onCompleted={refreshDashboard}
+          />
+          <PipelineAction
+            title="Re-score Topics"
+            subtitle="Recalculate opportunity scores with latest performance data."
+            icon={Sparkles}
+            trigger={triggerRescore}
+            onCompleted={refreshDashboard}
+          />
+          <PipelineAction
+            title="Run Analytics"
+            subtitle="Refresh insights and identify where to improve conversion."
+            icon={BarChart3}
+            trigger={triggerAnalyze}
+            onCompleted={refreshDashboard}
+          />
         </div>
       </section>
     </div>

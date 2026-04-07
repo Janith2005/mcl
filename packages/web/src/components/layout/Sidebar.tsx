@@ -10,9 +10,9 @@ import {
   Brain,
   Settings,
   HelpCircle,
+  Sparkles,
   Plus,
 } from 'lucide-react'
-import { ThemeToggle } from '@/components/ThemeToggle'
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -22,9 +22,6 @@ const navItems = [
   { to: '/scripts', icon: FileText, label: 'Scripts' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
   { to: '/brain', icon: Brain, label: 'Brain' },
-]
-
-const bottomItems = [
   { to: '/settings', icon: Settings, label: 'Settings' },
   { to: '/support', icon: HelpCircle, label: 'Support' },
 ]
@@ -32,119 +29,95 @@ const bottomItems = [
 export function Sidebar() {
   const navigate = useNavigate()
   const { user } = useAuth()
-
   const displayName = user?.user_metadata?.full_name
     || user?.user_metadata?.name
     || user?.email?.split('@')[0]
-    || 'Agent'
-  const initials = displayName.slice(0, 2).toUpperCase()
+    || 'Operator'
 
   return (
-    <aside
-      className="flex flex-col h-screen fixed left-0 top-0 z-40"
+    <header
+      className="fixed left-0 right-0 top-0 z-40"
       style={{
-        width: 'var(--ip-sidebar-width)',
         background: 'var(--ip-sidebar-bg)',
-        borderRight: '1px solid var(--ip-border-subtle)',
-        boxShadow: 'var(--ip-shadow-md)',
+        backdropFilter: 'blur(var(--ip-glass-blur))',
+        borderBottom: '1px solid var(--ip-border-subtle)',
+        boxShadow: 'var(--ip-shadow-sm)',
       }}
     >
-      {/* Brand */}
-      <div className="px-5 py-5 flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm"
-          style={{ background: 'var(--ip-primary-gradient)' }}
-        >
-          IP
-        </div>
-        <div>
-          <div
-            className="text-sm font-semibold leading-tight"
-            style={{ color: 'var(--ip-text-brand)', fontFamily: 'var(--ip-font-display)' }}
-          >
-            Influence Pirates
-          </div>
-          <div className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
-            The Luminous Lab
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 space-y-1">
-        {navItems.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
-                isActive ? 'text-white shadow-md' : 'hover:bg-[var(--ip-bg-subtle)]'
-              }`
-            }
-            style={({ isActive }) => ({
-              borderRadius: isActive ? 'var(--ip-radius-full)' : 'var(--ip-radius-md)',
-              background: isActive ? 'var(--ip-primary-gradient)' : undefined,
-              color: isActive ? 'var(--ip-sidebar-text-active)' : 'var(--ip-sidebar-text)',
-            })}
-          >
-            <Icon size={18} />
-            {label}
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* New Content CTA */}
-      <div className="px-3 pb-2">
+      <div
+        className="mx-auto px-5 py-3 flex items-center gap-4"
+        style={{ maxWidth: 'calc(var(--ip-content-max) + 2.5rem)' }}
+      >
         <button
-          onClick={() => navigate('/topics')}
-          className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90"
-          style={{
-            background: 'var(--ip-primary-gradient)',
-            borderRadius: 'var(--ip-radius-full)',
-          }}
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2.5 shrink-0"
+          title="Go to dashboard"
         >
-          <Plus size={16} />
-          New Content
-        </button>
-      </div>
-
-      {/* Bottom nav */}
-      <div className="px-3 py-2 space-y-1" style={{ borderTop: '1px solid var(--ip-border-subtle)' }}>
-        {bottomItems.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className="flex items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-[var(--ip-bg-subtle)]"
-            style={({ isActive }) => ({
-              borderRadius: 'var(--ip-radius-md)',
-              color: isActive ? 'var(--ip-text-brand)' : 'var(--ip-sidebar-text)',
-            })}
-          >
-            <Icon size={18} />
-            {label}
-          </NavLink>
-        ))}
-
-        {/* User avatar */}
-        <div className="flex items-center gap-3 px-3 py-2 mt-2">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-            style={{ background: 'var(--ip-accent-maroon)' }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold"
+            style={{ background: 'var(--ip-primary-gradient)', boxShadow: 'var(--ip-shadow-md)' }}
           >
-            {initials}
+            IP
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate" style={{ color: 'var(--ip-text)' }}>
-              {displayName}
-            </div>
-            <div className="text-xs truncate" style={{ color: 'var(--ip-text-tertiary)' }}>
-              {user?.email || ''}
-            </div>
+          <div className="text-left">
+            <p className="text-sm font-bold leading-tight" style={{ color: 'var(--ip-text)' }}>
+              Influencer Pirates
+            </p>
+            <p className="text-[11px] leading-tight" style={{ color: 'var(--ip-text-tertiary)' }}>
+              AI marketing workflow
+            </p>
           </div>
-          <ThemeToggle />
+        </button>
+
+        <div className="min-w-0 flex-1 overflow-x-auto">
+          <nav
+            className="inline-flex items-center gap-1 p-1 min-w-max"
+            style={{
+              background: 'var(--ip-surface)',
+              borderRadius: 'var(--ip-radius-full)',
+              border: '1px solid var(--ip-border-subtle)',
+            }}
+          >
+            {navItems.map(({ to, icon: Icon, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all"
+                style={({ isActive }) => ({
+                  borderRadius: 'var(--ip-radius-full)',
+                  background: isActive ? 'var(--ip-primary-gradient)' : 'transparent',
+                  color: isActive ? 'var(--ip-sidebar-text-active)' : 'var(--ip-sidebar-text)',
+                  boxShadow: isActive ? 'var(--ip-shadow-sm)' : 'none',
+                })}
+              >
+                <Icon size={13} />
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => navigate('/topics')}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white"
+            style={{
+              background: 'var(--ip-primary-gradient)',
+              borderRadius: 'var(--ip-radius-full)',
+              boxShadow: 'var(--ip-shadow-md)',
+            }}
+          >
+            <Plus size={12} />
+            New Content
+          </button>
+
+          <div className="hidden md:flex items-center gap-1.5 text-xs px-2.5 py-1.5" style={{ border: '1px solid var(--ip-border)', borderRadius: 'var(--ip-radius-full)', color: 'var(--ip-text-tertiary)' }}>
+            <Sparkles size={12} style={{ color: 'var(--ip-primary)' }} />
+            {displayName}
+          </div>
         </div>
       </div>
-    </aside>
+    </header>
   )
 }

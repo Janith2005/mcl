@@ -7,12 +7,12 @@ import {
   Sparkles, X, ChevronDown, Target, Zap, Shield,
 } from 'lucide-react'
 import {
-  getTopics, createTopic, deleteTopic, updateTopic, generateTopics, triggerAngle, type Topic,
+  getTopics, createTopic, deleteTopic, updateTopic, generateTopics, triggerAngle, getJob, type Topic,
 } from '@/api/services'
 
 type ViewMode = 'kanban' | 'table'
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// --- Helpers -----------------------------------------------------------------
 
 function getScoreColor(score: number): string {
   if (score >= 90) return 'var(--ip-score-perfect)'
@@ -79,7 +79,7 @@ function ScoreBar({ label, value, icon, invert = false }: {
   )
 }
 
-// ─── Topic Detail Modal ───────────────────────────────────────────────────────
+// --- Topic Detail Modal -------------------------------------------------------
 
 function TopicDetailModal({
   topic, onClose, onDelete, onStatusChange,
@@ -99,10 +99,44 @@ function TopicDetailModal({
   async function handleGenerateAngles() {
     setGeneratingAngles(true)
     try {
-      await triggerAngle([topic.id])
-      toast.success('Angle generation started — check Angles page in a moment')
+      const { job_id } = await triggerAngle([topic.id])
+      toast.info('Generating angles for this topic...')
+
+      const maxAttempts = 120
+      let attempts = 0
+      let status: 'pending' | 'running' | 'completed' | 'failed' = 'pending'
+      let resultCount = 0
+
+      while (attempts < maxAttempts) {
+        attempts += 1
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        const job = await getJob(job_id)
+        status = job.status
+        resultCount = Number(job.result?.result_count ?? 0)
+        if (status === 'completed' || status === 'failed') break
+      }
+
+      const topicParam = `topic_id=${encodeURIComponent(topic.id)}`
+      const jobParam = job_id ? `&job_id=${encodeURIComponent(job_id)}` : ''
+      const targetUrl = `/angles?${topicParam}${jobParam}`
+
+      if (status === 'completed' && resultCount > 0) {
+        toast.success(`Generated ${resultCount} angle${resultCount === 1 ? '' : 's'}`)
+        onClose()
+        navigate(targetUrl)
+        return
+      }
+
+      if (status === 'failed') {
+        toast.error('Angle generation failed for this topic. Please retry.')
+      } else if (status === 'completed') {
+        toast.error('No angles were generated. Please retry.')
+      } else {
+        toast.error('Angle generation is taking longer than expected. Check Angles page.')
+      }
+
       onClose()
-      navigate('/angles')
+      navigate(targetUrl)
     } catch {
       toast.error('Failed to start angle generation')
     } finally {
@@ -323,7 +357,7 @@ function TopicDetailModal({
   )
 }
 
-// ─── AI Discover Modal ────────────────────────────────────────────────────────
+// --- AI Discover Modal --------------------------------------------------------
 
 function DiscoverModal({
   onClose, onSubmit, isPending,
@@ -437,7 +471,7 @@ function DiscoverModal({
             }}
           >
             {isPending ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
-            {isPending ? 'Discovering topics…' : 'Discover Topics'}
+            {isPending ? 'Discovering topics...' : 'Discover Topics'}
           </button>
         </div>
       </div>
@@ -445,7 +479,7 @@ function DiscoverModal({
   )
 }
 
-// ─── Topic Card ───────────────────────────────────────────────────────────────
+// --- Topic Card ---------------------------------------------------------------
 
 function TopicCard({
   topic, onSelect, onDelete,
@@ -569,7 +603,7 @@ function TopicCard({
   )
 }
 
-// ─── Kanban Column ────────────────────────────────────────────────────────────
+// --- Kanban Column ------------------------------------------------------------
 
 function KanbanColumn({
   title, topics, color, onSelect, onDelete, onAdd,
@@ -628,7 +662,7 @@ function KanbanColumn({
   )
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// --- Main Page ----------------------------------------------------------------
 
 export function Topics() {
   const [viewMode, setViewMode] = useState<ViewMode>('kanban')
@@ -670,7 +704,9 @@ export function Topics() {
     onError: () => toast.error('Failed to generate topics'),
   })
 
-  const discoveredTopics = topics.filter(t => t.status === 'new')
+  const discoveredTopics = topics.filter(t =>
+    t.status === 'new' || t.status === 'discovered' || t.status === 'scored' || t.status === 'analyzed' || t.status === 'passed'
+  )
   const developingTopics = topics.filter(t => t.status === 'developing')
   const scriptedTopics = topics.filter(t => t.status === 'scripted' || t.status === 'published')
 
@@ -694,7 +730,7 @@ export function Topics() {
               backgroundClip: 'text',
             }}
           >
-            Influence Pirates
+            Influencer Pirates
           </span>
           <h1
             className="text-xl font-bold"
@@ -755,13 +791,13 @@ export function Topics() {
             border: '1px solid var(--ip-border-subtle)',
           }}
         >
-          {isLoading ? 'Loading…' : `${topics.length} topics`}
+          {isLoading ? 'Loading...' : `${topics.length} topics`}
         </span>
 
         {generateMutation.isPending && (
           <div className="flex items-center gap-2">
             <Loader2 size={13} className="animate-spin" style={{ color: 'var(--ip-primary)' }} />
-            <span className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>Discovering topics…</span>
+            <span className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>Discovering topics...</span>
           </div>
         )}
       </div>
@@ -879,7 +915,7 @@ export function Topics() {
                   <td colSpan={5} className="py-16 text-center" style={{ color: 'var(--ip-text-tertiary)' }}>
                     <div className="flex flex-col items-center gap-3">
                       <Sparkles size={24} style={{ opacity: 0.3 }} />
-                      <p className="text-sm">No topics yet — click AI Discover to generate ideas</p>
+                      <p className="text-sm">No topics yet - click AI Discover to generate ideas</p>
                     </div>
                   </td>
                 </tr>

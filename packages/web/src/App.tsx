@@ -17,6 +17,7 @@ import { Support } from './pages/Support'
 import { Legal } from './pages/Legal'
 import { FeedbackWidget } from './components/FeedbackWidget'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { shouldBypassAuth } from '@/lib/runtime'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,12 +34,15 @@ function Spinner() {
   )
 }
 
-const DEV_SKIP_AUTH = import.meta.env.VITE_DEV_SKIP_AUTH === 'true'
+const DEV_SKIP_AUTH = shouldBypassAuth()
 
 function RequireAuth() {
   const { session, loading, hasWorkspace } = useAuth()
-  if (DEV_SKIP_AUTH) return <Outlet />
   if (loading) return <Spinner />
+  if (DEV_SKIP_AUTH) {
+    if (!hasWorkspace) return <Navigate to="/onboarding" replace />
+    return <Outlet />
+  }
   if (!session) return <Navigate to="/login" replace />
   if (!hasWorkspace) return <Navigate to="/onboarding" replace />
   return <Outlet />

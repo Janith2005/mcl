@@ -33,7 +33,7 @@ export interface Topic {
   pillars: string[]
   engagement?: string
   created_at: string
-  status: 'new' | 'developing' | 'scripted' | 'published' | 'analyzed' | 'passed'
+  status: 'new' | 'discovered' | 'scored' | 'developing' | 'hook' | 'scripted' | 'published' | 'analyzed' | 'passed'
 }
 
 export interface Angle {
@@ -46,6 +46,8 @@ export interface Angle {
   strength_level: 'high' | 'medium' | 'low'
   strength_percent: number
   strength_label: string
+  status?: string
+  topic_id?: string | null
 }
 
 export interface Hook {
@@ -225,8 +227,10 @@ export const generateTopics = (data: { niche?: string; platform?: string; keywor
 
 // ─── Angles ──────────────────────────────────────────────────────────────────
 
-export const getAngles = () =>
-  apiGet<Angle[]>(wsPath('/angles'))
+export const getAngles = (topicId?: string) =>
+  apiGet<Angle[]>(
+    wsPath(`/angles${topicId ? `?topic_id=${encodeURIComponent(topicId)}` : ''}`),
+  )
 
 export const saveAngle = (id: string, data: Partial<Angle>) =>
   apiPut<Angle>(wsPath(`/angles/${id}`), data)

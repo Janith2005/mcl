@@ -158,80 +158,105 @@ function ReconPanel() {
           {/* Report Detail */}
           {selectedReport && (() => {
             const type = selectedReport.config?.type as string
-            const s = selectedReport.synthesis || {}
+            const synthesis = (selectedReport.synthesis ?? {}) as Record<string, unknown>
+            const topPatterns = Array.isArray(synthesis.top_patterns)
+              ? (synthesis.top_patterns as Array<{ pattern?: string; example_title?: string }>)
+              : []
+            const contentGaps = Array.isArray(synthesis.content_gaps)
+              ? (synthesis.content_gaps as string[])
+              : []
+            const hookStyles = Array.isArray(synthesis.hook_styles)
+              ? (synthesis.hook_styles as string[])
+              : []
+            const postingInsights = typeof synthesis.posting_insights === 'string'
+              ? synthesis.posting_insights
+              : null
+            const engagementDrivers = Array.isArray(synthesis.engagement_drivers)
+              ? (synthesis.engagement_drivers as string[])
+              : []
+            const adaptableElements = Array.isArray(synthesis.adaptable_elements)
+              ? (synthesis.adaptable_elements as string[])
+              : []
+            const avoidElements = Array.isArray(synthesis.avoid_elements)
+              ? (synthesis.avoid_elements as string[])
+              : []
+            const skeleton = synthesis.skeleton && typeof synthesis.skeleton === 'object'
+              ? (synthesis.skeleton as { hook_formula?: string; section_flow?: string[] })
+              : null
+
             return (
               <div className="p-4 rounded-lg space-y-4" style={{ background: 'var(--ip-bg-subtle)', border: '1px solid var(--ip-border-subtle)' }}>
                 {type === 'competitor_scrape' && (
                   <>
-                    {(s.top_patterns as any[])?.length > 0 && (
+                    {topPatterns.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>TOP PATTERNS</p>
                         <div className="space-y-1">
-                          {(s.top_patterns as any[]).map((p: any, i: number) => (
-                            <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>• <strong>{p.pattern}</strong> — {p.example_title}</p>
+                          {topPatterns.map((p, i) => (
+                            <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>- <strong>{p.pattern}</strong> - {p.example_title}</p>
                           ))}
                         </div>
                       </div>
                     )}
-                    {(s.content_gaps as string[])?.length > 0 && (
+                    {contentGaps.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>CONTENT GAPS TO EXPLOIT</p>
                         <div className="space-y-1">
-                          {(s.content_gaps as string[]).map((g: string, i: number) => (
-                            <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>→ {g}</p>
+                          {contentGaps.map((g, i) => (
+                            <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>{'->'} {g}</p>
                           ))}
                         </div>
                       </div>
                     )}
-                    {(s.hook_styles as string[])?.length > 0 && (
+                    {hookStyles.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>HOOK FORMULAS THEY USE</p>
                         <div className="space-y-1">
-                          {(s.hook_styles as string[]).map((h: string, i: number) => (
+                          {hookStyles.map((h, i) => (
                             <p key={i} className="text-xs font-mono" style={{ color: 'var(--ip-text-brand)' }}>{h}</p>
                           ))}
                         </div>
                       </div>
                     )}
-                    {s.posting_insights && (
+                    {postingInsights && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-1" style={{ color: 'var(--ip-text-tertiary)' }}>POSTING INSIGHTS</p>
-                        <p className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>{s.posting_insights as string}</p>
+                        <p className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>{postingInsights}</p>
                       </div>
                     )}
                   </>
                 )}
                 {type === 'skeleton_rip' && (
                   <>
-                    {(s.engagement_drivers as string[])?.length > 0 && (
+                    {engagementDrivers.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>ENGAGEMENT DRIVERS</p>
-                        {(s.engagement_drivers as string[]).map((d: string, i: number) => (
-                          <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>• {d}</p>
+                        {engagementDrivers.map((d, i) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>- {d}</p>
                         ))}
                       </div>
                     )}
-                    {(s.adaptable_elements as string[])?.length > 0 && (
+                    {adaptableElements.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>STEAL & ADAPT</p>
-                        {(s.adaptable_elements as string[]).map((e: string, i: number) => (
-                          <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>→ {e}</p>
+                        {adaptableElements.map((e, i) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-success)' }}>{'->'} {e}</p>
                         ))}
                       </div>
                     )}
-                    {(s.avoid_elements as string[])?.length > 0 && (
+                    {avoidElements.length > 0 && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>DON'T COPY</p>
-                        {(s.avoid_elements as string[]).map((e: string, i: number) => (
-                          <p key={i} className="text-xs" style={{ color: 'var(--ip-error)' }}>✗ {e}</p>
+                        {avoidElements.map((e, i) => (
+                          <p key={i} className="text-xs" style={{ color: 'var(--ip-error)' }}>x {e}</p>
                         ))}
                       </div>
                     )}
-                    {s.skeleton && (
+                    {skeleton && (
                       <div>
                         <p className="text-[10px] tracking-widest font-semibold mb-2" style={{ color: 'var(--ip-text-tertiary)' }}>CONTENT SKELETON</p>
-                        <p className="text-xs mb-1" style={{ color: 'var(--ip-text-brand)' }}>Hook: {(s.skeleton as any).hook_formula}</p>
-                        {((s.skeleton as any).section_flow as string[])?.map((sec: string, i: number) => (
+                        <p className="text-xs mb-1" style={{ color: 'var(--ip-text-brand)' }}>Hook: {skeleton.hook_formula}</p>
+                        {skeleton.section_flow?.map((sec, i) => (
                           <p key={i} className="text-xs" style={{ color: 'var(--ip-text-secondary)' }}>{i + 1}. {sec}</p>
                         ))}
                       </div>

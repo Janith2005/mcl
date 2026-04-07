@@ -2,6 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from supabase import Client
+from postgrest.exceptions import APIError
 from app.deps import get_supabase
 from app.middleware.auth import get_current_user
 
@@ -91,7 +92,19 @@ async def update_workspace(
         update_data['name'] = update_data.pop('workspace_name')
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
-    result = supabase.table("workspaces").update(update_data).eq("id", workspace_id).execute()
+    try:
+        result = supabase.table("workspaces").update(update_data).eq("id", workspace_id).execute()
+    except APIError as exc:
+        # Older schemas may not have `default_niche` on workspaces.
+        # Retry without it so saving workspace name still works.
+        detail = str(exc)
+        if "default_niche" in detail and "workspaces" in detail:
+            fallback_update = {k: v for k, v in update_data.items() if k != "default_niche"}
+            if not fallback_update:
+                return {"status": "updated"}
+            result = supabase.table("workspaces").update(fallback_update).eq("id", workspace_id).execute()
+        else:
+            raise HTTPException(status_code=400, detail=detail) from exc
     return result.data[0] if result.data else {"status": "updated"}
 
 
@@ -102,17 +115,30 @@ async def invite_member(
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
 ):
-    # Look up invitee by email
-    invitee = supabase.auth.admin.get_user_by_email(req.email) if hasattr(supabase.auth, 'admin') else None
+    # Optional best-effort member attach if admin lookup is supported by SDK.
+    invitee = None
+    try:
+        admin_api = getattr(supabase.auth, "admin", None)
+        lookup = getattr(admin_api, "get_user_by_email", None)
+        if callable(lookup):
+            invitee = lookup(req.email)
+    except Exception:
+        invitee = None
 
-    if invitee:
+    user_id = getattr(getattr(invitee, "user", None), "id", None)
+    if user_id:
         supabase.table("workspace_members").insert({
             "workspace_id": workspace_id,
-            "user_id": invitee.user.id,
+            "user_id": user_id,
             "role": req.role,
         }).execute()
 
     from app.services.email import send_invite
-    send_invite(req.email, workspace_id, f"https://app.influencepirates.com/invite/{workspace_id}")
+    delivery = "sent"
+    try:
+        send_invite(req.email, workspace_id, f"https://app.influencepirates.com/invite/{workspace_id}")
+    except Exception:
+        # In local/dev environments email providers are commonly unconfigured.
+        delivery = "skipped"
 
-    return {"status": "invited", "email": req.email}
+    return {"status": "invited", "email": req.email, "delivery": delivery}

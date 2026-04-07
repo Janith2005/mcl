@@ -40,7 +40,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RateLimitMiddleware)
 
     import os
-    default_origins = "http://localhost:5173,http://localhost:4173"
+    default_origins = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173"
     raw_origins = os.environ.get("ALLOWED_ORIGINS", default_origins)
     allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
     app.add_middleware(

@@ -1,12 +1,25 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { supabase } from '@/api/supabase'
 import { setWorkspaceId, getWorkspaceId } from '@/lib/workspace'
 import { api } from '@/api/client'
+import { shouldBypassAuth } from '@/lib/runtime'
 
-const DEV_SKIP_AUTH = import.meta.env.VITE_DEV_SKIP_AUTH === 'true'
+const DEV_SKIP_AUTH = shouldBypassAuth()
 
 type Session = Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']
 type User = NonNullable<Session>['user']
+
+type WorkspaceListItem = {
+  id?: string
+  workspaces?: {
+    id?: string
+  }
+}
+
+type DevSetupResponse = {
+  workspace_id?: string
+}
 
 interface AuthContextValue {
   session: Session | null
@@ -28,21 +41,64 @@ export function useAuth() {
   return useContext(AuthContext)
 }
 
-async function bootstrapWorkspace(): Promise<boolean> {
-  if (getWorkspaceId()) return true
+function extractWorkspaceId(item?: WorkspaceListItem): string {
+  const id = item?.workspaces?.id ?? item?.id
+  return typeof id === 'string' ? id.trim() : ''
+}
+
+async function workspaceExists(workspaceId: string): Promise<boolean> {
+  const id = workspaceId.trim()
+  if (!id) return false
+
   try {
-    const data = await api<any[]>('/api/v1/workspaces')
+    await api(`/api/v1/workspaces/${id}`)
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function pickFirstWorkspace(): Promise<boolean> {
+  try {
+    const data = await api<WorkspaceListItem[]>('/api/v1/workspaces')
     const workspaces = Array.isArray(data) ? data : []
-    if (workspaces.length > 0) {
-      const ws = workspaces[0]
-      const id: string = ws?.workspaces?.id ?? ws?.id
-      if (id) { setWorkspaceId(id); return true }
+
+    for (const ws of workspaces) {
+      const id = extractWorkspaceId(ws)
+      if (id) {
+        setWorkspaceId(id)
+        return true
+      }
     }
   } catch {
-    // Non-fatal — user may be offline or workspace not created yet
+    // Non-fatal: user may be offline or workspace not created yet.
   }
-  // No workspace found — will redirect to onboarding
+
   return false
+}
+
+async function bootstrapWorkspace(): Promise<boolean> {
+  const currentWorkspaceId = getWorkspaceId().trim()
+  if (currentWorkspaceId && await workspaceExists(currentWorkspaceId)) {
+    return true
+  }
+
+  return pickFirstWorkspace()
+}
+
+async function bootstrapDevWorkspace(): Promise<boolean> {
+  try {
+    const data = await api<DevSetupResponse>('/api/v1/dev/setup', { method: 'POST' })
+    const workspaceId = typeof data?.workspace_id === 'string' ? data.workspace_id.trim() : ''
+    if (workspaceId) {
+      setWorkspaceId(workspaceId)
+      return true
+    }
+  } catch {
+    // Non-fatal: still attempt workspace discovery below.
+  }
+
+  return bootstrapWorkspace()
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -51,31 +107,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [hasWorkspace, setHasWorkspace] = useState(false)
 
   async function refreshWorkspace() {
-    const found = await bootstrapWorkspace()
+    const found = DEV_SKIP_AUTH ? await bootstrapDevWorkspace() : await bootstrapWorkspace()
     setHasWorkspace(found)
   }
 
   useEffect(() => {
-    // Dev mode: skip Supabase entirely
+    // Dev mode: skip Supabase user auth but still ensure a valid workspace.
     if (DEV_SKIP_AUTH) {
-      // If workspace ID already cached in localStorage, skip the setup call entirely
-      if (getWorkspaceId()) {
-        setHasWorkspace(true)
-        setLoading(false)
-        return
-      }
-      // First run: call dev setup to create workspace in DB
-      api('/api/v1/dev/setup', { method: 'POST' })
-        .then((data: any) => {
-          if (data?.workspace_id) setWorkspaceId(data.workspace_id)
-        })
-        .catch(() => {
-          // Setup failed — wsPath() will fall back to VITE_WORKSPACE_ID
-        })
-        .finally(() => {
-          setHasWorkspace(true)
-          setLoading(false)
-        })
+      bootstrapDevWorkspace()
+        .then((found) => setHasWorkspace(found))
+        .finally(() => setLoading(false))
       return
     }
 
@@ -85,22 +126,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (done) return
       done = true
       setSession(s)
+
       if (s) {
         const found = await bootstrapWorkspace()
         setHasWorkspace(found)
-        // Identify user in PostHog if analytics is configured
+
         if (import.meta.env.VITE_POSTHOG_KEY) {
           import('./analytics').then(({ identifyUser }) => {
             identifyUser(s.user.id, { email: s.user.email })
           })
         }
+      } else {
+        setHasWorkspace(false)
       }
+
       setLoading(false)
     }
 
-    // Safety timeout — stop blocking the UI if Supabase hangs
+    // Safety timeout: stop blocking the UI if Supabase hangs.
     const timer = setTimeout(() => {
-      if (!done) finish(null)
+      if (!done) {
+        void finish(null)
+      }
     }, 4000)
 
     supabase.auth.getSession()
@@ -109,9 +156,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, s) => {
       setSession(s)
+
       if (s) {
         const found = await bootstrapWorkspace()
         setHasWorkspace(found)
+
         if (import.meta.env.VITE_POSTHOG_KEY) {
           import('./analytics').then(({ identifyUser }) => {
             identifyUser(s.user.id, { email: s.user.email })
@@ -119,10 +168,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setHasWorkspace(false)
+
         if (import.meta.env.VITE_POSTHOG_KEY) {
           import('./analytics').then(({ resetUser }) => resetUser())
         }
       }
+
       setLoading(false)
     })
 

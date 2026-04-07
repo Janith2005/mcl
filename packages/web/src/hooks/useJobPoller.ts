@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { wsPath } from '@/lib/workspace'
 import { api } from '@/api/client'
 
@@ -29,14 +29,14 @@ export function useJobPoller() {
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const stopPolling = () => {
+  const stopPolling = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }
+  }, [])
 
-  const startPolling = (jobId: string) => {
+  const startPolling = useCallback((jobId: string) => {
     stopPolling()
     setState({ jobId, status: 'pending', result: null, error: null, isActive: true })
 
@@ -58,7 +58,7 @@ export function useJobPoller() {
             error: status === 'failed' ? String(job.result?.error ?? 'Job failed') : null,
           }))
         }
-      } catch (err) {
+      } catch {
         stopPolling()
         setState(prev => ({
           ...prev,
@@ -68,15 +68,15 @@ export function useJobPoller() {
         }))
       }
     }, POLL_INTERVAL)
-  }
+  }, [stopPolling])
 
-  const reset = () => {
+  const reset = useCallback(() => {
     stopPolling()
     setState({ jobId: null, status: null, result: null, error: null, isActive: false })
-  }
+  }, [stopPolling])
 
   // Cleanup on unmount
-  useEffect(() => () => stopPolling(), [])
+  useEffect(() => () => stopPolling(), [stopPolling])
 
   return { ...state, startPolling, reset }
 }

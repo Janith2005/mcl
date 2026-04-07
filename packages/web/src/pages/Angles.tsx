@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRightLeft, Bookmark, Loader2, Sparkles, FileText, CheckCircle, XCircle } from 'lucide-react'
-import { getAngles, saveAngle, generateAngles, triggerScript, type Angle } from '@/api/services'
+import { getAngles, getJob, saveAngle, generateAngles, triggerScript, type Angle } from '@/api/services'
 import { useJobPoller } from '@/hooks/useJobPoller'
 import { toast } from 'sonner'
 import { CardSkeleton } from '@/components/Skeleton'
@@ -46,7 +46,7 @@ function AngleCard({ angle }: { angle: Angle }) {
       const { job_id } = await triggerScript(angle.id)
       startPolling(job_id)
       toast.info('Script generation started…')
-    } catch (e) {
+    } catch {
       toast.error('Failed to start script generation')
     }
   }
@@ -140,16 +140,52 @@ function AngleCard({ angle }: { angle: Angle }) {
 
 export function Angles() {
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
   const [activeTab, setActiveTab] = useState<Tab>('angles-lab')
   const [formatTab, setFormatTab] = useState<FormatTab>('longform')
   const [commonBelief, setCommonBelief] = useState('')
   const [surprisingTruth, setSurprisingTruth] = useState('')
+  const topicFilter = (searchParams.get('topic_id') || '').trim()
+  const jobId = (searchParams.get('job_id') || '').trim()
+  const lastJobToastRef = useRef<string | null>(null)
 
   const { data: angles = [], isLoading } = useQuery({
-    queryKey: ['angles'],
-    queryFn: getAngles,
+    queryKey: ['angles', topicFilter],
+    queryFn: () => getAngles(topicFilter || undefined),
     refetchInterval: 5000,
   })
+
+  const { data: angleJob } = useQuery({
+    queryKey: ['angle-job', jobId],
+    queryFn: () => getJob(jobId),
+    enabled: Boolean(jobId),
+    refetchInterval: (query) => {
+      const status = query.state.data?.status
+      if (status === 'completed' || status === 'failed') return false
+      return 2000
+    },
+  })
+
+  useEffect(() => {
+    if (!jobId || !angleJob) return
+    if (angleJob.status !== 'completed' && angleJob.status !== 'failed') return
+
+    const count = Number(angleJob.result?.result_count ?? 0)
+    const marker = `${jobId}:${angleJob.status}:${count}`
+    if (lastJobToastRef.current === marker) return
+    lastJobToastRef.current = marker
+
+    if (angleJob.status === 'completed') {
+      if (count > 0) {
+        toast.success(`Generated ${count} angle${count === 1 ? '' : 's'} for this topic`)
+      } else {
+        toast.error('Angle generation finished but returned 0 results. Please retry.')
+      }
+    } else {
+      toast.error('Angle generation failed. Please retry.')
+    }
+    queryClient.invalidateQueries({ queryKey: ['angles', topicFilter] })
+  }, [angleJob, jobId, queryClient, topicFilter])
 
   const generateMutation = useMutation({
     mutationFn: () => generateAngles({
@@ -178,8 +214,8 @@ export function Angles() {
     setSurprisingTruth(temp)
   }
 
-  const draftAngles = angles.filter((a: Angle & { status?: string }) => a.status === 'draft')
-  const publishedAngles = angles.filter((a: Angle & { status?: string }) => a.status === 'published')
+  const draftAngles = angles.filter((a) => a.status === 'draft')
+  const publishedAngles = angles.filter((a) => a.status === 'published')
 
   return (
     <div>
@@ -199,6 +235,23 @@ export function Angles() {
           </button>
         </div>
       </div>
+
+      {(topicFilter || jobId) && (
+        <div
+          className="mb-4 px-3 py-2 text-xs"
+          style={{
+            background: 'var(--ip-bg-subtle)',
+            borderRadius: 'var(--ip-radius-md)',
+            border: '1px solid var(--ip-border-subtle)',
+            color: 'var(--ip-text-secondary)',
+          }}
+        >
+          {topicFilter ? 'Showing angles for the topic selected in Topics page.' : 'Viewing all angles.'}
+          {jobId && angleJob && angleJob.status !== 'completed' && angleJob.status !== 'failed'
+            ? ' Generation is still running...'
+            : ''}
+        </div>
+      )}
 
       <div className="flex gap-1 mb-6" style={{ borderBottom: '1px solid var(--ip-border-subtle)' }}>
         {tabs.map(({ id, label }) => (
@@ -370,3 +423,5 @@ export function Angles() {
     </div>
   )
 }
+
+

@@ -1,0 +1,85 @@
+================================================================
+INFLUENCE PIRATES — HOW TO RUN
+================================================================
+
+
+----------------------------------------------------------------
+PREREQUISITES (both methods)
+----------------------------------------------------------------
+
+1. Copy env file and fill in your values:
+   cp .env.example .env
+
+   Required keys to fill in:
+   - SUPABASE_URL
+   - SUPABASE_ANON_KEY
+   - SUPABASE_SERVICE_ROLE_KEY
+   - AZURE_OPENAI_ENDPOINT
+   - AZURE_OPENAI_API_KEY
+   - AZURE_OPENAI_DEPLOYMENT
+
+
+================================================================
+WITH DOCKER  (recommended)
+================================================================
+
+Requirements: Docker Desktop running
+
+cd infra
+docker compose up --build
+
+  Frontend  →  http://localhost:5173
+  API       →  http://localhost:8000
+  Redis     →  localhost:6379
+
+Stop:
+  docker compose down
+
+Rebuild a single service:
+  docker compose up --build api
+  docker compose up --build web
+  docker compose up --build worker
+
+View logs:
+  docker compose logs -f
+  docker compose logs -f api
+  docker compose logs -f worker
+
+
+================================================================
+WITHOUT DOCKER  (local dev)
+================================================================
+
+Requirements: Python 3.11+, Node 20+, Redis running locally
+
+---- Terminal 1 — Redis ----
+redis-server
+
+---- Terminal 2 — API ----
+pip install -e packages/pipeline
+pip install -e packages/api
+cd packages/api
+uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload
+
+---- Terminal 3 — Worker ----
+pip install -e packages/pipeline
+pip install -e packages/worker
+cd packages/worker
+arq worker.main.WorkerSettings
+
+---- Terminal 4 — Frontend ----
+cd packages/web
+npm install
+cp ../../.env .env          # then rename VITE_ vars to match
+npm run dev
+
+  Frontend  →  http://localhost:5173
+  API       →  http://localhost:8000
+
+Frontend needs its own .env with these keys:
+  VITE_API_URL=http://localhost:8000
+  VITE_SUPABASE_URL=<your supabase url>
+  VITE_SUPABASE_ANON_KEY=<your supabase anon key>
+
+
+================================================================

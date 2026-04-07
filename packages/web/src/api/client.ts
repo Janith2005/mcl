@@ -1,7 +1,8 @@
 import { supabase } from './supabase'
+import { shouldBypassAuth } from '@/lib/runtime'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-const DEV_SKIP_AUTH = import.meta.env.VITE_DEV_SKIP_AUTH === 'true'
+const DEV_SKIP_AUTH = shouldBypassAuth()
 
 // Cache the token in memory — avoids a Supabase round-trip on every request
 let _cachedToken: string | null = null

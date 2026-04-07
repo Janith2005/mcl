@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+import uuid
 
 from supabase import Client
 
@@ -25,7 +25,7 @@ class SupabaseStorage:
                 "workspace_id": self._ws,
                 "title": t.get("title", ""),
                 "description": t.get("description", ""),
-                "status": t.get("status", "discovered"),
+                "status": t.get("status", "new"),
                 "source": t.get("source", {}),
                 "scoring": t.get("scoring", {}),
                 "pillars": t.get("pillars", []),
@@ -33,8 +33,9 @@ class SupabaseStorage:
             }
             # Use external_id to deduplicate (e.g. YouTube video ID)
             ext_id = t.get("id") or t.get("external_id")
-            if ext_id:
-                row["external_id"] = ext_id
+            if not ext_id:
+                ext_id = f"auto-{uuid.uuid4()}"
+            row["external_id"] = str(ext_id)
             rows.append(row)
 
         try:
@@ -65,13 +66,30 @@ class SupabaseStorage:
     def save_angles(self, angles: list[dict]) -> int:
         if not angles:
             return 0
-        rows = [{"workspace_id": self._ws, **a} for a in angles]
+        rows = []
+        for a in angles:
+            row = {"workspace_id": self._ws, **a}
+            ext_id = row.get("external_id")
+            if not ext_id:
+                topic_hint = str(row.get("topic_id", "none")).split("-")[0]
+                ext_id = f"auto-angle-{topic_hint}-{uuid.uuid4()}"
+            row["external_id"] = str(ext_id)
+            rows.append(row)
         try:
-            result = self._sb.table("angles").insert(rows).execute()
+            result = self._sb.table("angles").upsert(
+                rows,
+                on_conflict="workspace_id,external_id",
+                ignore_duplicates=True,
+            ).execute()
             return len(result.data or [])
         except Exception as e:
             logger.error("save_angles error: %s", e)
-            return 0
+            try:
+                result = self._sb.table("angles").insert(rows).execute()
+                return len(result.data or [])
+            except Exception as e2:
+                logger.error("save_angles insert fallback error: %s", e2)
+                return 0
 
     # ------------------------------------------------------------------ hooks
     def save_hooks(self, hooks: list[dict]) -> int:

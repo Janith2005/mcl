@@ -114,7 +114,7 @@ function BeatSheetPanel({
           CV
         </div>
         <div>
-          <p className="text-xs font-semibold" style={{ color: '#FFFFFF' }}>Captain Vane</p>
+          <p className="text-xs font-semibold" style={{ color: '#FFFFFF' }}>Growth Operator</p>
           <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>Pro Plan</p>
         </div>
       </div>
@@ -158,7 +158,7 @@ export function Scripts() {
   // Sync editedContent when section changes
   useEffect(() => {
     if (currentContent) setEditedContent(currentContent.content)
-  }, [resolvedSection, currentContent?.content])
+  }, [resolvedSection, currentContent, currentContent?.content])
 
   const saveSectionMutation = useMutation({
     mutationFn: () => updateSection(currentScriptId, resolvedSection, editedContent),
@@ -195,7 +195,7 @@ export function Scripts() {
 
   const scriptTitle = script?.title ?? scriptList[0]?.title ?? 'No Script'
 
-  // Empty state — no scripts exist yet
+  // Empty state - no scripts exist yet
   if (!scriptList.length) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] gap-6 text-center">
@@ -214,7 +214,7 @@ export function Scripts() {
             className="px-6 py-3 text-sm font-semibold text-white rounded-full"
             style={{ background: 'var(--ip-primary-gradient)' }}
           >
-            Go to Angles → Generate Script
+            Go to Angles to Generate Script
           </a>
           <p className="text-xs" style={{ color: 'var(--ip-text-tertiary)' }}>
             Pick an angle card and click "Generate Script"
@@ -233,7 +233,7 @@ export function Scripts() {
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium" style={{ color: 'var(--ip-text-secondary)' }}>
-            Influence Pirates
+            Influencer Pirates
           </span>
           <span style={{ color: 'var(--ip-text-tertiary)' }}>/</span>
           <span className="text-sm font-bold" style={{ color: 'var(--ip-text)', fontFamily: 'var(--ip-font-display)' }}>

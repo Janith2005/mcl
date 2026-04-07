@@ -45,7 +45,7 @@ const supportItems = [
 const faqs = [
   {
     q: 'How does the pipeline work?',
-    a: 'The 7-stage pipeline goes: Discover → Angle → Hook → Script → Publish → Analyze → Brain Evolves. Each stage builds on the last. Start by discovering topics that resonate with your ICP.',
+    a: 'The 7-stage pipeline goes: Discover -> Angle -> Hook -> Script -> Publish -> Analyze -> Brain Evolves. Each stage builds on the last. Start by discovering topics that resonate with your ICP.',
   },
   {
     q: 'What is the Agent Brain?',
@@ -53,11 +53,11 @@ const faqs = [
   },
   {
     q: 'How do I connect my YouTube channel?',
-    a: 'Go to Settings → Connections and click "Connect YouTube". This triggers an OAuth flow that lets us pull your analytics and sync performance data back to your Brain.',
+    a: 'Go to Settings -> Connections and click "Connect YouTube". This triggers an OAuth flow that lets us pull your analytics and sync performance data back to your Brain.',
   },
   {
     q: 'Why is my API key showing as Unconfigured?',
-    a: 'Go to Settings → API Keys and click "Configure" next to the key name. Paste your key in the input and click Save. Keys are stored encrypted and only the last 4 characters are shown.',
+    a: 'Go to Settings -> API Keys and click "Configure" next to the key name. Paste your key in the input and click Save. Keys are stored encrypted and only the last 4 characters are shown.',
   },
   {
     q: 'What hook patterns does the system use?',
@@ -76,7 +76,7 @@ export function Support() {
           Support & Help
         </h1>
         <p className="text-sm" style={{ color: 'var(--ip-text-secondary)' }}>
-          Get help with your Influence Pirates workspace.
+          Get help with your Influencer Pirates workspace.
         </p>
       </div>
 
@@ -151,7 +151,7 @@ export function Support() {
           Still stuck?
         </p>
         <p className="text-xs mb-3" style={{ color: 'var(--ip-text-secondary)' }}>
-          Email us at <strong>support@microcelebritylabs.com</strong> — we usually reply within a few hours.
+          Email us at <strong>support@microcelebritylabs.com</strong> - we usually reply within a few hours.
         </p>
         <a
           href="mailto:support@microcelebritylabs.com"

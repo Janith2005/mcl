@@ -26,37 +26,69 @@ def _update_job(supabase: Client, job_id: str, status: str, **meta) -> None:
         logger.error("Failed to update job %s: %s", job_id, e)
 
 
+def _to_int(value, default: int) -> int:
+    try:
+        return int(float(value))
+    except (TypeError, ValueError):
+        return default
+
+
+def _to_float(value, default: float) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _clamp(value: int, minimum: int, maximum: int) -> int:
+    return max(minimum, min(maximum, value))
+
+
 def _row_to_topic(row: dict) -> Topic:
     """Convert a Supabase topics row into a Topic pydantic model."""
-    source_data = row.get("source") or {}
-    scoring_data = row.get("scoring") or {}
+    source_raw = row.get("source")
+    scoring_raw = row.get("scoring")
+    source_data = source_raw if isinstance(source_raw, dict) else {}
+    scoring_data = scoring_raw if isinstance(scoring_raw, dict) else {}
+
+    icp_relevance = _clamp(_to_int(scoring_data.get("icp_relevance", scoring_data.get("relevance", 5)), 5), 1, 10)
+    timeliness = _clamp(_to_int(scoring_data.get("timeliness", scoring_data.get("virality", 5)), 5), 1, 10)
+    content_gap = _clamp(_to_int(scoring_data.get("content_gap", scoring_data.get("competition", 5)), 5), 1, 10)
+    proof_potential = _clamp(_to_int(scoring_data.get("proof_potential", 5), 5), 1, 10)
+    total_default = icp_relevance + timeliness + content_gap + proof_potential
+    total = _clamp(_to_int(scoring_data.get("total", total_default), total_default), 4, 40)
+    weighted_total = _to_float(scoring_data.get("weighted_total", float(total)), float(total))
 
     source = TopicSource(
-        platform=source_data.get("platform", "unknown"),
-        url=source_data.get("url", ""),
-        author=source_data.get("author", ""),
-        engagement_signals=source_data.get("engagement_signals", ""),
+        platform=str(source_data.get("platform", "unknown")),
+        url=str(source_data.get("url", "")),
+        author=str(source_data.get("author", "")),
+        engagement_signals=str(source_data.get("engagement_signals", "")),
     )
 
     scoring = TopicScoring(
-        icp_relevance=scoring_data.get("icp_relevance", 5),
-        timeliness=scoring_data.get("timeliness", 5),
-        content_gap=scoring_data.get("content_gap", 5),
-        proof_potential=scoring_data.get("proof_potential", 5),
-        total=scoring_data.get("total", 20),
-        weighted_total=float(scoring_data.get("weighted_total", 20.0)),
+        icp_relevance=icp_relevance,
+        timeliness=timeliness,
+        content_gap=content_gap,
+        proof_potential=proof_potential,
+        total=total,
+        weighted_total=weighted_total,
     )
+
+    discovered_at = row.get("discovered_at") or datetime.now(timezone.utc)
+    raw_pillars = row.get("pillars") or []
+    pillars = [str(p) for p in raw_pillars] if isinstance(raw_pillars, list) else []
 
     return Topic(
         id=str(row["id"]),
-        title=row.get("title", ""),
-        description=row.get("description", "") or "",
+        title=str(row.get("title", "")),
+        description=str(row.get("description", "") or ""),
         source=source,
-        discovered_at=datetime.now(timezone.utc),
+        discovered_at=discovered_at,
         scoring=scoring,
-        pillars=row.get("pillars") or [],
-        status=row.get("status", "discovered"),
-        notes=row.get("notes", "") or "",
+        pillars=pillars,
+        status=str(row.get("status", "new")),
+        notes=str(row.get("notes", "") or ""),
         workspace_id=row.get("workspace_id"),
     )
 
@@ -87,7 +119,23 @@ def _generate_angles_for_topic(brain, topic: Topic, content_format: str, doc_con
         },
     ]
 
-    data = chat_json(messages)
+    data = None
+    last_error: Exception | None = None
+    for attempt in range(3):
+        try:
+            data = chat_json(messages, temperature=0.1, retries=2)
+            break
+        except Exception as e:
+            last_error = e
+            logger.warning(
+                "[angle] generation parse failed for topic %s (attempt %d/3): %s",
+                topic.id,
+                attempt + 1,
+                e,
+            )
+    if data is None:
+        raise RuntimeError(f"Could not generate valid JSON angles: {last_error}") from last_error
+
     if isinstance(data, dict):
         data = data.get("angles", [data])
     if not isinstance(data, list):
@@ -97,7 +145,12 @@ def _generate_angles_for_topic(brain, topic: Topic, content_format: str, doc_con
     for item in data[:4]:
         contrast = item.get("contrast", {})
         funnel = item.get("funnel_direction", {})
+        external_id = item.get("external_id")
+        if not external_id:
+            topic_hint = str(topic.id).split("-")[0]
+            external_id = f"auto-angle-{topic_hint}-{uuid.uuid4()}"
         angles.append({
+            "external_id": str(external_id),
             "topic_id": topic.id,
             "format": content_format,
             "title": item.get("title", ""),
@@ -141,6 +194,7 @@ async def run_angle_generation(
         storage = SupabaseStorage(supabase, workspace_id)
 
         all_angles = []
+        topic_errors: list[str] = []
         for topic_id in topic_ids:
             try:
                 result = supabase.table("topics").select("*").eq(
@@ -162,10 +216,42 @@ async def run_angle_generation(
 
             except Exception as e:
                 logger.error("[angle] failed for topic %s: %s", topic_id, e)
+                topic_errors.append(f"{topic_id}: {e}")
                 continue
 
         saved = storage.save_angles(all_angles)
         logger.info("[angle] saved %d angles", saved)
+
+        if saved == 0 and topic_errors and topic_ids:
+            error_message = "Angle generation failed for all requested topics."
+            _update_job(
+                supabase,
+                job_id,
+                "failed",
+                error=error_message,
+                result_count=0,
+                failed_topics=topic_errors[:10],
+            )
+            return {
+                "status": "failed",
+                "result_count": 0,
+                "error": error_message,
+                "failed_topics": topic_errors[:10],
+            }
+
+        if topic_errors:
+            _update_job(
+                supabase,
+                job_id,
+                "completed",
+                result_count=saved,
+                failed_topics=topic_errors[:10],
+            )
+            return {
+                "status": "completed",
+                "result_count": saved,
+                "failed_topics": topic_errors[:10],
+            }
 
         _update_job(supabase, job_id, "completed", result_count=saved)
         return {"status": "completed", "result_count": saved}

@@ -2,7 +2,6 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from httpx import AsyncClient, ASGITransport
-from app.main import create_app
 from app.deps import get_supabase, get_redis
 
 
@@ -21,23 +20,31 @@ def mock_supabase():
 def mock_redis():
     """Mock Redis client with pipeline support."""
     redis = AsyncMock()
-    pipe = AsyncMock()
+    pipe = MagicMock()
+    pipe.zremrangebyscore.return_value = 0
+    pipe.zadd.return_value = 1
+    pipe.zcard.return_value = 1
+    pipe.expire.return_value = True
     # Default pipeline behaviour: 0 removed, True zadd, 1 count, True expire
-    pipe.execute = AsyncMock(return_value=[0, True, 1, True])
+    pipe.execute = AsyncMock(return_value=[0, 1, 1, True])
     redis.pipeline = MagicMock(return_value=pipe)
+    redis.ping = AsyncMock(return_value=True)
     redis.aclose = AsyncMock()
     return redis
 
 
 @pytest.fixture
-def app(mock_supabase, mock_redis):
+def app(mock_supabase, mock_redis, monkeypatch):
     """Create test app with mocked dependencies and Redis in app.state.
 
     ASGITransport (used by httpx) does NOT trigger the ASGI lifespan
     protocol, so we patch the lifespan to a no-op and manually set
     app.state.redis after creation.
     """
+    monkeypatch.setenv("DEV_SKIP_AUTH", "false")
+    monkeypatch.setattr("app.middleware.auth.DEV_SKIP_AUTH", False, raising=False)
     from contextlib import asynccontextmanager
+    from app.main import create_app
 
     @asynccontextmanager
     async def _noop_lifespan(app):

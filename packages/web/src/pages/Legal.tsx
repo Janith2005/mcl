@@ -133,11 +133,15 @@ export function Legal() {
   const [nodes, setNodes] = useState<MarkdownNode[]>([])
   const [loading, setLoading] = useState(true)
 
+  function handleTabChange(tab: LegalTab) {
+    setLoading(true)
+    setActiveTab(tab)
+  }
+
   useEffect(() => {
     const config = TAB_CONFIG.find((t) => t.id === activeTab)
     if (!config) return
 
-    setLoading(true)
     fetch(config.file)
       .then((res) => res.text())
       .then((md) => {
@@ -165,7 +169,7 @@ export function Legal() {
           className="text-lg font-bold"
           style={{ fontFamily: 'var(--ip-font-display)', color: 'var(--ip-text)' }}
         >
-          Influence Pirates
+          Influencer Pirates
         </a>
         <a
           href="/login"
@@ -189,7 +193,7 @@ export function Legal() {
           {TAB_CONFIG.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className="py-2 px-5 text-sm font-medium transition-all"
               style={{
                 borderRadius: 'var(--ip-radius-full, 9999px)',

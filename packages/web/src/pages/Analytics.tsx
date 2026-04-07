@@ -82,7 +82,7 @@ export function Analytics() {
       toast.error('Analysis failed')
       setTimeout(analyzePoller.reset, 3000)
     }
-  }, [analyzePoller.status])
+  }, [analyzePoller.reset, analyzePoller.status, queryClient])
 
   const topPerformers = data?.top_performers ?? []
   const hookPatternData = data?.hook_pattern_data ?? []

@@ -29,9 +29,9 @@ interface CrewMember {
 }
 
 const crewMembers: CrewMember[] = [
-  { name: 'Jack Sparrow', avatar: 'JS', role: 'ADMIN' },
-  { name: 'Anna Bonny', avatar: 'AB', role: 'EDITOR' },
-  { name: 'Blackbeard', avatar: 'BB', role: 'MENTOR' },
+  { name: 'Ava Stone', avatar: 'AS', role: 'ADMIN' },
+  { name: 'Noah Reed', avatar: 'NR', role: 'EDITOR' },
+  { name: 'Mia Chen', avatar: 'MC', role: 'MENTOR' },
 ]
 
 const roleBadgeStyles: Record<CrewMember['role'], { background: string }> = {
@@ -48,9 +48,9 @@ interface ApiKeyEntry {
 }
 
 const initialApiKeys: ApiKeyEntry[] = [
-  { name: 'OpenAI', status: 'Active', maskedKey: '••••••••u9f2' },
+  { name: 'OpenAI', status: 'Active', maskedKey: '********u9f2' },
   { name: 'Claude (Anthropic)', status: 'Unconfigured' },
-  { name: 'Supabase', status: 'Active', maskedKey: '••••••••M3cx' },
+  { name: 'Supabase', status: 'Active', maskedKey: '********M3cx' },
 ]
 
 interface PlatformConnection {
@@ -62,8 +62,8 @@ interface PlatformConnection {
 }
 
 const platforms: PlatformConnection[] = [
-  { platform: 'YouTube', handle: 'Luminous_VLOGS', connected: true, lastSync: 'Connected 3 days ago', color: '#FF0000' },
-  { platform: 'TikTok', handle: 'PirateHacks_Official', connected: true, lastSync: 'Last fetch: 1h ago', color: '#000000' },
+  { platform: 'YouTube', handle: 'InfluencerCreatorHQ', connected: true, lastSync: 'Connected 3 days ago', color: '#FF0000' },
+  { platform: 'TikTok', handle: 'GrowthLoopsHQ', connected: true, lastSync: 'Last fetch: 1h ago', color: '#000000' },
 ]
 
 const glassCard: React.CSSProperties = {
@@ -77,7 +77,7 @@ const glassCard: React.CSSProperties = {
 
 export function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('Workspace')
-  const [workspaceName, setWorkspaceName] = useState('Influence Pirates Main Lab')
+  const [workspaceName, setWorkspaceName] = useState('Influencer Pirates Main Workspace')
   const [defaultNiche, setDefaultNiche] = useState('B2B SaaS Growth')
   const [inviteEmail, setInviteEmail] = useState('')
   const [showInviteInput, setShowInviteInput] = useState(false)
@@ -111,12 +111,13 @@ export function SettingsPage() {
   })
 
   const configKeyMutation = useMutation({
-    mutationFn: ({ name, key }: { name: string; key: string }) => configureApiKey(name, key),
-    onSuccess: (data: any, { name }) => {
+    mutationFn: async ({ name, key }: { name: string; key: string }) =>
+      (await configureApiKey(name, key)) as { id?: string } | undefined,
+    onSuccess: (data: { id?: string } | undefined, { name }) => {
       setApiKeys((prev) =>
         prev.map((k) =>
           k.name === name
-            ? { ...k, status: 'Active', maskedKey: `••••••••${apiKeyInputs[name]?.slice(-4) ?? '???'}`, id: data?.id }
+            ? { ...k, status: 'Active', maskedKey: `********${apiKeyInputs[name]?.slice(-4) ?? '???'}`, id: data?.id }
             : k
         )
       )
@@ -164,7 +165,7 @@ export function SettingsPage() {
   }
 
   function handleDiscard() {
-    setWorkspaceName('Influence Pirates Main Lab')
+    setWorkspaceName('Influencer Pirates Main Workspace')
     setDefaultNiche('B2B SaaS Growth')
   }
 
@@ -241,7 +242,7 @@ export function SettingsPage() {
             Settings
           </h1>
           <p className="text-sm" style={{ color: 'var(--ip-text-secondary)' }}>
-            Configure your digital laboratory and manage your pirate crew.
+            Configure your workspace and manage your team.
           </p>
         </div>
 
@@ -546,7 +547,7 @@ export function SettingsPage() {
             style={{ background: 'var(--ip-primary-gradient)', borderRadius: 'var(--ip-radius-full)', boxShadow: 'var(--ip-shadow-md)' }}
           >
             {saveMutation.isPending && <Loader2 size={14} className="animate-spin" />}
-            Save Laboratory Config
+            Save Workspace Settings
           </button>
         </div>
       </div>

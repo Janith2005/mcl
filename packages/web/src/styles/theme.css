@@ -1,119 +1,107 @@
 /*
- * Influence Pirates — Central Design Tokens
- *
- * ALL visual decisions live here. Components reference these vars only.
- * To change the entire look: edit this file. Nothing else.
- *
- * Naming: --ip-{category}-{property}
- * Categories: bg, surface, text, border, primary, accent, stage, score,
- *             font, radius, shadow, space, duration, ease
+ * MCL visual tokens - TryHolo-inspired light direction
+ * Dark mode intentionally disabled per product direction.
  */
-
-/* ============================================================
-   HOLO PRISM (Light Mode) — "The Luminous Lab"
-   ============================================================ */
 
 :root {
   /* Backgrounds */
-  --ip-bg: #F5EDF5;
-  --ip-bg-subtle: #FAF5FA;
-  --ip-bg-page: #F5EDF5;
-  --ip-bg-gradient: radial-gradient(ellipse at 0% 0%, rgba(232, 180, 240, 0.45) 0%, transparent 50%),
-                    radial-gradient(ellipse at 100% 0%, rgba(216, 160, 235, 0.40) 0%, transparent 50%),
-                    radial-gradient(ellipse at 100% 100%, rgba(240, 190, 220, 0.35) 0%, transparent 50%),
-                    radial-gradient(ellipse at 0% 100%, rgba(220, 170, 240, 0.30) 0%, transparent 50%),
-                    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
-                    #F5EDF5;
+  --ip-bg: #f6f7fb;
+  --ip-bg-subtle: #eef1f6;
+  --ip-bg-page: #f6f7fb;
+  --ip-bg-gradient:
+    radial-gradient(920px 420px at 0% -20%, rgba(238, 68, 84, 0.14) 0%, transparent 62%),
+    radial-gradient(920px 420px at 100% -10%, rgba(62, 134, 198, 0.12) 0%, transparent 64%),
+    linear-gradient(180deg, #f9fbff 0%, #f2f5fa 100%);
 
   /* Surfaces */
-  --ip-surface: #FFFFFF;
-  --ip-surface-hover: #FDF8FD;
-  --ip-surface-glass: rgba(255, 255, 255, 0.7);
-  --ip-glass-blur: 12px;
+  --ip-surface: #ffffff;
+  --ip-surface-hover: #f8f9fc;
+  --ip-surface-glass: rgba(255, 255, 255, 0.95);
+  --ip-glass-blur: 10px;
 
-  /* Card Glass (glassmorphic cards) */
-  --ip-card-glass-bg: rgba(255, 255, 255, 0.55);
-  --ip-card-glass-blur: 16px;
-  --ip-card-glass-border: rgba(255, 255, 255, 0.6);
-  --ip-card-glass-shadow: 0 4px 24px rgba(166, 102, 170, 0.08), 0 1px 4px rgba(166, 102, 170, 0.04);
+  /* Card surfaces */
+  --ip-card-glass-bg: rgba(255, 255, 255, 0.9);
+  --ip-card-glass-blur: 8px;
+  --ip-card-glass-border: rgba(212, 218, 227, 0.85);
+  --ip-card-glass-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
 
   /* Text */
-  --ip-text: #1A1A1A;
-  --ip-text-secondary: #6B7280;
-  --ip-text-tertiary: #9CA3AF;
-  --ip-text-brand: #5B2C6F;
-  --ip-text-on-primary: #FFFFFF;
+  --ip-text: #181d26;
+  --ip-text-secondary: #505968;
+  --ip-text-tertiary: #7f8898;
+  --ip-text-brand: #ee4454;
+  --ip-text-on-primary: #ffffff;
 
   /* Borders */
-  --ip-border: #E8D8E8;
-  --ip-border-subtle: #F0E4F0;
+  --ip-border: #d8deea;
+  --ip-border-subtle: #e8ecf3;
 
-  /* Primary Accent (Fuchsia → Pink gradient) */
-  --ip-primary: #A666AA;
-  --ip-primary-hover: #9555A0;
-  --ip-primary-end: #E879A8;
-  --ip-primary-gradient: linear-gradient(135deg, #A666AA 0%, #E879A8 100%);
+  /* Accent */
+  --ip-primary: #ee4454;
+  --ip-primary-hover: #f05427;
+  --ip-primary-end: #ec4492;
+  --ip-primary-gradient: linear-gradient(135deg, #ee4454 0%, #ec4492 100%);
 
-  /* Accent Colors */
-  --ip-accent-plum: #5B2C6F;
-  --ip-accent-maroon: #7B3F5E;
+  --ip-accent-plum: #a666aa;
+  --ip-accent-maroon: #ec4492;
 
-  /* Sidebar */
-  --ip-sidebar-bg: linear-gradient(180deg, #FFFFFF 0%, #F5EDF5 100%);
+  /* Navigation shell */
+  --ip-sidebar-bg: rgba(255, 255, 255, 0.92);
   --ip-sidebar-active-bg: var(--ip-primary-gradient);
-  --ip-sidebar-text: #374151;
-  --ip-sidebar-text-active: #FFFFFF;
-  --ip-sidebar-width: 200px;
-  --ip-sidebar-width-collapsed: 64px;
+  --ip-sidebar-text: #475163;
+  --ip-sidebar-text-active: #ffffff;
+  --ip-sidebar-width: 240px;
+  --ip-sidebar-width-collapsed: 72px;
 
-  /* Pipeline Stage Colors */
-  --ip-stage-discover: #0EA5E9;
-  --ip-stage-angle: #8B5CF6;
-  --ip-stage-hook: #F59E0B;
-  --ip-stage-script: #10B981;
-  --ip-stage-publish: #EC4899;
-  --ip-stage-analyze: #6366F1;
+  /* Stage colors */
+  --ip-stage-discover: #3e86c6;
+  --ip-stage-angle: #a666aa;
+  --ip-stage-hook: #f05427;
+  --ip-stage-script: #18a67f;
+  --ip-stage-publish: #ec4492;
+  --ip-stage-analyze: #5b87f7;
 
   /* Semantic */
-  --ip-success: #10B981;
-  --ip-warning: #F59E0B;
-  --ip-error: #EF4444;
-  --ip-info: #3B82F6;
+  --ip-success: #12b886;
+  --ip-warning: #f59f00;
+  --ip-error: #ef4444;
+  --ip-info: #3b82f6;
 
-  /* Scoring Heat Map */
-  --ip-score-low: #EF4444;
-  --ip-score-below: #F59E0B;
-  --ip-score-good: #3B82F6;
-  --ip-score-strong: #10B981;
-  --ip-score-perfect: #D4AF37;
+  /* Scoring */
+  --ip-score-low: #ef4444;
+  --ip-score-below: #f59f00;
+  --ip-score-good: #3b82f6;
+  --ip-score-strong: #12b886;
+  --ip-score-perfect: #d4af37;
 
-  /* Hook Pattern Colors */
-  --ip-hook-question: #EF4444;
-  --ip-hook-stat: #3B82F6;
-  --ip-hook-negative-stake: #F59E0B;
-  --ip-hook-contrarian: #8B5CF6;
-  --ip-hook-visual-bridge: #10B981;
-  --ip-hook-direct-payoff: #EC4899;
+  /* Hook patterns */
+  --ip-hook-question: #ef4444;
+  --ip-hook-stat: #3e86c6;
+  --ip-hook-negative-stake: #f05427;
+  --ip-hook-contrarian: #a666aa;
+  --ip-hook-visual-bridge: #12b886;
+  --ip-hook-direct-payoff: #ec4492;
 
   /* Typography */
-  --ip-font-display: 'Space Grotesk', sans-serif;
-  --ip-font-body: 'Geist Variable', sans-serif;
-  --ip-font-mono: 'Geist Mono', monospace;
-  --ip-font-serif: 'Instrument Serif', Georgia, serif;
+  --ip-font-display: "Gabarito", "Space Grotesk Variable", "Space Grotesk", sans-serif;
+  --ip-font-body: "Inter", "Geist Variable", sans-serif;
+  --ip-font-mono: "Fragment Mono", "Geist Mono", ui-monospace, monospace;
+  --ip-font-serif: "Instrument Serif", Georgia, serif;
 
-  /* Border Radius */
-  --ip-radius-sm: 8px;
-  --ip-radius-md: 12px;
-  --ip-radius-lg: 16px;
+  /* Radius */
+  --ip-radius-sm: 10px;
+  --ip-radius-md: 14px;
+  --ip-radius-lg: 18px;
   --ip-radius-xl: 24px;
   --ip-radius-full: 9999px;
 
   /* Shadows */
-  --ip-shadow-sm: 0 1px 3px rgba(166, 102, 170, 0.06);
-  --ip-shadow-md: 0 4px 12px rgba(166, 102, 170, 0.08);
-  --ip-shadow-lg: 0 8px 24px rgba(166, 102, 170, 0.12);
-  --ip-shadow-glow: 0 0 20px rgba(166, 102, 170, 0.15);
-  --ip-shadow-glow-border: 0 0 12px rgba(166, 102, 170, 0.10);
+  --ip-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --ip-shadow-md: 0 10px 24px rgba(15, 23, 42, 0.11);
+  --ip-shadow-lg: 0 16px 36px rgba(15, 23, 42, 0.14);
+  --ip-shadow-xl: 0 24px 50px rgba(15, 23, 42, 0.2);
+  --ip-shadow-glow: 0 0 0 1px rgba(238, 68, 84, 0.22), 0 14px 32px rgba(238, 68, 84, 0.18);
+  --ip-shadow-glow-border: 0 0 0 1px rgba(238, 68, 84, 0.22);
 
   /* Spacing */
   --ip-space-1: 4px;
@@ -128,112 +116,15 @@
   --ip-space-16: 64px;
 
   /* Motion */
-  --ip-duration-micro: 50ms;
+  --ip-duration-micro: 80ms;
   --ip-duration-short: 150ms;
-  --ip-duration-medium: 250ms;
-  --ip-duration-long: 400ms;
+  --ip-duration-medium: 240ms;
+  --ip-duration-long: 340ms;
   --ip-ease-enter: ease-out;
   --ip-ease-exit: ease-in;
-  --ip-ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+  --ip-ease-move: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   /* Layout */
-  --ip-content-max: 1440px;
-  --ip-assistant-width: 320px;
-}
-
-/* ============================================================
-   OBSIDIAN PLUNDER (Dark Mode) — "The Sovereign Navigator"
-   Applied via .dark class on <html>
-   ============================================================ */
-
-.dark {
-  /* Backgrounds — deep obsidian, no gradient wash */
-  --ip-bg: #0D0D0D;
-  --ip-bg-subtle: #141414;
-  --ip-bg-page: #0D0D0D;
-  --ip-bg-gradient: #0D0D0D; /* flat, no radial gradient in dark mode */
-
-  /* Surfaces — flat dark, no glassmorphism */
-  --ip-surface: #161616;
-  --ip-surface-hover: #1C1C1C;
-  --ip-surface-glass: #161616; /* no transparency in dark mode */
-  --ip-glass-blur: 0px; /* no blur in dark mode */
-
-  /* Card — flat dark with thin borders, no glassmorphism */
-  --ip-card-glass-bg: #1A1A1A;
-  --ip-card-glass-blur: 0px;
-  --ip-card-glass-border: rgba(212, 175, 55, 0.15);
-  --ip-card-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-
-  /* Text */
-  --ip-text: #E8E8E8;
-  --ip-text-secondary: #9CA3AF;
-  --ip-text-tertiary: #6B7280;
-  --ip-text-brand: #D4AF37;
-  --ip-text-on-primary: #0D0D0D;
-
-  /* Borders — subtle gold tint */
-  --ip-border: rgba(212, 175, 55, 0.12);
-  --ip-border-subtle: rgba(212, 175, 55, 0.08);
-
-  /* Primary — solid gold, not gradient */
-  --ip-primary: #D4AF37;
-  --ip-primary-hover: #E5C253;
-  --ip-primary-end: #D4AF37;
-  --ip-primary-gradient: #D4AF37; /* solid, not gradient in dark */
-
-  /* Accent — teal/cyan for secondary accents */
-  --ip-accent-plum: #2DD4BF;
-  --ip-accent-maroon: #D4AF37;
-
-  /* Sidebar */
-  --ip-sidebar-bg: #0D0D0D;
-  --ip-sidebar-active-bg: transparent;
-  --ip-sidebar-text: #6B7280;
-  --ip-sidebar-text-active: #D4AF37;
-  --ip-sidebar-width: 200px;
-  --ip-sidebar-width-collapsed: 64px;
-
-  /* Pipeline stages — slightly muted for dark bg */
-  --ip-stage-discover: #38BDF8;
-  --ip-stage-angle: #A78BFA;
-  --ip-stage-hook: #FBBF24;
-  --ip-stage-script: #34D399;
-  --ip-stage-publish: #F472B6;
-  --ip-stage-analyze: #818CF8;
-
-  /* Semantic */
-  --ip-success: #34D399;
-  --ip-warning: #FBBF24;
-  --ip-error: #F87171;
-  --ip-info: #60A5FA;
-
-  /* Scoring */
-  --ip-score-low: #F87171;
-  --ip-score-below: #FBBF24;
-  --ip-score-good: #60A5FA;
-  --ip-score-strong: #34D399;
-  --ip-score-perfect: #D4AF37;
-
-  /* Hook patterns */
-  --ip-hook-question: #F87171;
-  --ip-hook-stat: #60A5FA;
-  --ip-hook-negative-stake: #FBBF24;
-  --ip-hook-contrarian: #A78BFA;
-  --ip-hook-visual-bridge: #34D399;
-  --ip-hook-direct-payoff: #F472B6;
-
-  /* Border Radius — sharp, precise */
-  --ip-radius-sm: 2px;
-  --ip-radius-md: 4px;
-  --ip-radius-lg: 6px;
-  --ip-radius-xl: 8px;
-  --ip-radius-full: 4px; /* NOT pill-shaped in dark mode */
-
-  /* Shadows — minimal, dark */
-  --ip-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --ip-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --ip-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
-  --ip-shadow-glow: 0 0 12px rgba(212, 175, 55, 0.1);
-  --ip-shadow-glow-border: inset 1px 0 0 rgba(212, 175, 55, 0.05);
+  --ip-content-max: 1320px;
+  --ip-assistant-width: 360px;
 }

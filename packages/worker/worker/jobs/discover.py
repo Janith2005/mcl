@@ -6,9 +6,8 @@ YouTube rate-limited, no competitor handles configured).
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
-from datetime import datetime, timezone
+import uuid
 
 from supabase import Client
 
@@ -90,7 +89,7 @@ def _videos_to_topics(videos: list[dict], brain, storage: SupabaseStorage) -> li
             "external_id": f"yt-{video_id}" if video_id else None,
             "title": title,
             "description": description[:500],
-            "status": "discovered",
+            "status": "new",
             "source": {
                 "platform": "youtube",
                 "url": video.get("url", ""),
@@ -137,7 +136,7 @@ def _llm_fallback_topics(brain, keywords: list[str], mode: str, count: int = 8) 
             data = data.get("topics", []) if isinstance(data, dict) else []
 
         topics = []
-        for item in data[:count]:
+        for index, item in enumerate(data[:count], start=1):
             scoring = item.get("scoring", {})
             # Ensure all scoring fields exist
             for field in ["icp_relevance", "timeliness", "content_gap", "proof_potential"]:
@@ -146,10 +145,10 @@ def _llm_fallback_topics(brain, keywords: list[str], mode: str, count: int = 8) 
             scoring.setdefault("weighted_total", float(scoring["total"]))
 
             topics.append({
-                "external_id": None,
+                "external_id": f"ai-discover-{uuid.uuid4()}-{index}",
                 "title": item.get("title", ""),
                 "description": item.get("description", ""),
-                "status": "discovered",
+                "status": "new",
                 "source": {
                     "platform": item.get("source_platform", "ai-generated"),
                     "url": "",
