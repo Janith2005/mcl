@@ -46,14 +46,17 @@ Add these secrets in GitHub repo settings:
 Add these repository (or environment) variables:
 
 - `AZURE_SUBSCRIPTION_ID` (optional if embedded in `AZURE_CREDENTIALS`)
-- `AZURE_RESOURCE_GROUP`
-- `AZURE_LOCATION` (example: `eastus`)
-- `AZURE_CONTAINERAPPS_ENV`
-- `AZURE_ACR_NAME`
-- `AZURE_API_APP_NAME` (optional; defaults to `mcl-api`)
-- `AZURE_WORKER_APP_NAME` (optional; defaults to `mcl-worker`)
-- `AZURE_REDIS_APP_NAME` (optional; defaults to `mcl-redis`)
 - `ALLOWED_ORIGINS` (comma-separated frontend origins for CORS)
+
+The workflow is currently pinned to these Azure names:
+
+- Resource group: `mcl-rg`
+- Container Apps environment: `mcl-env`
+- ACR: `mclregistry`
+- API app: `mcl-api`
+- Redis app: `mcl-redis`
+- Worker app: `mcl-worker`
+- Location: `eastus`
 
 ## Triggering Deploys
 

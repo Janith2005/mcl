@@ -58,13 +58,13 @@ jobs:
       - name: Deploy API + worker + redis to Azure Container Apps
         env:
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
-          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
-          AZURE_CONTAINERAPPS_ENV: ${{ vars.AZURE_CONTAINERAPPS_ENV }}
-          AZURE_ACR_NAME: ${{ vars.AZURE_ACR_NAME }}
-          AZURE_API_APP_NAME: ${{ vars.AZURE_API_APP_NAME }}
-          AZURE_WORKER_APP_NAME: ${{ vars.AZURE_WORKER_APP_NAME }}
-          AZURE_REDIS_APP_NAME: ${{ vars.AZURE_REDIS_APP_NAME }}
+          AZURE_RESOURCE_GROUP: mcl-rg
+          AZURE_LOCATION: eastus
+          AZURE_CONTAINERAPPS_ENV: mcl-env
+          AZURE_ACR_NAME: mclregistry
+          AZURE_API_APP_NAME: mcl-api
+          AZURE_WORKER_APP_NAME: mcl-worker
+          AZURE_REDIS_APP_NAME: mcl-redis
           IMAGE_TAG: ${{ github.sha }}
           ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
 
